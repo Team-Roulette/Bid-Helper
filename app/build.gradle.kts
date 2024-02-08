@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -18,6 +20,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_SERVICE_KEY", getProperty("api.serviceKey"))
+        buildConfigField("String", "BASE_URL", getProperty("url.baseUrl"))
     }
 
     buildTypes {
@@ -38,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -48,6 +53,8 @@ android {
         }
     }
 }
+
+fun getProperty(propertyKey: String): String = gradleLocalProperties(rootDir).getProperty(propertyKey)
 
 dependencies {
 
