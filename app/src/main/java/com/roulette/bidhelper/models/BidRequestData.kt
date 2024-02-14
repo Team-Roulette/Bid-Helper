@@ -5,10 +5,11 @@ import com.roulette.bidhelper.BuildConfig
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-private const val START_TIME = "202401010000"
-fun currentTime(): String {
-    val time = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("yyyyMMddhhmm") // ex) 202402132233
+private lateinit var time: LocalDateTime
+private val formatter = DateTimeFormatter.ofPattern("yyyyMMddhhmm") // ex) 202402132233
+fun targetTime(month: Long): String {
+    time = LocalDateTime.now().minusMonths(month)
+    if(month != 0L) time = time.withHour(0).withMinute(0)
     return time.format(formatter)
 }
 
@@ -17,8 +18,8 @@ open class BidCommonParams( // 요청 기본 파라미터
     @SerializedName("pageNo") var pageNo: String? = null, // 페이지 번호,
     @SerializedName("ServiceKey") val serviceKey: String = BuildConfig.API_SERVICE_KEY, // 공공데이터포탈에서 받은 인증키
     @SerializedName("inqryDiv") var inqryDiv: String? = null, // 검색하고자하는 조회구분 1.입력일시, 2.입찰공고번호
-    @SerializedName("inqryBgnDt") val inqryBgnDt: String = START_TIME, // 검색하고자하는 조회시작일시
-    @SerializedName("inqryEndDt") val inqryEndDt: String = currentTime(), // 검색하고자하는 조회종료일시
+    @SerializedName("inqryBgnDt") val inqryBgnDt: String = targetTime(3), // 검색하고자하는 조회시작일시
+    @SerializedName("inqryEndDt") val inqryEndDt: String = targetTime(0), // 검색하고자하는 조회종료일시
     @SerializedName("type") val type: String = "json",// 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
 )
 
@@ -31,6 +32,7 @@ data class BidLimitRegion( // 입찰공고목록 정보에 대한 면허제한�
 
 data class BidSearch( // 나라장터검색조건에 의한 입찰공고공사조회
     @SerializedName("bidNtceNm") var bidNtceNm: String? = null, // 공고명
+    @SerializedName("bidNm") var bidNm: String? = null, // 공고명(방위사업청 연계건)
     @SerializedName("ntceInsttCd") var ntceInsttCd: String? = null, // 공고기관코드
     @SerializedName("ntceInsttNm") var ntceInsttNm: String? = null, // 공고기관명
     @SerializedName("dminsttCd") var dminsttCd: String? = null, // 수요기관코드

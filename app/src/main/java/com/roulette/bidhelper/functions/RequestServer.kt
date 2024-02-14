@@ -72,7 +72,7 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidConstBasisAmountDTO>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.i("test", t.message.toString())
             }
         })
     }
@@ -92,11 +92,12 @@ object RequestServer {
                 call: Call<BidCalcAInfoDTO>,
                 response: Response<BidCalcAInfoDTO>
             ) {
-                TODO("Not yet implemented")
+                val body = response.body()!!
+                Log.i("test", body.response.header.resultMsg)
             }
 
             override fun onFailure(call: Call<BidCalcAInfoDTO>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.i("test", t.message.toString())
             }
         })
     }
@@ -132,11 +133,13 @@ object RequestServer {
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>
             ) {
-                TODO("Not yet implemented")
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.e("test", t.message.toString())
             }
 
         })
@@ -158,11 +161,12 @@ object RequestServer {
                 call: Call<BidPosRegionDTO>,
                 response: Response<BidPosRegionDTO>
             ) {
-                TODO("Not yet implemented")
+                val body = response.body()!!
+                Log.i("test", body.response.header.resultMsg)
             }
 
             override fun onFailure(call: Call<BidPosRegionDTO>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.i("test", t.message.toString())
             }
 
         })
@@ -184,13 +188,13 @@ object RequestServer {
                 call: Call<BidLicenseLimitDTO>,
                 response: Response<BidLicenseLimitDTO>
             ) {
-                TODO("Not yet implemented")
+                val body = response.body()!!
+                Log.i("test", body.response.header.resultMsg)
             }
 
             override fun onFailure(call: Call<BidLicenseLimitDTO>, t: Throwable) {
-                TODO("Not yet implemented")
+                Log.i("test", t.message.toString())
             }
-
         })
     }
 }
