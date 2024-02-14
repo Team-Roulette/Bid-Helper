@@ -5,6 +5,8 @@ import com.roulette.bidhelper.models.dtos.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.dtos.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.dtos.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.dtos.BidPosRegionDTO
+import com.roulette.bidhelper.models.dtos.BidResultListDTO
+import com.roulette.bidhelper.models.dtos.BidResultPriceDTO
 import com.roulette.bidhelper.models.dtos.BidThingBasisAmountDTO
 import retrofit2.Call
 import retrofit2.http.GET
@@ -100,4 +102,29 @@ interface BidService {
         @Query("bidNtceOrd") bidNtceOrd: String?, // 검색하고자 하는 입찰공고차수 (조회구분이 2인 경우 필수)
         @Query("type") type: String? // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
     ): Call<BidLicenseLimitDTO>
+
+    @GET("getOpengResultListInfoCnstwkPreparPcDetail") // 개찰결과 공사예비가격 상세 목록 조회
+    fun getBidResultPrice(
+        @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
+        @Query("pageNo") pageNo: String, // 페이지 번호,
+        @Query("ServiceKey") serviceKey: String, // 공공데이터포탈에서 받은 인증키
+        @Query("inqryDiv") inqryDiv: String, // 검색하고자하는 조회구분 1.입력일시, 2.입찰공고번호
+        @Query("inqryBgnDt") inqryBgnDt: String?, // 검색하고자하는 조회시작일시
+        @Query("inqryEndDt") inqryEndDt: String?, // 검색하고자하는 조회종료일시
+        @Query("bidNtceNo") bidNtceNo: String?, // 검색하고자하는 입찰공고번호, 조회구분 4인 경우 필수
+        @Query("type") type: String? // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
+    ): Call<BidResultPriceDTO>
+
+
+    @GET("getOpengResultListInfoCnstwk") // 개찰결과 공사 목록 조회
+    fun getBidResultList(
+        @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
+        @Query("pageNo") pageNo: String, // 페이지 번호,
+        @Query("ServiceKey") serviceKey: String, // 공공데이터포탈에서 받은 인증키
+        @Query("inqryDiv") inqryDiv: String, // 검색하고자하는 조회구분 1.입력일시, 2.공고일시, 3.개찰일시, 4.입찰공고번호
+        @Query("inqryBgnDt") inqryBgnDt: String?, // 검색하고자하는 조회시작일시
+        @Query("inqryEndDt") inqryEndDt: String?, // 검색하고자하는 조회종료일시
+        @Query("bidNtceNo") bidNtceNo: String?, // 검색하고자 하는 입찰공고번호, (조회구분 '2' 선택시 필수)
+        @Query("type") type: String? // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
+    ): Call<BidResultListDTO>
 }

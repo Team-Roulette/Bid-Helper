@@ -23,7 +23,7 @@ open class BidCommonParams( // 요청 기본 파라미터
     @SerializedName("type") val type: String = "json",// 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
 )
 
-open class BidAmountInfo( // 입찰공고목록 정보에 대한 물품기초금액, 공사기초금액, 입찰가격산식A정보조회는
+open class BidAmountInfo( // 입찰공고목록 정보에 대한 물품기초금액, 공사기초금액, 입찰가격산식A정보조회, 개찰결과 공사 목록, 공사 예비가격상세 목록 조회
     @SerializedName("bidNtceNo") var bidNtceNo: String? = null, // 검색하고자 하는 입찰공고번호, (조회구분 '2' 선택시 필수)
 ) : BidCommonParams()
 data class BidLimitRegion( // 입찰공고목록 정보에 대한 면허제한정보, 참가가능지역정보
