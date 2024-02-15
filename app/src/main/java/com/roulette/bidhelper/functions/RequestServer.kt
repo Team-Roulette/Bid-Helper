@@ -2,17 +2,17 @@ package com.roulette.bidhelper.functions
 
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
-import com.roulette.bidhelper.models.BidAmountInfo
-import com.roulette.bidhelper.models.BidLimitRegion
-import com.roulette.bidhelper.models.BidSearch
-import com.roulette.bidhelper.models.dtos.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.dtos.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.dtos.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.dtos.BidLicenseLimitDTO
-import com.roulette.bidhelper.models.dtos.BidPosRegionDTO
-import com.roulette.bidhelper.models.dtos.BidResultListDTO
-import com.roulette.bidhelper.models.dtos.BidResultPriceDTO
-import com.roulette.bidhelper.models.dtos.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidAmountInfo
+import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
+import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.BidLimitRegion
+import com.roulette.bidhelper.models.apis.BidPosRegionDTO
+import com.roulette.bidhelper.models.apis.BidResultListDTO
+import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -175,7 +175,7 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidPosRegionDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
 
         })
@@ -202,7 +202,7 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidLicenseLimitDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
         })
     }
@@ -223,11 +223,11 @@ object RequestServer {
                 response: Response<BidResultPriceDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.header.resultMsg)
+                Log.i("test", body.response.header.resultMsg+"낙찰 가격")
             }
 
             override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
 
         })
@@ -249,11 +249,11 @@ object RequestServer {
                 response: Response<BidResultListDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.header.resultMsg)
+                Log.i("test", body.response.header.resultMsg+"낙찰 결과")
             }
 
             override fun onFailure(call: Call<BidResultListDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
 
         })

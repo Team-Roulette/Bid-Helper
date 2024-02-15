@@ -1,13 +1,13 @@
 package com.roulette.bidhelper.functions
 
-import com.roulette.bidhelper.models.dtos.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.dtos.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.dtos.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.dtos.BidLicenseLimitDTO
-import com.roulette.bidhelper.models.dtos.BidPosRegionDTO
-import com.roulette.bidhelper.models.dtos.BidResultListDTO
-import com.roulette.bidhelper.models.dtos.BidResultPriceDTO
-import com.roulette.bidhelper.models.dtos.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
+import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.BidPosRegionDTO
+import com.roulette.bidhelper.models.apis.BidResultListDTO
+import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -114,7 +114,6 @@ interface BidService {
         @Query("bidNtceNo") bidNtceNo: String?, // 검색하고자하는 입찰공고번호, 조회구분 4인 경우 필수
         @Query("type") type: String? // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
     ): Call<BidResultPriceDTO>
-
 
     @GET("getOpengResultListInfoCnstwk") // 개찰결과 공사 목록 조회
     fun getBidResultList(
