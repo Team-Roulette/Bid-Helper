@@ -39,10 +39,10 @@ import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 
 @Composable
-fun BidInfoSearchScreen(
+fun SearchScreen(
+    onNextButtonClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val list1 = listOf<String>("a", "b", "c")
     Column(
         modifier = modifier
     ) {
@@ -101,7 +101,7 @@ fun BidInfoSearchScreen(
 
         BidInfoButtonView(
             onClickReset = {},
-            onClickSearch = {}
+            onClickSearch = onNextButtonClicked
         )
     }
 }

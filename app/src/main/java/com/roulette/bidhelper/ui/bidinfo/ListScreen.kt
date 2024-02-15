@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,32 +15,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun BidInfoListScreen(
+fun ListScreen(
+    onItemClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {
     val itemList = listOf("aaa", "bbb", "ccc", "ddd")
     LazyColumn(
         modifier = modifier) {
         items(itemList) {
-            BidInfoListItem(it)
+            ListItem(
+                item = it,
+                onItemClicked = onItemClicked)
             Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
         }
     }
 }
 
 @Composable
-fun BidInfoListItem(
+fun ListItem(
     item: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClicked: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 15.dp)
+            .clickable (enabled = true, onClick = onItemClicked)
     ) {
         Text(text = item, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
         Text(text = item, style = MaterialTheme.typography.displaySmall)
@@ -47,17 +52,4 @@ fun BidInfoListItem(
         Text(text = item, style = MaterialTheme.typography.displaySmall)
         Text(text = item, style = MaterialTheme.typography.displaySmall)
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun BidInfoListScreenPreview() {
-    val itemList = listOf("aaa", "bbb", "ccc", "ddd")
-    Column {
-        itemList.forEach{
-            BidInfoListItem(it)
-        }
-    }
-
 }

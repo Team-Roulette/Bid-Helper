@@ -27,11 +27,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
+import com.roulette.bidhelper.ui.bidinfo.ListScreen
+import com.roulette.bidhelper.ui.bidinfo.PreciseScreen
+import com.roulette.bidhelper.ui.bidinfo.SearchScreen
 import com.roulette.bidhelper.ui.theme.InterFamily
+
+enum class HomeScreen {
+    Home,
+    BidInfo,
+    PastInfo,
+    Calculator,
+    Filter
+}
 
 @Composable
 fun HomeScreen(
+    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -41,13 +58,37 @@ fun HomeScreen(
             modifier = Modifier.height(50.dp)
         )
 
-        HomeBody()
+        NavHost(
+            navController = navController,
+            startDestination = HomeScreen.Home.name
+        ){
+            composable(route = HomeScreen.Home.name) {
+                HomeBody(navController = navController)
+            }
+
+            composable(route = HomeScreen.BidInfo.name) {
+                BidInfoScreen()
+            }
+
+            composable(route = HomeScreen.PastInfo.name) {
+                //PastInfoScreen()
+            }
+
+            composable(route = HomeScreen.Calculator.name) {
+                //CalculatorScreen()
+            }
+
+            composable(route = HomeScreen.Filter.name) {
+                //FilterScreen()
+            }
+        }
     }
 
 }
 
 @Composable
 fun HomeBody(
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -70,7 +111,7 @@ fun HomeBody(
             topRadius = 10.dp,
             titleRes = R.string.home_card_bid_info,
             bgColorRes = R.color.color_home_button_1,
-            onClick = {},
+            onClick = {navController.navigate(HomeScreen.BidInfo.name)},
             modifier = modifier.fillMaxWidth()
         )
 

@@ -3,14 +3,10 @@ package com.roulette.bidhelper
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.roulette.bidhelper.ui.bidinfo.BidInfoListScreen
 import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
 import com.roulette.bidhelper.ui.home.HomeScreen
 import com.roulette.bidhelper.ui.theme.BidHelperTheme
@@ -20,7 +16,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             BidHelperTheme {
-                BidInfoScreen()
+                HomeScreen()
             }
         }
     }
