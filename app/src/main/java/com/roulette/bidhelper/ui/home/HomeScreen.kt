@@ -36,6 +36,7 @@ import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
 import com.roulette.bidhelper.ui.bidinfo.ListScreen
 import com.roulette.bidhelper.ui.bidinfo.PreciseScreen
 import com.roulette.bidhelper.ui.bidinfo.SearchScreen
+import com.roulette.bidhelper.ui.calculator.CalculatorScreen
 import com.roulette.bidhelper.ui.theme.InterFamily
 
 enum class HomeScreen {
@@ -75,7 +76,7 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.Calculator.name) {
-                //CalculatorScreen()
+                CalculatorScreen()
             }
 
             composable(route = HomeScreen.Filter.name) {
@@ -125,7 +126,7 @@ fun HomeBody(
         HomeButton(
             titleRes = R.string.home_card_bid_calculator,
             bgColorRes = R.color.color_home_button_3,
-            onClick = {},
+            onClick = {navController.navigate(HomeScreen.Calculator.name)},
             modifier = modifier.fillMaxWidth()
         )
 
