@@ -28,16 +28,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
-    val basicPrice = BigDecimal(333146000)
-    val aPrice = BigDecimal(10015866)
-    val  lowerLimit= BigDecimal(87.7445)
-
-    val test1 = BiddingPriceCalculator().predictBiddingPrice(basicPrice, aPrice, lowerLimit)?.setScale(0, RoundingMode.HALF_UP)
-    Log.d("test", test1.toString())
-
-    val predictPrice = test1?.add(BigDecimal(1))    // + 1
-    val test2 = BiddingPriceCalculator().calculateBiddingRate(basicPrice, aPrice, predictPrice!!)?.setScale(3, RoundingMode.HALF_UP)
-    Log.d("test", test2.toString())
 
     Text(
         text = "Hello $name!",
