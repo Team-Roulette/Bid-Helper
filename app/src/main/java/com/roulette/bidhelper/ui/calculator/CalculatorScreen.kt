@@ -76,7 +76,7 @@ fun CalculatorScreen(
         )
         Button(
             onClick = {
-                answer = BiddingPriceCalculator().predictBiddingPrice(price.base, price.a, price.low)?.setScale(0, RoundingMode.HALF_UP)!!
+                answer = BiddingPriceCalculator().predictBiddingPrice(price.base, price.a, price.low, price.estimate)?.setScale(0, RoundingMode.HALF_UP)!!
             },
             modifier = Modifier
                 .size(width = 120.dp, height = 70.dp)
