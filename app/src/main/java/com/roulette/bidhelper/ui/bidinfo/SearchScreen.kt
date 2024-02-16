@@ -36,6 +36,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.ui.bidinfo.spinners.firstCategoryList_1
+import com.roulette.bidhelper.ui.bidinfo.spinners.firstCategoryList_2
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 
 @Composable
@@ -56,13 +58,13 @@ fun SearchScreen(
             .fillMaxWidth()
             .height(1.dp)
             .background(Color.LightGray))
-        BidInfoSpinnerView(title = R.string.bid_info_first_category, list = mainCategoryList)
+        BidInfoSpinnerView(title = R.string.bid_info_first_category, list = firstCategoryList_1)
 
         Spacer(modifier = Modifier
             .fillMaxWidth()
             .height(1.dp)
             .background(Color.LightGray))
-        BidInfoSpinnerView(title = R.string.bid_info_second_category, list = mainCategoryList)
+        BidInfoSpinnerView(title = R.string.bid_info_second_category, list = firstCategoryList_2)
 
         Spacer(modifier = Modifier
             .fillMaxWidth()
