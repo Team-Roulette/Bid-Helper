@@ -32,6 +32,8 @@ import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
 import com.roulette.bidhelper.ui.calculator.CalculatorScreen
+import com.roulette.bidhelper.ui.pastinfo.PastInfoScreen
+import com.roulette.bidhelper.ui.theme.InterFamily
 
 enum class HomeScreen {
     Home,
@@ -66,7 +68,7 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.PastInfo.name) {
-                //PastInfoScreen()
+                PastInfoScreen()
             }
 
             composable(route = HomeScreen.Calculator.name) {
@@ -113,7 +115,7 @@ fun HomeBody(
         HomeButton(
             titleRes = R.string.home_card_past_info,
             bgColorRes = R.color.color_home_button_2,
-            onClick = {},
+            onClick = {navController.navigate(HomeScreen.PastInfo.name)},
             modifier = modifier.fillMaxWidth()
         )
 
