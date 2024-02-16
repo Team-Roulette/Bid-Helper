@@ -31,6 +31,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
+import com.roulette.bidhelper.ui.bidinfo.FilterScreen
 import com.roulette.bidhelper.ui.calculator.CalculatorScreen
 
 enum class HomeScreen {
@@ -74,7 +75,7 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.Filter.name) {
-                //FilterScreen()
+                FilterScreen()
             }
         }
     }
@@ -128,7 +129,7 @@ fun HomeBody(
             bottomRadius = 10.dp,
             titleRes = R.string.home_card_bid_filter,
             bgColorRes = R.color.color_home_button_4,
-            onClick = {}
+            onClick = {navController.navigate(HomeScreen.Filter.name)},
         )
     }
 }

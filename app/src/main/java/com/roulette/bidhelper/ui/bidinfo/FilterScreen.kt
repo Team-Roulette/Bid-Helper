@@ -76,7 +76,6 @@ fun FilterScreen(
                     }
                 )
             }
-
             composable(route = FilterScreen.List.name) {
                 ListScreen(
                     onItemClicked = {
@@ -84,7 +83,6 @@ fun FilterScreen(
                     }
                 )
             }
-
             composable(route = FilterScreen.Precise.name) {
                 PreciseScreen()
             }
