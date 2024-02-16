@@ -2,15 +2,17 @@ package com.roulette.bidhelper.functions
 
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
-import com.roulette.bidhelper.models.BidAmountInfo
-import com.roulette.bidhelper.models.BidLimitRegion
-import com.roulette.bidhelper.models.BidSearch
-import com.roulette.bidhelper.models.dtos.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.dtos.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.dtos.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.dtos.BidLicenseLimitDTO
-import com.roulette.bidhelper.models.dtos.BidPosRegionDTO
-import com.roulette.bidhelper.models.dtos.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidAmountInfo
+import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
+import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.BidLimitRegion
+import com.roulette.bidhelper.models.apis.BidPosRegionDTO
+import com.roulette.bidhelper.models.apis.BidResultListDTO
+import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,16 +20,23 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RequestServer {
-    private const val BASE_URL = BuildConfig.BASE_URL
-    val retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
+    private const val BASE_URL_BEFORE = BuildConfig.BASE_URL_BEFORE
+    private const val BASE_URL_AFTER = BuildConfig.BASE_URL_AFTER
+    
+    val retrofitBefore = Retrofit.Builder()
+        .baseUrl(BASE_URL_BEFORE)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    val retrofitAfter = Retrofit.Builder()
+        .baseUrl(BASE_URL_AFTER)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    val bidService = retrofit.create(BidService::class.java) //retrofit객체 만듦!
+    val bidServiceBefore = retrofitBefore.create(BidService::class.java) // 입찰 정보 retrofit 객체
+    val bidServiceAfter = retrofitAfter.create(BidService::class.java) // 낙찰 정보 retrofit 객체
 
     fun getBidThingBasisAmount(param: BidAmountInfo) {
-        bidService.getBidThingBasisAmount(
+        bidServiceBefore.getBidThingBasisAmount(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -53,7 +62,7 @@ object RequestServer {
     }
 
     fun getBidConstBasisAmount(param: BidAmountInfo) {
-        bidService.getBidConstBasisAmount(
+        bidServiceBefore.getBidConstBasisAmount(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -78,7 +87,7 @@ object RequestServer {
     }
 
     fun getBidCalcAInfo(param: BidAmountInfo) {
-        bidService.getBidCalcAInfo(
+        bidServiceBefore.getBidCalcAInfo(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -103,7 +112,7 @@ object RequestServer {
     }
 
     fun getBidConstWorkSearch(param: BidSearch) {
-        bidService.getBidConstWorkSearch(
+        bidServiceBefore.getBidConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -146,7 +155,7 @@ object RequestServer {
     }
 
     fun getBidPosRegion(param: BidLimitRegion) {
-        bidService.getBidPosRegion(
+        bidServiceBefore.getBidPosRegion(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -166,14 +175,14 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidPosRegionDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
 
         })
     }
 
     fun getBidLicenseLimit(param: BidLimitRegion) {
-        bidService.getBidLicenseLimit(
+        bidServiceBefore.getBidLicenseLimit(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -193,8 +202,60 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidLicenseLimitDTO>, t: Throwable) {
-                Log.i("test", t.message.toString())
+                Log.e("test", t.message.toString())
             }
+        })
+    }
+
+    fun getBidResultPrice(param: BidAmountInfo) {
+        bidServiceAfter.getBidResultPrice(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            bidNtceNo = param.bidNtceNo,
+            type = param.type
+        ).enqueue(object : Callback<BidResultPriceDTO>{
+            override fun onResponse(
+                call: Call<BidResultPriceDTO>,
+                response: Response<BidResultPriceDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.header.resultMsg+"낙찰 가격")
+            }
+
+            override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getBidResultList(param: BidAmountInfo) {
+        bidServiceAfter.getBidResultList(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            bidNtceNo = param.bidNtceNo,
+            type = param.type
+        ).enqueue(object : Callback<BidResultListDTO>{
+            override fun onResponse(
+                call: Call<BidResultListDTO>,
+                response: Response<BidResultListDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.header.resultMsg+"낙찰 결과")
+            }
+
+            override fun onFailure(call: Call<BidResultListDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
         })
     }
 }

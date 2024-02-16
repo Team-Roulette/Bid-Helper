@@ -1,4 +1,4 @@
-package com.roulette.bidhelper.models
+package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
 import com.roulette.bidhelper.BuildConfig
@@ -18,12 +18,12 @@ open class BidCommonParams( // 요청 기본 파라미터
     @SerializedName("pageNo") var pageNo: String? = null, // 페이지 번호,
     @SerializedName("ServiceKey") val serviceKey: String = BuildConfig.API_SERVICE_KEY, // 공공데이터포탈에서 받은 인증키
     @SerializedName("inqryDiv") var inqryDiv: String? = null, // 검색하고자하는 조회구분 1.입력일시, 2.입찰공고번호
-    @SerializedName("inqryBgnDt") val inqryBgnDt: String = targetTime(3), // 검색하고자하는 조회시작일시
-    @SerializedName("inqryEndDt") val inqryEndDt: String = targetTime(0), // 검색하고자하는 조회종료일시
+    @SerializedName("inqryBgnDt") var inqryBgnDt: String = targetTime(3), // 검색하고자하는 조회시작일시
+    @SerializedName("inqryEndDt") var inqryEndDt: String = targetTime(0), // 검색하고자하는 조회종료일시
     @SerializedName("type") val type: String = "json",// 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
 )
 
-open class BidAmountInfo( // 입찰공고목록 정보에 대한 물품기초금액, 공사기초금액, 입찰가격산식A정보조회는
+open class BidAmountInfo( // 입찰공고목록 정보에 대한 물품기초금액, 공사기초금액, 입찰가격산식A정보조회, 개찰결과 공사 목록, 공사 예비가격상세 목록 조회
     @SerializedName("bidNtceNo") var bidNtceNo: String? = null, // 검색하고자 하는 입찰공고번호, (조회구분 '2' 선택시 필수)
 ) : BidCommonParams()
 data class BidLimitRegion( // 입찰공고목록 정보에 대한 면허제한정보, 참가가능지역정보
