@@ -419,7 +419,7 @@ fun BidInfoButtonView(
             .fillMaxWidth()
             .padding(vertical = 30.dp)
     ) {
-        BidInfoButton(onClick = onClickSearch, text = "검색", icon = Icons.Filled.Search)
+        BidInfoButton(onClick = onClickSearch, text = "왈뢀롸뢀", icon = Icons.Filled.Search)
         BidInfoButton(onClick = onClickReset, text = "초기화", icon = Icons.Filled.Refresh)
     }
 }
