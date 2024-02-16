@@ -26,4 +26,10 @@
     <string name="bid_info_search">공고명</string>
 
 
+
+    <string name="past_info_input_data_from">개찰일\n(from)</string>
+
+    <string name="past_info_input_data_to">개찰일\n(to)</string>
+
+
 </resources>
