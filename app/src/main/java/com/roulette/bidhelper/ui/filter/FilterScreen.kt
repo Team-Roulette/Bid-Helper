@@ -1,4 +1,4 @@
-package com.roulette.bidhelper.ui.bidinfo
+package com.roulette.bidhelper.ui.filter
 
 import android.content.Context
 import android.util.Log
@@ -39,6 +39,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
@@ -46,7 +47,7 @@ import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 
 @Composable
-fun SearchScreen(
+fun FilterScreen(
     onNextButtonClicked: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -111,7 +112,8 @@ fun SearchScreen(
         },
             onItemSelected = { selectedItem ->
                 selectedSecondCategory = selectedItem
-            },"secondCategoryList"
+            },
+            "secondCategoryList"
         )
 
         Spacer(
@@ -128,51 +130,49 @@ fun SearchScreen(
             },
             "locationCategoryList"
         )
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
+        BidInfoCalendarView(title = R.string.bid_info_input_data_from)
 
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
+        BidInfoCalendarView(title = R.string.bid_info_input_data_to)
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoCalendarView(title = R.string.bid_info_input_data_from)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
+        BidInfoBudgetView(title = R.string.bid_info_budget_setting)
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoCalendarView(title = R.string.bid_info_input_data_to)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
+        BidInfoSearchView(title = R.string.bid_info_search)
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoBudgetView(title = R.string.bid_info_budget_setting)
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(Color.LightGray)
+        )
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoSearchView(title = R.string.bid_info_search)
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-
-    BidInfoButtonView(
-        onClickReset = {},
-        onClickSearch = onNextButtonClicked
-    )
+        BidInfoButtonView(
+            onClickReset = {},
+            onClickSearch = onNextButtonClicked
+        )
     }
 }
 
@@ -184,8 +184,9 @@ fun BidInfoSpinnerView(
     list: List<String>,
     onItemSelected: (String) -> Unit,// 선택값 반환
     sharedPreferencesKey: String, // SharedPreferences에 저장할 때 사용할 키
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
+
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
     //sharedPreference에서 값을 읽어와서 기본값으로 설정
@@ -195,7 +196,6 @@ fun BidInfoSpinnerView(
         mutableStateOf(defaultValue ?: "선택 없음")
     }
     val expanded = remember { mutableStateOf(false) }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -236,6 +236,11 @@ fun BidInfoSpinnerView(
                             currentValue.value = item
                             expanded.value = false
                             onItemSelected(item)
+                            //사용자가 항목을 선택할 때, SharedPreference에 저장
+                            with(sharedPreferences.edit()){
+                                putString(sharedPreferencesKey, item)
+                                apply()
+                            }
                         }
                     )
                 }
@@ -454,4 +459,12 @@ fun BidInfoButton(
         Icon(imageVector = icon, contentDescription = null)
         Text(text = text)
     }
+}
+
+@Preview(showBackground = true, showSystemUi = true)
+@Composable
+fun filterScreenPreview(){
+    FilterScreen(onNextButtonClicked ={
+        Log.d("FilterScreenPreview", "Next button clicked")
+    })
 }
