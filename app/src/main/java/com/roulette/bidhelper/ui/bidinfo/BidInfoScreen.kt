@@ -1,6 +1,5 @@
 package com.roulette.bidhelper.ui.bidinfo
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -84,7 +83,6 @@ fun BidInfoScreen(
                     }
                 )
             }
-
             composable(route = BidInfoScreen.Precise.name) {
                 PreciseScreen()
             }
