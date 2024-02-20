@@ -17,7 +17,6 @@ import java.math.RoundingMode
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             BidHelperTheme {
                 HomeScreen()
@@ -26,19 +25,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     BidHelperTheme {
-        Greeting("Android")
+        HomeScreen()
     }
 }
