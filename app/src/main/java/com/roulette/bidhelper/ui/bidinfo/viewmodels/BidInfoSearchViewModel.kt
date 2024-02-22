@@ -9,27 +9,27 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.ui.bidinfo.spinners.firstCategoryList_1
-import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-import com.roulette.bidhelper.ui.bidinfo.spinners.secondCategoryList_1_1
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.http.Query
 
 private const val TAG = "SearchViewModel"
 
 data class SearchUiState(
-    var mainCategory: String = mainCategoryList[0],
-    var firstCategory: String = firstCategoryList_1[0],
-    var secondCategory: String = secondCategoryList_1_1[0],
+    var mainCategory: String = "",
+    var firstCategory: String = "",
+    var secondCategory: String = "",
     var locale: String = "",
     var dateFrom: String = "",
     var dateTo: String = "",
@@ -204,4 +204,5 @@ class SearchViewModel : ViewModel() {
 
         })
     }
+
 }
