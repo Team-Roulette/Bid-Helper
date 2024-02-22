@@ -137,9 +137,7 @@ fun SearchScreen(
         SpacerView(modifier = Modifier)
         BidInfoButtonView(
             onClickReset = {},
-            onClickSearch = {
-                onNextButtonClicked
-            }
+            onClickSearch = onNextButtonClicked
         )
     }
 }

@@ -77,13 +77,14 @@ fun FilterScreen(
                 )
             }
 
-            composable(route = FilterScreen.List.name) {
-                ListScreen(
-                    onItemClicked = {
-                        navController.navigate(FilterScreen.Precise.name)
-                    }
-                )
-            }
+//            composable(route = FilterScreen.List.name) {
+//                ListScreen(
+//                    viewModel = sharedViewModel,
+//                    onItemClicked = {
+//                        navController.navigate(FilterScreen.Precise.name)
+//                    }
+//                )
+//            }
 
             composable(route = FilterScreen.Precise.name) {
                 PreciseScreen()
