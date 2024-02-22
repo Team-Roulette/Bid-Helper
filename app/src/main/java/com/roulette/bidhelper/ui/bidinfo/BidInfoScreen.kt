@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
 
 enum class BidInfoScreen {
     Search,
@@ -54,6 +56,7 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
+    val sharedViewModel: SearchViewModel = viewModel()
     Scaffold(
         topBar = {
             BidInfoTopAppBar(
@@ -70,7 +73,10 @@ fun BidInfoScreen(
         ){
             composable(route = BidInfoScreen.Search.name) {
                 SearchScreen(
+                    viewModel = sharedViewModel,
                     onNextButtonClicked = {
+                        sharedViewModel.getBidConstWorkSearch()
+                        sharedViewModel.getBidConstBasisAmount()
                         navController.navigate(BidInfoScreen.List.name)
                     }
                 )
@@ -78,6 +84,7 @@ fun BidInfoScreen(
 
             composable(route = BidInfoScreen.List.name) {
                 ListScreen(
+                    viewModel = sharedViewModel,
                     onItemClicked = {
                         navController.navigate(BidInfoScreen.Precise.name)
                     }

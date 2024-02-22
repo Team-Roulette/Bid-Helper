@@ -61,7 +61,7 @@ object RequestServer {
         })
     }
 
-    fun getBidConstBasisAmount(param: BidAmountInfo) {
+    /*fun getBidConstBasisAmount(param: BidAmountInfo) {
         bidServiceBefore.getBidConstBasisAmount(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -84,7 +84,7 @@ object RequestServer {
                 Log.i("test", t.message.toString())
             }
         })
-    }
+    }*/
 
     fun getBidCalcAInfo(param: BidAmountInfo) {
         bidServiceBefore.getBidCalcAInfo(

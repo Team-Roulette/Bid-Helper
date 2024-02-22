@@ -1,12 +1,10 @@
 package com.roulette.bidhelper.ui.bidinfo
 
-
-import android.content.Context
-import android.util.Log
-
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Toast
-
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -38,13 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-
-import androidx.compose.runtime.derivedStateOf
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,32 +47,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-
-import java.text.DateFormat
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
-
 @Composable
 fun SearchScreen(
+    modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    modifier: Modifier = Modifier
+    viewModel: SearchViewModel
 ) {
     var selectedMainCategory by remember {
         mutableStateOf<String?>(null)
@@ -95,117 +79,119 @@ fun SearchScreen(
         mutableStateOf<String?>(null)
     }
 
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
+
     Column(
         modifier = modifier
     ) {
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
+        SpacerView(modifier = Modifier)
         BidInfoSpinnerView(
             title = R.string.bid_info_main_category,
             list = mainCategoryList,
+            sharedPreferences = sharedPreferences,
+            sharedPreferencesKey = "firstCategory",
             onItemSelected = { selectedItem ->
                 selectedMainCategory = selectedItem
             },
-            "mainCategoryList"
+            currentValue = viewModel.uiState.mainCategory,
+            changeUiState = {viewModel.updateUIState(mainCategory = it)}
         )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
+        SpacerView(modifier = Modifier)
         BidInfoSpinnerView(title = R.string.bid_info_first_category,
             list = when (selectedMainCategory) {
                 null -> emptyList()
                 else -> categoryMap[selectedMainCategory]!!
             },
+            sharedPreferences = sharedPreferences,
+            sharedPreferencesKey = "firstCategory",
             onItemSelected = { selectedItem ->
                 selectedFirstCategory = selectedItem
             },
-            "firstCategoryList"
+            currentValue = viewModel.uiState.firstCategory,
+            changeUiState = {viewModel.updateUIState(firstCategory = it)}
         )
-        Log.d("asdf", selectedMainCategory.toString())
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
-        BidInfoSpinnerView(title = R.string.bid_info_second_category, list = when (selectedFirstCategory) {
-            null -> emptyList()
-            else -> categoryMap[selectedFirstCategory]!!
-        },
+        SpacerView(modifier = Modifier)
+        BidInfoSpinnerView(
+            title = R.string.bid_info_second_category,
+            list = when (selectedFirstCategory) {
+                null -> emptyList()
+                else -> categoryMap[selectedFirstCategory]!!
+            },
+            sharedPreferences = sharedPreferences,
+            sharedPreferencesKey = "secondCategoryList",
             onItemSelected = { selectedItem ->
                 selectedSecondCategory = selectedItem
-            },"secondCategoryList"
+            },
+            currentValue = viewModel.uiState.secondCategory,
+            changeUiState = {viewModel.updateUIState(secondCategory = it)}
         )
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
+        SpacerView(modifier = Modifier)
         BidInfoSpinnerView(
             title = R.string.bid_info_local_limit,
             list = placeCategoryList,
+            sharedPreferences = sharedPreferences,
+            sharedPreferencesKey = "locationCategoryList",
+            currentValue = viewModel.uiState.locale,
             onItemSelected = { selectedItem ->
                 selectedLocation = selectedItem
             },
-            "locationCategoryList"
+            changeUiState = {viewModel.updateUIState(locale = it)}
         )
 
+        SpacerView(modifier = Modifier)
+        BidInfoCalendarView(
+            title = R.string.bid_info_input_data_from,
+            selectedDate =  viewModel.uiState.dateFrom,
+            changeUiState = { viewModel.updateUIState(dateFrom = it) }
+        )
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoCalendarView(title = R.string.bid_info_input_data_from)
+        SpacerView(modifier = Modifier)
+        BidInfoCalendarView(
+            title = R.string.bid_info_input_data_to,
+            selectedDate = viewModel.uiState.dateTo,
+            changeUiState = { viewModel.updateUIState(dateTo = it) }
+        )
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoCalendarView(title = R.string.bid_info_input_data_to)
+        SpacerView(modifier = Modifier)
+        BidInfoBudgetView(
+            title = R.string.bid_info_budget_setting,
+            priceType = viewModel.uiState.priceType,
+            minPrice = viewModel.uiState.minPrice,
+            maxPrice = viewModel.uiState.maxPrice,
+            changeUiState = { priceType, minPrice, maxPrice ->
+              viewModel.updateUIState(priceType = priceType, minPrice = minPrice, maxPrice = maxPrice)
+            }
+        )
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoBudgetView(title = R.string.bid_info_budget_setting)
+        SpacerView(modifier = Modifier)
+        BidInfoSearchView(
+            title = R.string.bid_info_search,
+            content = viewModel.uiState.searchName,
+            changeUiState = { viewModel.updateUIState(searchName = it) }
+        )
 
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-    BidInfoSearchView(title = R.string.bid_info_search)
-
-    Spacer(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(Color.LightGray)
-    )
-
-    BidInfoButtonView(
-        onClickReset = {},
-        onClickSearch = onNextButtonClicked
-    )
+        SpacerView(modifier = Modifier)
+        BidInfoButtonView(
+            onClickReset = {},
+            onClickSearch = onNextButtonClicked
+        )
     }
+}
+
+@Composable
+fun SpacerView(
+    modifier: Modifier = Modifier
+) {
+    Spacer(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(Color.LightGray)
+    )
 }
 
 
@@ -214,20 +200,16 @@ fun BidInfoSpinnerView(
     @StringRes
     title: Int,
     list: List<String>,
-    onItemSelected: (String) -> Unit,// 선택값 반환
+    sharedPreferences: SharedPreferences,
     sharedPreferencesKey: String, // SharedPreferences에 저장할 때 사용할 키
     modifier: Modifier = Modifier,
+    currentValue: String,
+    onItemSelected: (String) -> Unit,// 선택값 반환
+    changeUiState: (String) -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
     //sharedPreference에서 값을 읽어와서 기본값으로 설정
-    val defaultValue = sharedPreferences.getString(sharedPreferencesKey, if (list.isNotEmpty()) list[0] else "선택 없음")
-    // 리스트가 비어 있지 않은지 확인하고, 비어 있다면 기본값 설정
-    val currentValue = remember {
-        mutableStateOf(defaultValue ?: "선택 없음")
-    }
+    changeUiState(sharedPreferences.getString(sharedPreferencesKey, if (list.isNotEmpty()) list[0] else "선택 없음")!!)
     val expanded = remember { mutableStateOf(false) }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -248,7 +230,7 @@ fun BidInfoSpinnerView(
                 .padding(vertical = 7.dp, horizontal = 15.dp)
         ) {
             Text(
-                text = currentValue.value,
+                text = currentValue,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.fillMaxWidth(.9f)
             )
@@ -265,7 +247,7 @@ fun BidInfoSpinnerView(
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            currentValue.value = item
+                            changeUiState(item)
                             expanded.value = false
                             onItemSelected(item)
                         }
@@ -280,15 +262,16 @@ fun BidInfoSpinnerView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BidInfoCalendarView(
+    modifier: Modifier = Modifier,
     @StringRes
     title: Int,
-    modifier: Modifier = Modifier
+    selectedDate: String,
+    changeUiState: (String) -> Unit
 ) {
     val context = LocalContext.current
     val showDialog = remember { mutableStateOf(false) }
 
     // 선택된 날짜를 저장하기 위한 상태
-    var selectedDate by remember { mutableStateOf("") }
     val dateFormat = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault())
 
     // DatePickerDialog 초기화
@@ -300,7 +283,7 @@ fun BidInfoCalendarView(
                 set(year, monthOfYear, dayOfMonth)
             }
             val selectedDateString = dateFormat.format(calendar.time)
-            selectedDate = selectedDateString
+            changeUiState(selectedDate)
             Toast.makeText(context, "Selected date: $selectedDateString", Toast.LENGTH_SHORT).show()
 
         },
@@ -351,16 +334,18 @@ fun BidInfoCalendarView(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BidInfoBudgetView(
+    modifier: Modifier = Modifier,
     @StringRes
     title: Int,
-    modifier: Modifier = Modifier
+    priceType: String,
+    minPrice: String,
+    maxPrice: String,
+    changeUiState: (String, String, String) -> Unit
 ) {
     val list = listOf("기초금액", "추정가격")
     val currentValue = remember { mutableStateOf(list[0]) }
     val expanded = remember { mutableStateOf(false) }
 
-    var min by remember { mutableStateOf(TextFieldValue(""))}
-    var max by remember { mutableStateOf(TextFieldValue(""))}
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -384,7 +369,7 @@ fun BidInfoBudgetView(
                     .clickable { expanded.value = !expanded.value }
                     .border(width = 1.dp, color = Color.LightGray)
                     .padding(vertical = 7.dp, horizontal = 15.dp)
-            ) {
+            ){
                 Text(
                     text = currentValue.value,
                     style = MaterialTheme.typography.labelSmall,
@@ -416,16 +401,11 @@ fun BidInfoBudgetView(
                     .fillMaxWidth()
             ) {
                 OutlinedTextField(
-                    value = min,
+                    value = minPrice,
                     label = { Text(text = "최소(억)", style = MaterialTheme.typography.bodySmall) },
                     textStyle = MaterialTheme.typography.labelSmall,
-                    onValueChange = {newValue ->
-                        val newText = newValue.text
-                        min = newValue.copy(
-                            text = newText,
-                            selection = TextRange(newText.length)
-                        )
-
+                    onValueChange = {
+                        changeUiState(priceType, it, maxPrice)
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -437,16 +417,11 @@ fun BidInfoBudgetView(
                 Spacer(modifier = Modifier.fillMaxWidth(.1f))
 
                 OutlinedTextField(
-                    value = max,
+                    value = maxPrice,
                     label = { Text(text = "최대(억)", style = MaterialTheme.typography.bodySmall) },
                     textStyle = MaterialTheme.typography.labelSmall,
-                    onValueChange = {newValue ->
-                        val newText = newValue.text
-                        max = newValue.copy(
-                            text = newText,
-                            selection = TextRange(newText.length)
-                        )
-
+                    onValueChange = {
+                        changeUiState(priceType, minPrice, it)
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -464,9 +439,10 @@ fun BidInfoBudgetView(
 fun BidInfoSearchView(
     @StringRes
     title: Int,
+    content:String,
+    changeUiState: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var content by remember{ mutableStateOf("") }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -480,13 +456,16 @@ fun BidInfoSearchView(
         )
 
         Box(
-            modifier = Modifier.fillMaxWidth().height(40.dp).border(1.dp, Color.LightGray)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp)
+                .border(1.dp, Color.LightGray)
         ) {
             BasicTextField(
                 value = content,
                 textStyle = MaterialTheme.typography.labelSmall,
                 onValueChange = {
-                    content = it
+                    changeUiState(it)
                 },
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done
@@ -518,7 +497,7 @@ fun BidInfoButtonView(
 
 @Composable
 fun BidInfoButton(
-    onClick: () -> Unit,
+    onClick:() -> Unit,
     text: String,
     icon: ImageVector
 ) {

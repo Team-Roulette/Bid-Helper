@@ -11,9 +11,10 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class BidConstBasisAmountViewModel : ViewModel() {
+class BidConstBasisAmountViewModel {
     private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
     val bidConstBasisAmount: LiveData<BidConstBasisAmountDTO> = _bidConstBasisAmount
+
 
     fun setBidConstBasisAmount(param: BidAmountInfo) {
         RequestServer.bidServiceBefore.getBidConstBasisAmount(
