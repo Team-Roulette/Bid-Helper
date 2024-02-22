@@ -4,7 +4,6 @@ import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.apis.BidLimitRegion
@@ -61,7 +60,7 @@ object RequestServer {
         })
     }
 
-    fun getBidConstBasisAmount(param: BidAmountInfo) {
+    /*fun getBidConstBasisAmount(param: BidAmountInfo) {
         bidServiceBefore.getBidConstBasisAmount(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -84,7 +83,7 @@ object RequestServer {
                 Log.i("test", t.message.toString())
             }
         })
-    }
+    }*/
 
     fun getBidCalcAInfo(param: BidAmountInfo) {
         bidServiceBefore.getBidCalcAInfo(
