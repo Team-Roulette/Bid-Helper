@@ -2,6 +2,7 @@
 
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,15 +42,20 @@ data class SearchUiState(
     var searchName: String = ""
 )
 
-class SearchViewModel : ViewModel() {
+class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
-
-    private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
-    val bidConstBasisAmount: LiveData<BidConstBasisAmountDTO> = _bidConstBasisAmount
-
 
     private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
     val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
+
+    init {
+        updateUIState(
+            mainCategory = sharedPreferences.getString("mainCategory", mainCategoryList[0])!!,
+            firstCategory = sharedPreferences.getString("firstCategory", "")!!,
+            secondCategory = sharedPreferences.getString("secondCategory", "")!!,
+            locale = sharedPreferences.getString("locale", "")!!
+        )
+    }
 
     fun updateUIState(
         mainCategory: String = uiState.mainCategory,
@@ -76,84 +82,6 @@ class SearchViewModel : ViewModel() {
             maxPrice = maxPrice,
             searchName = searchName
         )
-    }
-
-    fun getBidConstBasisAmount() {
-
-        /*viewModelScope.launch {
-            val bid = BidConstBasisAmountViewModel()
-
-            val bidAmountInfo: BidAmountInfo = BidAmountInfo().apply {
-                numOfRows = "10"
-                pageNo = "1"
-                inqryDiv = "1"
-            }
-
-            Log.d(TAG, "$bidAmountInfo")
-            Log.d(TAG, bidAmountInfo.inqryBgnDt)
-            Log.d(TAG, bidAmountInfo.inqryEndDt)
-            Log.d(TAG, bidAmountInfo.inqryDiv!!)
-
-            withContext(Dispatchers.IO) {
-                bid.setBidConstBasisAmount(bidAmountInfo)
-                val num = bid.bidConstBasisAmount
-            }
-        }*/
-        viewModelScope.launch {
-            val bidAmountInfo: BidAmountInfo = BidAmountInfo().apply {
-                numOfRows = "10"
-                pageNo = "1"
-                inqryDiv = "1"
-                bidNtceNo = "1"
-            }
-
-            Log.d(TAG, "${bidAmountInfo.numOfRows}")
-            Log.d(TAG, "${bidAmountInfo.pageNo}")
-            Log.d(TAG, bidAmountInfo.serviceKey)
-            Log.d(TAG, "${bidAmountInfo.inqryDiv}")
-            Log.d(TAG, bidAmountInfo.inqryBgnDt)
-            Log.d(TAG, bidAmountInfo.inqryEndDt)
-            Log.d(TAG, "${bidAmountInfo.bidNtceNo}")
-            Log.d(TAG, bidAmountInfo.type)
-
-            setBidConstBasisAmount(bidAmountInfo)
-
-            _bidConstBasisAmount.value?.response?.body?.items?.get(0)?.bssamt?.let {
-                Log.d(
-                    TAG,
-                    "value: $it"
-                )
-            }
-        }
-    }
-
-    private fun setBidConstBasisAmount(param: BidAmountInfo) {
-        RequestServer.bidServiceBefore.getBidConstBasisAmount(
-            numOfRows = param.numOfRows!!,
-            pageNo = param.pageNo!!,
-            serviceKey = param.serviceKey,
-            inqryDiv = param.inqryDiv!!,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
-            bidNtceNo = param.bidNtceNo,
-            type = param.type
-        ).enqueue(object : Callback<BidConstBasisAmountDTO> {
-            override fun onResponse(
-                call: Call<BidConstBasisAmountDTO>,
-                response: Response<BidConstBasisAmountDTO>
-            ) {
-                val body = response.body()!!
-                Log.d(TAG, body.response.body.totalCount)
-                Log.d(TAG, body.response.header.resultCode)
-                _bidConstBasisAmount.value = body
-
-            }
-
-            override fun onFailure(call: Call<BidConstBasisAmountDTO>, t: Throwable) {
-                Log.d(TAG, t.message.toString())
-                _bidConstBasisAmount.value = null
-            }
-        })
     }
 
     fun getBidConstWorkSearch() {
@@ -205,5 +133,15 @@ class SearchViewModel : ViewModel() {
             }
 
         })
+    }
+}
+
+class SearchViewModelFactory(private val sharedPreferences: SharedPreferences) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(BidInfoSearchViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return BidInfoSearchViewModel(sharedPreferences) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

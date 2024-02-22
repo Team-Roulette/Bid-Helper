@@ -1,7 +1,6 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -22,8 +21,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
 
 private const val TAG = "BidInfoScreen"
 
@@ -62,8 +61,11 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-    val sharedViewModel: SearchViewModel = viewModel()
 
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
+    val factory = SearchViewModelFactory(sharedPreferences)
+    val sharedViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
 
     Scaffold(
         topBar = {
