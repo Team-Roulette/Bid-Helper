@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,6 +20,7 @@ import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -61,6 +63,7 @@ class SearchViewModel : ViewModel() {
         maxPrice: String = uiState.maxPrice,
         searchName: String = uiState.searchName,
     ) {
+        Log.d(TAG, "$mainCategory , $firstCategory, $secondCategory")
         uiState = SearchUiState(
             mainCategory = mainCategory,
             firstCategory = firstCategory,
@@ -76,6 +79,7 @@ class SearchViewModel : ViewModel() {
     }
 
     fun getBidConstBasisAmount() {
+
         /*viewModelScope.launch {
             val bid = BidConstBasisAmountViewModel()
 
@@ -159,8 +163,6 @@ class SearchViewModel : ViewModel() {
             pageNo = "1"
             inqryDiv = "1"
         }
-
-
         RequestServer.bidServiceBefore.getBidConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -204,5 +206,4 @@ class SearchViewModel : ViewModel() {
 
         })
     }
-
 }
