@@ -76,6 +76,7 @@ fun PastInfoScreen(
                 SearchScreen(
                     viewModel = sharedViewModel,
                     onNextButtonClicked = {
+                        sharedViewModel.getBidResultList()
                         navController.navigate(PastInfoScreen.List.name)
                     }
                 )
@@ -83,6 +84,7 @@ fun PastInfoScreen(
 
             composable(route = PastInfoScreen.List.name) {
                 ListScreen(
+                    viewModel = sharedViewModel,
                     onItemClicked = {
                         navController.navigate(PastInfoScreen.Precise.name)
                     }

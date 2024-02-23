@@ -15,28 +15,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.roulette.bidhelper.models.apis.BidResultListDTO
+import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 @Composable
 fun ListScreen(
+    viewModel: PastInfoSharedViewModel,
     onItemClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val itemList = listOf("aaa", "bbb", "ccc", "ddd")
+    val itemList = viewModel.bidResultPrice
     LazyColumn(
         modifier = modifier) {
-        items(itemList) {
-            ListItem(
-                item = it,
-                onItemClicked = onItemClicked)
-            Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
+        if(itemList.value?.response?.body?.items != null) {
+            items(itemList.value?.response?.body?.items!!) {
+                ListItem(
+                    item = it,
+                    onItemClicked = onItemClicked
+                )
+                Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
+            }
         }
     }
 }
 
 @Composable
 fun ListItem(
-    item: String,
+    item: BidResultPriceDTO.Response.Body.Item,
     modifier: Modifier = Modifier,
     onItemClicked: () -> Unit
 ) {
@@ -46,10 +54,10 @@ fun ListItem(
             .padding(horizontal = 20.dp, vertical = 15.dp)
             .clickable (enabled = true, onClick = onItemClicked)
     ) {
-        Text(text = item, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
+        Text(text = item.bidNtceNm ?: "", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
+            maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(text = item.ntceInsttNm ?: "", style = MaterialTheme.typography.displaySmall)
+        Text(text = item.bidNtceNo ?: "", style = MaterialTheme.typography.displaySmall)
+        Text(text = item.prtcptCnum ?: "", style = MaterialTheme.typography.displaySmall)
     }
 }
