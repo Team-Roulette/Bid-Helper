@@ -33,19 +33,19 @@ val title = listOf(
 )
 
 @Composable
-fun PreciseScreen(
+fun PastInfoPreciseScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
     ){
-        BidInfoTabLayout()
+        PastInfoTabLayout()
     }
 }
 
 @Composable
-fun BidInfoSummaryScreen(
+fun PastInfoSummaryScreen(
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -56,14 +56,14 @@ fun BidInfoSummaryScreen(
             .border(width = 1.dp, color = Color.LightGray)
     ){
         title.forEach{title->
-            BidInfoTextView(title = title, content= "title")
-            BidInfoHorizontalSpacer(modifier = Modifier)
+            PastInfoTextView(title = title, content= "title")
+            PastInfoHorizontalSpacer(modifier = Modifier)
         }
     }
 }
 
 @Composable
-fun BidInfoTextView(
+fun PastInfoTextView(
     title: String,
     content: String,
     modifier: Modifier = Modifier
@@ -97,7 +97,7 @@ fun BidInfoTextView(
 }
 
 @Composable
-fun BidInfoHorizontalSpacer(
+fun PastInfoHorizontalSpacer(
     modifier: Modifier
 ) {
     Spacer(modifier = modifier
@@ -107,7 +107,7 @@ fun BidInfoHorizontalSpacer(
 }
 
 @Composable
-private fun BidInfoTabLayout(
+private fun PastInfoTabLayout(
     modifier:Modifier = Modifier
 ) {
     val list = listOf("공고요약", "상세정보")
@@ -133,8 +133,8 @@ private fun BidInfoTabLayout(
 @Composable
 fun TabContent(selectedTabIndex: Int, modifier: Modifier = Modifier) {
     when (selectedTabIndex) {
-        0 -> BidInfoSummaryScreen()
-        1 -> BidInfoSummaryScreen()
+        0 -> PastInfoSummaryScreen()
+        1 -> PastInfoSummaryScreen()
         else -> Text("Selection not valid", color = Color.Red)
     }
 }

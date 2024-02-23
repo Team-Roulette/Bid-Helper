@@ -73,7 +73,7 @@ fun PastInfoScreen(
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = PastInfoScreen.Search.name) {
-                SearchScreen(
+                PastInfoSearchScreen(
                     viewModel = sharedViewModel,
                     onNextButtonClicked = {
                         sharedViewModel.getBidResultList()
@@ -83,7 +83,7 @@ fun PastInfoScreen(
             }
 
             composable(route = PastInfoScreen.List.name) {
-                ListScreen(
+                PastInfoListScreen(
                     viewModel = sharedViewModel,
                     onItemClicked = {
                         navController.navigate(PastInfoScreen.Precise.name)
@@ -92,7 +92,7 @@ fun PastInfoScreen(
             }
 
             composable(route = PastInfoScreen.Precise.name) {
-                PreciseScreen()
+                PastInfoPreciseScreen()
             }
         }
     }

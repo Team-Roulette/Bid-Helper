@@ -17,12 +17,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.roulette.bidhelper.models.apis.BidResultListDTO
 import com.roulette.bidhelper.models.apis.BidResultPriceDTO
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 @Composable
-fun ListScreen(
+fun PastInfoListScreen(
     viewModel: PastInfoSharedViewModel,
     onItemClicked:() -> Unit,
     modifier: Modifier = Modifier
