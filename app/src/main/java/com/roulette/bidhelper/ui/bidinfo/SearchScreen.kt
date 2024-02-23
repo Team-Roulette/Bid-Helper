@@ -1,8 +1,6 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.app.DatePickerDialog
-import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -34,13 +32,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,33 +50,19 @@ import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
+private const val TAG = "MainActivity"
 
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    viewModel: SearchViewModel
+    viewModel: BidInfoSearchViewModel
 ) {
-    var selectedMainCategory by remember {
-        mutableStateOf<String?>(null)
-    }
-    var selectedFirstCategory by remember {
-        mutableStateOf<String?>(null)
-    }
-    var selectedSecondCategory by remember {
-        mutableStateOf<String?>(null)
-    }
-    var selectedLocation by remember {
-        mutableStateOf<String?>(null)
-    }
-
-    val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
-
     Column(
         modifier = modifier
     ) {
@@ -89,26 +70,14 @@ fun SearchScreen(
         BidInfoSpinnerView(
             title = R.string.bid_info_main_category,
             list = mainCategoryList,
-            sharedPreferences = sharedPreferences,
-            sharedPreferencesKey = "firstCategory",
-            onItemSelected = { selectedItem ->
-                selectedMainCategory = selectedItem
-            },
             currentValue = viewModel.uiState.mainCategory,
-            changeUiState = {viewModel.updateUIState(mainCategory = it)}
+            changeUiState = { viewModel.updateUIState(mainCategory = it) }
         )
 
         SpacerView(modifier = Modifier)
         BidInfoSpinnerView(title = R.string.bid_info_first_category,
-            list = when (selectedMainCategory) {
-                null -> emptyList()
-                else -> categoryMap[selectedMainCategory]!!
-            },
-            sharedPreferences = sharedPreferences,
-            sharedPreferencesKey = "firstCategory",
-            onItemSelected = { selectedItem ->
-                selectedFirstCategory = selectedItem
-            },
+            list = if(categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
+            else categoryMap[viewModel.uiState.mainCategory]!!,
             currentValue = viewModel.uiState.firstCategory,
             changeUiState = {viewModel.updateUIState(firstCategory = it)}
         )
@@ -116,15 +85,8 @@ fun SearchScreen(
         SpacerView(modifier = Modifier)
         BidInfoSpinnerView(
             title = R.string.bid_info_second_category,
-            list = when (selectedFirstCategory) {
-                null -> emptyList()
-                else -> categoryMap[selectedFirstCategory]!!
-            },
-            sharedPreferences = sharedPreferences,
-            sharedPreferencesKey = "secondCategoryList",
-            onItemSelected = { selectedItem ->
-                selectedSecondCategory = selectedItem
-            },
+            list = if(categoryMap[viewModel.uiState.firstCategory] == null) emptyList()
+            else categoryMap[viewModel.uiState.firstCategory]!!,
             currentValue = viewModel.uiState.secondCategory,
             changeUiState = {viewModel.updateUIState(secondCategory = it)}
         )
@@ -133,12 +95,7 @@ fun SearchScreen(
         BidInfoSpinnerView(
             title = R.string.bid_info_local_limit,
             list = placeCategoryList,
-            sharedPreferences = sharedPreferences,
-            sharedPreferencesKey = "locationCategoryList",
             currentValue = viewModel.uiState.locale,
-            onItemSelected = { selectedItem ->
-                selectedLocation = selectedItem
-            },
             changeUiState = {viewModel.updateUIState(locale = it)}
         )
 
@@ -200,15 +157,10 @@ fun BidInfoSpinnerView(
     @StringRes
     title: Int,
     list: List<String>,
-    sharedPreferences: SharedPreferences,
-    sharedPreferencesKey: String, // SharedPreferences에 저장할 때 사용할 키
     modifier: Modifier = Modifier,
     currentValue: String,
-    onItemSelected: (String) -> Unit,// 선택값 반환
-    changeUiState: (String) -> Unit = {},
+    changeUiState: (String) -> Unit,
 ) {
-    //sharedPreference에서 값을 읽어와서 기본값으로 설정
-    changeUiState(sharedPreferences.getString(sharedPreferencesKey, if (list.isNotEmpty()) list[0] else "선택 없음")!!)
     val expanded = remember { mutableStateOf(false) }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -249,7 +201,6 @@ fun BidInfoSpinnerView(
                         onClick = {
                             changeUiState(item)
                             expanded.value = false
-                            onItemSelected(item)
                         }
                     )
                 }
@@ -283,7 +234,7 @@ fun BidInfoCalendarView(
                 set(year, monthOfYear, dayOfMonth)
             }
             val selectedDateString = dateFormat.format(calendar.time)
-            changeUiState(selectedDate)
+            changeUiState(selectedDateString)
             Toast.makeText(context, "Selected date: $selectedDateString", Toast.LENGTH_SHORT).show()
 
         },
@@ -291,8 +242,6 @@ fun BidInfoCalendarView(
         Calendar.getInstance().get(Calendar.MONTH),
         Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
     )
-
-
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -331,7 +280,6 @@ fun BidInfoCalendarView(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BidInfoBudgetView(
     modifier: Modifier = Modifier,
@@ -343,7 +291,6 @@ fun BidInfoBudgetView(
     changeUiState: (String, String, String) -> Unit
 ) {
     val list = listOf("기초금액", "추정가격")
-    val currentValue = remember { mutableStateOf(list[0]) }
     val expanded = remember { mutableStateOf(false) }
 
     Row(
@@ -371,7 +318,7 @@ fun BidInfoBudgetView(
                     .padding(vertical = 7.dp, horizontal = 15.dp)
             ){
                 Text(
-                    text = currentValue.value,
+                    text = priceType,
                     style = MaterialTheme.typography.labelSmall,
                     modifier = Modifier.fillMaxWidth(.9f)
                 )
@@ -388,7 +335,7 @@ fun BidInfoBudgetView(
                         DropdownMenuItem(
                             text = { Text(text = it) },
                             onClick = {
-                                currentValue.value = it
+                                changeUiState(it, minPrice, maxPrice)
                                 expanded.value = false
                             }
                         )
