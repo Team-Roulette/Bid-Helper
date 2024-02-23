@@ -50,7 +50,7 @@ import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -61,7 +61,7 @@ private const val TAG = "MainActivity"
 fun SearchScreen(
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
-    viewModel: SearchViewModel
+    viewModel: BidInfoSearchViewModel
 ) {
     Column(
         modifier = modifier
@@ -75,7 +75,6 @@ fun SearchScreen(
         )
 
         SpacerView(modifier = Modifier)
-        Log.d(TAG, viewModel.uiState.mainCategory)
         BidInfoSpinnerView(title = R.string.bid_info_first_category,
             list = if(categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
             else categoryMap[viewModel.uiState.mainCategory]!!,
@@ -243,8 +242,6 @@ fun BidInfoCalendarView(
         Calendar.getInstance().get(Calendar.MONTH),
         Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
     )
-
-
 
     Row(
         verticalAlignment = Alignment.CenterVertically,

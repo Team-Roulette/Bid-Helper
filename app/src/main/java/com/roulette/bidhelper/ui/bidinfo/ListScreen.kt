@@ -19,17 +19,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 @Composable
 fun ListScreen(
-    viewModel: SearchViewModel,
+    viewModel: BidInfoSearchViewModel,
     onItemClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val itemList = viewModel.bidConstWorkSearch
-    val itemList2 = viewModel.bidConstBasisAmount
 
     LazyColumn(
         modifier = modifier) {

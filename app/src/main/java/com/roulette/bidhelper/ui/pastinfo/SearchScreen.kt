@@ -37,9 +37,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 @Composable
 fun SearchScreen(
+    viewModel: PastInfoSharedViewModel,
     onNextButtonClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {

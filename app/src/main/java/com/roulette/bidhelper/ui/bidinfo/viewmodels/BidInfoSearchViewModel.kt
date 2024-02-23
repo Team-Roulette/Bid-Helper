@@ -2,6 +2,7 @@
 
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -22,6 +23,7 @@ import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
+import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -51,9 +53,11 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
     init {
         updateUIState(
             mainCategory = sharedPreferences.getString("mainCategory", mainCategoryList[0])!!,
-            firstCategory = sharedPreferences.getString("firstCategory", "")!!,
-            secondCategory = sharedPreferences.getString("secondCategory", "")!!,
-            locale = sharedPreferences.getString("locale", "")!!
+            firstCategory = sharedPreferences.getString("firstCategory",
+                if(uiState.mainCategory == mainCategoryList[0]) "업종구분을 먼저 선택하세요" else "")!!,
+            secondCategory = sharedPreferences.getString("secondCategory",
+                if(uiState.mainCategory == "업종구분을 먼저 선택하세요") "1차업종구분을 먼저 선택하세요" else "")!!,
+            locale = sharedPreferences.getString("locale", placeCategoryList[0])!!
         )
     }
 
@@ -70,6 +74,7 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
         searchName: String = uiState.searchName,
     ) {
         Log.d(TAG, "$mainCategory , $firstCategory, $secondCategory")
+
         uiState = SearchUiState(
             mainCategory = mainCategory,
             firstCategory = firstCategory,
@@ -85,12 +90,12 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
     }
 
     fun getBidConstWorkSearch() {
-
         val param: BidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
         }
+
         RequestServer.bidServiceBefore.getBidConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
