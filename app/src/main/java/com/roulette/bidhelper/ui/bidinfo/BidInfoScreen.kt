@@ -1,6 +1,5 @@
 package com.roulette.bidhelper.ui.bidinfo
 
-
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -14,11 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
 
 enum class BidInfoScreen {
     Search,
@@ -55,6 +57,9 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
+    val sharedViewModel: SearchViewModel = viewModel()
+    var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
+
     Scaffold(
         topBar = {
             BidInfoTopAppBar(
@@ -71,7 +76,10 @@ fun BidInfoScreen(
         ){
             composable(route = BidInfoScreen.Search.name) {
                 SearchScreen(
+                    viewModel = sharedViewModel,
                     onNextButtonClicked = {
+//                        sharedViewModel.getBidConstWorkSearch()
+                        sharedViewModel.getBidConstBasisAmount()
                         navController.navigate(BidInfoScreen.List.name)
                     }
                 )
@@ -79,14 +87,16 @@ fun BidInfoScreen(
 
             composable(route = BidInfoScreen.List.name) {
                 ListScreen(
-                    onItemClicked = {
+                    viewModel = sharedViewModel,
+                    onItemClicked = { item ->
+                        sharedViewModel.selectItem(item)
+                        selectedItem = item
                         navController.navigate(BidInfoScreen.Precise.name)
                     }
                 )
             }
-
             composable(route = BidInfoScreen.Precise.name) {
-                PreciseScreen()
+                PreciseScreen(item = selectedItem!!)
             }
         }
     }

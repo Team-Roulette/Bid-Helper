@@ -21,23 +21,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
-import com.roulette.bidhelper.ui.bidinfo.ListScreen
-import com.roulette.bidhelper.ui.bidinfo.PreciseScreen
-import com.roulette.bidhelper.ui.bidinfo.SearchScreen
 import com.roulette.bidhelper.ui.calculator.CalculatorScreen
-import com.roulette.bidhelper.ui.theme.InterFamily
+import com.roulette.bidhelper.ui.filter.FilterScreen
+import com.roulette.bidhelper.ui.pastinfo.PastInfoScreen
 
 enum class HomeScreen {
     Home,
@@ -72,7 +68,7 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.PastInfo.name) {
-                //PastInfoScreen()
+                PastInfoScreen()
             }
 
             composable(route = HomeScreen.Calculator.name) {
@@ -80,7 +76,9 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.Filter.name) {
-                //FilterScreen()
+                FilterScreen(
+                    onNextButtonClicked = {}
+                )
             }
         }
     }
@@ -105,7 +103,7 @@ fun HomeBody(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 40.dp)
-                
+
         )
 
         HomeButton(
@@ -119,7 +117,7 @@ fun HomeBody(
         HomeButton(
             titleRes = R.string.home_card_past_info,
             bgColorRes = R.color.color_home_button_2,
-            onClick = {},
+            onClick = {navController.navigate(HomeScreen.PastInfo.name)},
             modifier = modifier.fillMaxWidth()
         )
 
@@ -134,7 +132,7 @@ fun HomeBody(
             bottomRadius = 10.dp,
             titleRes = R.string.home_card_bid_filter,
             bgColorRes = R.color.color_home_button_4,
-            onClick = {}
+            onClick = {navController.navigate(HomeScreen.Filter.name)},
         )
     }
 }

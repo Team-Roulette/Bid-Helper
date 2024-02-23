@@ -14,42 +14,56 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
 
 @Composable
 fun ListScreen(
-    onItemClicked:() -> Unit,
+    viewModel: SearchViewModel,
+    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val itemList = listOf("aaa", "bbb", "ccc", "ddd")
+
+    val itemList = viewModel.bidConstWorkSearch
+    val itemList2 = viewModel.bidConstBasisAmount
+    val lifecycleOwner = LocalLifecycleOwner.current
     LazyColumn(
-        modifier = modifier) {
-        items(itemList) {
-            ListItem(
-                item = it,
-                onItemClicked = onItemClicked)
-            Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
+        modifier = modifier
+    ) {
+        viewModel.bidConstWorkSearch.observe(lifecycleOwner) { dto ->
+            items(dto.response.body.items) {
+                ListItem(
+                    item = it,
+                    onItemClicked = onItemClicked
+                )
+                Spacer(modifier = Modifier.fillMaxWidth().height(1.dp).background(Color.LightGray))
+            }
         }
     }
 }
 
 @Composable
 fun ListItem(
-    item: String,
+    item: BidConstWorkSearchDTO.Response.Body.Item,
     modifier: Modifier = Modifier,
-    onItemClicked: () -> Unit
+    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 15.dp)
-            .clickable (enabled = true, onClick = onItemClicked)
+            .clickable (enabled = true) { onItemClicked(item) }
     ) {
-        Text(text = item, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
-        Text(text = item, style = MaterialTheme.typography.displaySmall)
+        Text(text = item.bidNtceNm, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
+            maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Text(text = item.ntceInsttNm, style = MaterialTheme.typography.displaySmall)
+        Text(text = "기초가격: ${item.d2bMngBssamt}", style = MaterialTheme.typography.displaySmall)
+        Text(text = "추정가격: ${item.presmptPrce}", style = MaterialTheme.typography.displaySmall)
+        Text(text = "[입찰일]${item.bidClseDt} [입력일]${item.rgstDt}", style = MaterialTheme.typography.displaySmall,
+            maxLines = 1, overflow = TextOverflow.Ellipsis)
     }
 }
