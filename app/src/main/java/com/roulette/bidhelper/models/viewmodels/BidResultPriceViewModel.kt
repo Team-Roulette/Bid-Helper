@@ -39,7 +39,6 @@ class BidResultPriceViewModel : ViewModel() {
                 Log.e("test", t.message.toString())
                 _bidResultPrice.value = null
             }
-
         })
     }
 }

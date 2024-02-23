@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
 
@@ -95,7 +96,14 @@ fun BidInfoScreen(
                 ListScreen(
                     viewModel = sharedViewModel,
                     onItemClicked = {
-                        navController.navigate(BidInfoScreen.Precise.name)
+                        navController.navigate(BidInfoScreen.Precise.name) {
+                            anim {
+                                enter = R.anim.slide_in_right // 새 화면이 오른쪽에서 들어옴
+                                exit = R.anim.slide_out_left // 현재 화면이 왼쪽으로 나감
+                                popEnter = R.anim.slide_out_left // 이전 화면이 왼쪽에서 들어옴
+                                popExit = R.anim.slide_out_right // 현재 화면이 오른쪽으로 나감
+                            }
+                        }
                     }
                 )
             }
