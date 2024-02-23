@@ -26,20 +26,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
 
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
     "지역제한", "업종", "입찰일", "등록일", "기초금액", "추정가격"
 )
+lateinit var contents: List<String>
 
 @Composable
 fun PreciseScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    item: BidConstWorkSearchDTO.Response.Body.Item
 ) {
+    val viewModel: SearchViewModel = viewModel()
     Column(
         modifier = modifier
             .fillMaxSize()
     ){
+        viewModel.selectItem(item)
+        viewModel.selectedItem.value?.apply {
+            contents = listOf(
+                bidNtceNm,
+                bidNtceNo,
+                dminsttNm,
+                dminsttNm,
+                cmmnSpldmdCorpRgnLmtYn,
+                "",
+                bidBeginDt,
+                bidNtceDt,
+                d2bMngBssamt,
+                presmptPrce
+            )
+        }
         BidInfoTabLayout()
     }
 }
@@ -48,6 +69,7 @@ fun PreciseScreen(
 fun BidInfoSummaryScreen(
     modifier: Modifier = Modifier
 ) {
+    val viewModel: SearchViewModel = viewModel()
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -55,8 +77,8 @@ fun BidInfoSummaryScreen(
             .padding(horizontal = 25.dp, vertical = 35.dp)
             .border(width = 1.dp, color = Color.LightGray)
     ){
-        title.forEach{title->
-            BidInfoTextView(title = title, content= "title")
+        for(i in 0..9) {
+            BidInfoTextView(title = title[i], content= contents[i])
             BidInfoHorizontalSpacer(modifier = Modifier)
         }
     }
