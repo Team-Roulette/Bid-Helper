@@ -2,6 +2,10 @@ package com.roulette.bidhelper.ui.home
 
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -57,7 +61,14 @@ fun HomeScreen(
 
         NavHost(
             navController = navController,
-            startDestination = HomeScreen.Home.name
+            startDestination = HomeScreen.Home.name,
+            enterTransition = {
+                // 화면 진입 시 애니메이션 정의
+                slideInVertically(
+                    initialOffsetY = { 1000 }, // 위에서 시작
+                    animationSpec = tween(700) // 700ms 동안
+                ) + fadeIn(animationSpec = tween(700)) // 페이드인 효과 추가
+            }
         ){
             composable(route = HomeScreen.Home.name) {
                 HomeBody(navController = navController)
