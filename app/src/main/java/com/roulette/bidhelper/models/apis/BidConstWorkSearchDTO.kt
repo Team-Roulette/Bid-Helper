@@ -1,7 +1,7 @@
 package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
-
+// 나라장터검색조건에 의한 입찰공고공사조회
 data class BidConstWorkSearchDTO(
     @SerializedName("response")
     val response: Response

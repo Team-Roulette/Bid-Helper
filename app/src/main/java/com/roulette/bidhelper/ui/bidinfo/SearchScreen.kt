@@ -1,9 +1,11 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.app.DatePickerDialog
+
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
+
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -65,6 +67,8 @@ fun SearchScreen(
     onNextButtonClicked: () -> Unit,
     viewModel: BidInfoSearchViewModel
 ) {
+
+
     Column(
         modifier = modifier
     ) {
@@ -73,7 +77,7 @@ fun SearchScreen(
             title = R.string.bid_info_main_category,
             list = mainCategoryList,
             currentValue = viewModel.uiState.mainCategory,
-            changeUiState = { viewModel.updateUIState(mainCategory = it) }
+            changeUiState = { viewModel.updateUIState(mainCategory = it, firstCategory = categoryMap[it]!!.get(0), secondCategory = "") }
         )
 
         SpacerView(modifier = Modifier)
@@ -81,7 +85,10 @@ fun SearchScreen(
             list = if(categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
             else categoryMap[viewModel.uiState.mainCategory]!!,
             currentValue = viewModel.uiState.firstCategory,
-            changeUiState = {viewModel.updateUIState(firstCategory = it)}
+            changeUiState = {
+                viewModel.updateUIState(firstCategory = it, secondCategory = categoryMap[it]!!.get(0))
+
+            }
         )
 
         SpacerView(modifier = Modifier)
