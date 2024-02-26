@@ -1,5 +1,6 @@
 package com.roulette.bidhelper.functions
 
+import com.roulette.bidhelper.models.apis.BidBaseInfoListDTO
 import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
@@ -269,4 +270,17 @@ interface BidService {
         @Query("type") type: String? // 타입
     ): Call<BidStatusServiceSearchDTO>
 
+    @GET("getIndstrytyBaseLawrgltInfoList02")
+    fun getBaseInfoList(
+        @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
+        @Query("pageNo") pageNo: String, // 페이지 번호,
+        @Query("ServiceKey") serviceKey: String, // 공공데이터포탈에서 받은 인증키
+        @Query("indstrytyClsfcCd") indstrytyClsfcCd: String? = null, // 검색하고자하는 업종을 분류하는 코드
+        @Query("indstrytyNm") indstrytyNm: String? = null, // 검색하고자하는 업종에 대한 분류 명
+        @Query("indstrytyCd") indstrytyCd: String? = null, // 검색하고자하는 업종을 분류하는 코드(코드값)
+        @Query("inqryBgnDt") inqryBgnDt: String? = null, // 검색하고자하는 조회시작일시
+        @Query("inqryEndDt") inqryEndDt: String? = null, // 검색하고자하는 조회종료일시
+        @Query("indstrytyUseYn") indstrytyUseYn: String? = null, // 업종사용여부, 값이 없을 경우 전체 조회
+        @Query("type") type: String? = null // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
+    ): Call<BidBaseInfoListDTO>
 }
