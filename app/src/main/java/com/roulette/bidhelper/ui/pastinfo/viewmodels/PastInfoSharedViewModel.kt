@@ -4,14 +4,14 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.roulette.bidhelper.functions.RequestServer
-import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidResultPriceDTO
-import kotlinx.coroutines.launch
+import com.roulette.bidhelper.functions.RequestServer.bidServiceAfter
+import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
+import com.roulette.bidhelper.models.apis.Item
+import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
+import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,16 +33,13 @@ data class PastInfoUiState(
 )
 
 sealed interface BidResultUiState {
-    data class Success(val bidResultPriceDTO: BidResultPriceDTO): BidResultUiState
-    object Error: BidResultUiState
-    object Loading: BidResultUiState
+    data class Success(val items: List<Item>) : BidResultUiState
+    data object Error : BidResultUiState
+    data object Loading : BidResultUiState
 }
 
 class PastInfoSharedViewModel : ViewModel() {
     var uiState by mutableStateOf(PastInfoUiState())
-
-    private val _bidResultPrice = MutableLiveData<BidResultPriceDTO>()
-    val bidResultPrice: LiveData<BidResultPriceDTO> = _bidResultPrice
 
     var bidResultUiState: BidResultUiState by mutableStateOf(BidResultUiState.Loading)
         private set
@@ -57,7 +54,7 @@ class PastInfoSharedViewModel : ViewModel() {
         priceType: String = uiState.priceType,
         minPrice: String = uiState.minPrice,
         maxPrice: String = uiState.maxPrice,
-        searchName: String = uiState.searchName,
+        searchName: String = uiState.searchName
     ) {
         uiState = PastInfoUiState(
             mainCategory = mainCategory,
@@ -73,47 +70,147 @@ class PastInfoSharedViewModel : ViewModel() {
         )
     }
 
-    fun getBidResultList() {
-        val param = BidAmountInfo().apply {
-            numOfRows = "10"
+    fun setPastInfoSearchList() {
+        bidResultUiState = BidResultUiState.Loading
+        val bidSearch = BidSearch().apply {
+            numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
-            inqryBgnDt = "202401211200"
-            inqryEndDt = "202402210445"
-            bidNtceNo = null
         }
-
-        viewModelScope.launch {
-            RequestServer.bidServiceAfter.getBidResultPrice(
-                numOfRows = param.numOfRows!!,
-                pageNo = param.pageNo!!,
-                serviceKey = param.serviceKey,
-                inqryDiv = param.inqryDiv!!,
-                inqryBgnDt = param.inqryBgnDt,
-                inqryEndDt = param.inqryEndDt,
-                bidNtceNo = param.bidNtceNo,
-                type = param.type
-            ).enqueue(object : Callback<BidResultPriceDTO> {
-                override fun onResponse(
-                    call: Call<BidResultPriceDTO>,
-                    response: Response<BidResultPriceDTO>
-                ) {
-                    val body = response.body()!!
-                    Log.i(
-                        TAG, body.response.toString()
-                    )
-                    _bidResultPrice.value = body
-                    bidResultUiState = BidResultUiState.Success(
-                        body
-                    )
-                }
-
-                override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
-                    Log.e(TAG, "${t.message.toString()} code: ${t.localizedMessage}")
-                    _bidResultPrice.value = null
-                    bidResultUiState = BidResultUiState.Error
-                }
-            })
+        when (uiState.mainCategory) {
+            mainCategoryList[1] -> getStatusConstWorkList(bidSearch)
+            mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
+            mainCategoryList[3] -> getStatusServiceSearchList(bidSearch)
+            else -> {
+                Log.d(TAG, "누구 맘대로 알바감?")
+            }
         }
     }
+
+    private fun getStatusThingSearchList(param: BidSearch){
+        bidServiceAfter.getBidStatusThingSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusThingSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusThingSearchDTO>,
+                response: Response<BidStatusThingSearchDTO>
+            ) {
+                val body = response.body()
+                bidResultUiState = BidResultUiState.Success(
+                    body?.response?.body?.items!!
+                )
+            }
+
+            override fun onFailure(call: Call<BidStatusThingSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+        })
+    }
+
+    private fun getStatusConstWorkList(param: BidSearch){
+        bidServiceAfter.getBidStatusConstWorkSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusConstWorkSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusConstWorkSearchDTO>,
+                response: Response<BidStatusConstWorkSearchDTO>
+            ) {
+                val body = response.body()
+                bidResultUiState = BidResultUiState.Success(
+                    body?.response?.body?.items!!
+                )
+            }
+
+            override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+        })
+    }
+
+    private fun getStatusServiceSearchList(param: BidSearch){
+        bidServiceAfter.getBidStatusServiceSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusServiceSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusServiceSearchDTO>,
+                response: Response<BidStatusServiceSearchDTO>
+            ) {
+                val body = response.body()
+                bidResultUiState = BidResultUiState.Success(
+                    body?.response?.body?.items!!
+                )
+            }
+
+            override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+        })
+    }
+
 }

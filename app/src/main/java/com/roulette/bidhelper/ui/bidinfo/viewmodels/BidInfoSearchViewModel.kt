@@ -10,9 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-
 import androidx.lifecycle.ViewModelProvider
-
 import androidx.lifecycle.viewModelScope
 
 import com.roulette.bidhelper.functions.RequestServer
@@ -50,13 +48,6 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
 
     private val _selectedItem = MutableLiveData<BidConstWorkSearchDTO.Response.Body.Item>()
     val selectedItem: LiveData<BidConstWorkSearchDTO.Response.Body.Item> = _selectedItem
-
-    private val _isLoading = MutableLiveData(false)
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    fun fetchData() {
-        _isLoading.value = true
-    }
 
     fun selectItem(item: BidConstWorkSearchDTO.Response.Body.Item) {
         _selectedItem.value = item
@@ -148,15 +139,12 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
                 _bidConstWorkSearch.value = body
-                _isLoading.value = false
-
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
 
                 Log.e("test", t.message.toString())
                 _bidConstWorkSearch.value = null
-                _isLoading.value = false
             }
         })
     }

@@ -28,7 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
@@ -38,10 +38,10 @@ lateinit var contents: List<String>
 
 @Composable
 fun PreciseScreen(
+    viewModel: BidInfoSearchViewModel,
     modifier: Modifier = Modifier,
     item: BidConstWorkSearchDTO.Response.Body.Item
 ) {
-    val viewModel: SearchViewModel = viewModel()
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -69,7 +69,6 @@ fun PreciseScreen(
 fun BidInfoSummaryScreen(
     modifier: Modifier = Modifier
 ) {
-    val viewModel: SearchViewModel = viewModel()
     Column(
         modifier = modifier
             .fillMaxWidth()

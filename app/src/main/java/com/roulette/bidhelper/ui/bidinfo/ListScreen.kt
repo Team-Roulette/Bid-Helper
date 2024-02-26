@@ -56,7 +56,7 @@ fun ListItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp, vertical = 15.dp)
+//            .padding(horizontal = 20.dp, vertical = 15.dp)
             .clickable (enabled = true) { onItemClicked(item) }
     ) {
         Text(text = item.bidNtceNm, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,

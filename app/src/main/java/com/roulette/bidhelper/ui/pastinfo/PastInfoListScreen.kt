@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.Item
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
@@ -33,15 +34,12 @@ fun PastInfoListScreen(
     onItemClicked:() -> Unit,
     modifier: Modifier = Modifier
 ) {
-
-
-    val itemList = viewModel.bidResultPrice
     val bidResultUiState = viewModel.bidResultUiState
 
     when (bidResultUiState) {
         is BidResultUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is BidResultUiState.Success -> ResultScreen(
-            itemList = bidResultUiState.bidResultPriceDTO,
+            itemList = bidResultUiState.items,
             modifier = modifier.fillMaxWidth(),
             onItemClicked = onItemClicked
         )
@@ -62,10 +60,10 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 fun ResultScreen(
     modifier: Modifier = Modifier,
     onItemClicked: () -> Unit,
-    itemList: BidResultPriceDTO) {
+    itemList: List<Item>) {
     LazyColumn(
         modifier = modifier) {
-        items(itemList.response.body.items) {
+        items(itemList) {
             ListItem(
                 item = it,
                 onItemClicked = onItemClicked
@@ -77,7 +75,7 @@ fun ResultScreen(
 
 @Composable
 fun ListItem(
-    item: BidResultPriceDTO.Response.Body.Item,
+    item: Item,
     modifier: Modifier = Modifier,
     onItemClicked: () -> Unit
 ) {
@@ -87,10 +85,10 @@ fun ListItem(
             .padding(horizontal = 20.dp, vertical = 15.dp)
             .clickable (enabled = true, onClick = onItemClicked)
     ) {
-        Text(text = item.bidNtceNm ?: "", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
+        Text(text = item.bidNtceNm?: "", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
             maxLines = 1, overflow = TextOverflow.Ellipsis)
-        Text(text = item.ntceInsttNm ?: "", style = MaterialTheme.typography.displaySmall)
-        Text(text = item.bidNtceNo ?: "", style = MaterialTheme.typography.displaySmall)
-        Text(text = item.prtcptCnum ?: "", style = MaterialTheme.typography.displaySmall)
+        Text(text = item.dminsttNm?: "", style = MaterialTheme.typography.displaySmall)
+        Text(text = item.bidNtceNo?: "", style = MaterialTheme.typography.displaySmall)
+        Text(text = item.bidwinnrNm?: "", style = MaterialTheme.typography.displaySmall)
     }
 }
