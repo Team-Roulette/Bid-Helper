@@ -7,9 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,11 +32,20 @@ data class PastInfoUiState(
     var searchName: String = ""
 )
 
+sealed interface BidResultUiState {
+    data class Success(val bidResultPriceDTO: BidResultPriceDTO): BidResultUiState
+    object Error: BidResultUiState
+    object Loading: BidResultUiState
+}
+
 class PastInfoSharedViewModel : ViewModel() {
     var uiState by mutableStateOf(PastInfoUiState())
 
     private val _bidResultPrice = MutableLiveData<BidResultPriceDTO>()
     val bidResultPrice: LiveData<BidResultPriceDTO> = _bidResultPrice
+
+    var bidResultUiState: BidResultUiState by mutableStateOf(BidResultUiState.Loading)
+        private set
 
     fun updateUIState(
         mainCategory: String = uiState.mainCategory,
@@ -72,31 +83,37 @@ class PastInfoSharedViewModel : ViewModel() {
             bidNtceNo = null
         }
 
-        RequestServer.bidServiceAfter.getBidResultPrice(
-            numOfRows = param.numOfRows!!,
-            pageNo = param.pageNo!!,
-            serviceKey = param.serviceKey,
-            inqryDiv = param.inqryDiv!!,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
-            bidNtceNo = param.bidNtceNo,
-            type = param.type
-        ).enqueue(object : Callback<BidResultPriceDTO> {
-            override fun onResponse(
-                call: Call<BidResultPriceDTO>,
-                response: Response<BidResultPriceDTO>
-            ) {
-                val body = response.body()!!
-                Log.i(
-                    TAG, body.response.toString()
-                )
-                _bidResultPrice.value = body
-            }
+        viewModelScope.launch {
+            RequestServer.bidServiceAfter.getBidResultPrice(
+                numOfRows = param.numOfRows!!,
+                pageNo = param.pageNo!!,
+                serviceKey = param.serviceKey,
+                inqryDiv = param.inqryDiv!!,
+                inqryBgnDt = param.inqryBgnDt,
+                inqryEndDt = param.inqryEndDt,
+                bidNtceNo = param.bidNtceNo,
+                type = param.type
+            ).enqueue(object : Callback<BidResultPriceDTO> {
+                override fun onResponse(
+                    call: Call<BidResultPriceDTO>,
+                    response: Response<BidResultPriceDTO>
+                ) {
+                    val body = response.body()!!
+                    Log.i(
+                        TAG, body.response.toString()
+                    )
+                    _bidResultPrice.value = body
+                    bidResultUiState = BidResultUiState.Success(
+                        body
+                    )
+                }
 
-            override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
-                Log.e(TAG, "${t.message.toString()} code: ${t.localizedMessage}")
-                _bidResultPrice.value = null
-            }
-        })
+                override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
+                    Log.e(TAG, "${t.message.toString()} code: ${t.localizedMessage}")
+                    _bidResultPrice.value = null
+                    bidResultUiState = BidResultUiState.Error
+                }
+            })
+        }
     }
 }
