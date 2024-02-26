@@ -14,26 +14,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 @Composable
 fun ListScreen(
     viewModel: BidInfoSearchViewModel,
-    onItemClicked:() -> Unit,
+    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val itemList = viewModel.bidConstWorkSearch
+    val itemList2 = viewModel.bidConstBasisAmount
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     LazyColumn(
-        modifier = modifier) {
-        if(itemList.value?.response?.body?.items != null) {
-            items(itemList.value?.response?.body?.items!!) {
+        modifier = modifier
+    ) {
+        viewModel.bidConstWorkSearch.observe(lifecycleOwner) { dto ->
+            items(dto.response.body.items) {
                 ListItem(
                     item = it,
                     onItemClicked = onItemClicked
@@ -48,13 +51,13 @@ fun ListScreen(
 fun ListItem(
     item: BidConstWorkSearchDTO.Response.Body.Item,
     modifier: Modifier = Modifier,
-    onItemClicked: () -> Unit
+    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 15.dp)
-            .clickable (enabled = true, onClick = onItemClicked)
+            .clickable (enabled = true) { onItemClicked(item) }
     ) {
         Text(text = item.bidNtceNm, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
             maxLines = 1, overflow = TextOverflow.Ellipsis)
