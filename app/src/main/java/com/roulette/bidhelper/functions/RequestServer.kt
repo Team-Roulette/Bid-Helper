@@ -4,7 +4,6 @@ import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.apis.BidLimitRegion

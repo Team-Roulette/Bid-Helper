@@ -1,9 +1,6 @@
 package com.roulette.bidhelper.ui.calculator
 
-import android.text.TextUtils.isDigitsOnly
-import android.util.Log
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -27,13 +24,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.core.text.isDigitsOnly
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.functions.BiddingPriceCalculator
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
-import java.util.Currency
 import java.util.Locale
 
 private const val TAG = "CalculatorScreen"

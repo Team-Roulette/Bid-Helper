@@ -12,11 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
@@ -47,8 +43,25 @@ data class SearchUiState(
 class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
 
+    private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
+    val bidConstBasisAmount: LiveData<BidConstBasisAmountDTO> = _bidConstBasisAmount
+
     private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
     val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
+
+    private val _selectedItem = MutableLiveData<BidConstWorkSearchDTO.Response.Body.Item>()
+    val selectedItem: LiveData<BidConstWorkSearchDTO.Response.Body.Item> = _selectedItem
+
+    private val _isLoading = MutableLiveData(false)
+    val isLoading: LiveData<Boolean> = _isLoading
+
+    fun fetchData() {
+        _isLoading.value = true
+    }
+
+    fun selectItem(item: BidConstWorkSearchDTO.Response.Body.Item) {
+        _selectedItem.value = item
+    }
 
     init {
         updateUIState(
@@ -130,11 +143,13 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
                 _bidConstWorkSearch.value = body
+                _isLoading.value = false
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
                 _bidConstWorkSearch.value = null
+                _isLoading.value = false
             }
 
         })
