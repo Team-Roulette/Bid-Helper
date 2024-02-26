@@ -63,6 +63,12 @@ fun FilterScreen(
         mutableStateOf<String?>(null)
     }
 
+    // selectedMainCategory가 변경될 때마다 실행됩니다.
+    val onMainCategorySelected: (String) -> Unit = { selectedItem ->
+        selectedMainCategory = selectedItem
+        selectedFirstCategory = null // 하위 카테고리 선택 리셋
+    }
+
     Column(
         modifier = modifier
     ) {
@@ -78,7 +84,8 @@ fun FilterScreen(
             onItemSelected = { selectedItem ->
                 selectedMainCategory = selectedItem
             },
-            "mainCategoryList"
+            "mainCategoryList",
+            currentValue = selectedMainCategory // 현재 선택된 값을 전달
         )
 
         Spacer(
@@ -95,7 +102,8 @@ fun FilterScreen(
             onItemSelected = { selectedItem ->
                 selectedFirstCategory = selectedItem
             },
-            "firstCategoryList"
+            "firstCategoryList",
+            currentValue = selectedFirstCategory // 현재 선택된 값을 전달
         )
         Log.d("asdf", selectedMainCategory.toString())
 
@@ -112,7 +120,8 @@ fun FilterScreen(
             onItemSelected = { selectedItem ->
                 selectedSecondCategory = selectedItem
             },
-            "secondCategoryList"
+            "secondCategoryList",
+            currentValue = selectedSecondCategory // 현재 선택된 값을 전달
         )
 
         Spacer(
@@ -127,7 +136,8 @@ fun FilterScreen(
             onItemSelected = { selectedItem ->
                 selectedLocation = selectedItem
             },
-            "locationCategoryList"
+            "locationCategoryList",
+            currentValue = selectedLocation
         )
 
         Spacer(
@@ -161,18 +171,18 @@ fun BidInfoSpinnerView(
     list: List<String>,
     onItemSelected: (String) -> Unit,// 선택값 반환
     sharedPreferencesKey: String, // SharedPreferences에 저장할 때 사용할 키
+    currentValue: String?, // 외부에서 관리되는 현재 선택된 값
     modifier: Modifier = Modifier
 ) {
 
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
     //sharedPreference에서 값을 읽어와서 기본값으로 설정
-    val defaultValue = sharedPreferences.getString(sharedPreferencesKey, if (list.isNotEmpty()) list[0] else "선택 없음")
-    // 리스트가 비어 있지 않은지 확인하고, 비어 있다면 기본값 설정
-    val currentValue = remember {
-        mutableStateOf(defaultValue ?: "선택 없음")
-    }
     val expanded = remember { mutableStateOf(false) }
+    // currentValue의 초기값을 설정하고, 사용자의 선택을 반영하기 위해 사용합니다.
+    val (selectedItem, setSelectedItem) = remember { mutableStateOf(currentValue ?: "") }
+
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -193,7 +203,7 @@ fun BidInfoSpinnerView(
                 .padding(vertical = 7.dp, horizontal = 15.dp)
         ) {
             Text(
-                text = currentValue.value,
+                text = selectedItem,
                 style = MaterialTheme.typography.labelSmall,
                 modifier = Modifier.fillMaxWidth(.9f)
             )
@@ -210,7 +220,7 @@ fun BidInfoSpinnerView(
                     DropdownMenuItem(
                         text = { Text(text = item) },
                         onClick = {
-                            currentValue.value = item
+                            setSelectedItem(item)
                             expanded.value = false
                             onItemSelected(item)
                             //사용자가 항목을 선택할 때, SharedPreference에 저장

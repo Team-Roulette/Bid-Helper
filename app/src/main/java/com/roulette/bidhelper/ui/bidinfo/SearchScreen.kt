@@ -54,9 +54,6 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-
-
-
 private const val TAG = "MainActivity"
 
 @Composable
@@ -75,7 +72,7 @@ fun SearchScreen(
             title = R.string.bid_info_main_category,
             list = mainCategoryList,
             currentValue = viewModel.uiState.mainCategory,
-            changeUiState = { viewModel.updateUIState(mainCategory = it) }
+            changeUiState = { viewModel.updateUIState(mainCategory = it, firstCategory = categoryMap[it]!!.get(0), secondCategory = "") }
         )
 
         SpacerView(modifier = Modifier)
@@ -83,7 +80,10 @@ fun SearchScreen(
             list = if(categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
             else categoryMap[viewModel.uiState.mainCategory]!!,
             currentValue = viewModel.uiState.firstCategory,
-            changeUiState = {viewModel.updateUIState(firstCategory = it)}
+            changeUiState = {
+                viewModel.updateUIState(firstCategory = it, secondCategory = categoryMap[it]!!.get(0))
+
+            }
         )
 
         SpacerView(modifier = Modifier)
