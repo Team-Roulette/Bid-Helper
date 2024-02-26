@@ -64,6 +64,7 @@ fun BidInfoScreen(
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
     var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
+
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
     val factory = SearchViewModelFactory(sharedPreferences)
@@ -88,7 +89,6 @@ fun BidInfoScreen(
                     viewModel = sharedViewModel,
                     onNextButtonClicked = {
 //                        sharedViewModel.getBidConstWorkSearch()
-                        sharedViewModel.getBidConstBasisAmount()
                         sharedViewModel.getBidConstWorkSearch()
                         navController.navigate(BidInfoScreen.List.name)
                     }
@@ -113,7 +113,10 @@ fun BidInfoScreen(
                 )
             }
             composable(route = BidInfoScreen.Precise.name) {
-                PreciseScreen(item = selectedItem!!)
+                PreciseScreen(
+                    viewModel = sharedViewModel,
+                    item = selectedItem!!
+                )
             }
         }
     }
