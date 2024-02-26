@@ -22,7 +22,7 @@ data class BidStatusThingSearchDTO(
             val pageNo: String,
             @SerializedName("totalCount") // 데이터 총 개수
             val totalCount: String
-        ) {
+        ) /*{
             data class Item(
                 @SerializedName("bidClsfcNo") // 입찰분류번호
                 val bidClsfcNo: String,
@@ -67,7 +67,7 @@ data class BidStatusThingSearchDTO(
                 @SerializedName("sucsfbidRate") // 최종낙찰률
                 val sucsfbidRate: String
             )
-        }
+        }*/
 
         data class Header(
             @SerializedName("resultCode") // 결과코드

@@ -64,19 +64,19 @@ fun PastInfoScreen(
                 currentScreen = backStartEntry?.destination?.route?: PastInfoScreen.Search.name,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
-                modifier = Modifier
+                modifier = modifier
             ) }
     ) { innerPadding ->
         NavHost(
             navController = navController,
             startDestination = PastInfoScreen.Search.name,
-            modifier = Modifier.padding(innerPadding)
+            modifier = modifier.padding(innerPadding)
         ){
             composable(route = PastInfoScreen.Search.name) {
                 PastInfoSearchScreen(
                     viewModel = sharedViewModel,
                     onNextButtonClicked = {
-                        sharedViewModel.getBidResultList()
+                        sharedViewModel.setPastInfoSearchList()
                         navController.navigate(PastInfoScreen.List.name)
                     }
                 )
