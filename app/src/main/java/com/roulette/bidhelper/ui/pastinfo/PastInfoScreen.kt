@@ -12,12 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.ui.bidinfo.BidInfoTopAppBar
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 enum class PastInfoScreen {
     Search,
@@ -54,6 +56,8 @@ fun PastInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
+
+    val sharedViewModel: PastInfoSharedViewModel = viewModel()
     Scaffold(
         topBar = {
             PastInfoTopAppBar(
@@ -69,15 +73,18 @@ fun PastInfoScreen(
             modifier = Modifier.padding(innerPadding)
         ){
             composable(route = PastInfoScreen.Search.name) {
-                SearchScreen(
+                PastInfoSearchScreen(
+                    viewModel = sharedViewModel,
                     onNextButtonClicked = {
+                        sharedViewModel.getBidResultList()
                         navController.navigate(PastInfoScreen.List.name)
                     }
                 )
             }
 
             composable(route = PastInfoScreen.List.name) {
-                ListScreen(
+                PastInfoListScreen(
+                    viewModel = sharedViewModel,
                     onItemClicked = {
                         navController.navigate(PastInfoScreen.Precise.name)
                     }
@@ -85,7 +92,7 @@ fun PastInfoScreen(
             }
 
             composable(route = PastInfoScreen.Precise.name) {
-                PreciseScreen()
+                PastInfoPreciseScreen()
             }
         }
     }

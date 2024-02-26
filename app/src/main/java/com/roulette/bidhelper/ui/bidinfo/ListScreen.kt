@@ -19,11 +19,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 @Composable
 fun ListScreen(
-    viewModel: SearchViewModel,
+    viewModel: BidInfoSearchViewModel,
     onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,6 +31,7 @@ fun ListScreen(
     val itemList = viewModel.bidConstWorkSearch
     val itemList2 = viewModel.bidConstBasisAmount
     val lifecycleOwner = LocalLifecycleOwner.current
+
     LazyColumn(
         modifier = modifier
     ) {

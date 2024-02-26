@@ -2,10 +2,13 @@
 
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +18,8 @@ import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
+import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,7 +40,7 @@ data class SearchUiState(
     var searchName: String = ""
 )
 
-class SearchViewModel : ViewModel() {
+class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
 
     private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
@@ -57,6 +62,18 @@ class SearchViewModel : ViewModel() {
     fun selectItem(item: BidConstWorkSearchDTO.Response.Body.Item) {
         _selectedItem.value = item
     }
+
+    init {
+        updateUIState(
+            mainCategory = sharedPreferences.getString("mainCategory", mainCategoryList[0])!!,
+            firstCategory = sharedPreferences.getString("firstCategory",
+                if(uiState.mainCategory == mainCategoryList[0]) "업종구분을 먼저 선택하세요" else "")!!,
+            secondCategory = sharedPreferences.getString("secondCategory",
+                if(uiState.mainCategory == "업종구분을 먼저 선택하세요") "1차업종구분을 먼저 선택하세요" else "")!!,
+            locale = sharedPreferences.getString("locale", placeCategoryList[0])!!
+        )
+    }
+
     fun updateUIState(
         mainCategory: String = uiState.mainCategory,
         firstCategory: String = uiState.firstCategory,
@@ -69,6 +86,8 @@ class SearchViewModel : ViewModel() {
         maxPrice: String = uiState.maxPrice,
         searchName: String = uiState.searchName,
     ) {
+        Log.d(TAG, "$mainCategory , $firstCategory, $secondCategory")
+
         uiState = SearchUiState(
             mainCategory = mainCategory,
             firstCategory = firstCategory,
@@ -83,91 +102,12 @@ class SearchViewModel : ViewModel() {
         )
     }
 
-    fun getBidConstBasisAmount() {
-        /*viewModelScope.launch {
-            val bid = BidConstBasisAmountViewModel()
-
-            val bidAmountInfo: BidAmountInfo = BidAmountInfo().apply {
-                numOfRows = "10"
-                pageNo = "1"
-                inqryDiv = "1"
-            }
-
-            Log.d(TAG, "$bidAmountInfo")
-            Log.d(TAG, bidAmountInfo.inqryBgnDt)
-            Log.d(TAG, bidAmountInfo.inqryEndDt)
-            Log.d(TAG, bidAmountInfo.inqryDiv!!)
-
-            withContext(Dispatchers.IO) {
-                bid.setBidConstBasisAmount(bidAmountInfo)
-                val num = bid.bidConstBasisAmount
-            }
-        }*/
-        viewModelScope.launch {
-            val bidAmountInfo: BidAmountInfo = BidAmountInfo().apply {
-                numOfRows = "10"
-                pageNo = "1"
-                inqryDiv = "1"
-                bidNtceNo = "1"
-            }
-
-            Log.d(TAG, "${bidAmountInfo.numOfRows}")
-            Log.d(TAG, "${bidAmountInfo.pageNo}")
-            Log.d(TAG, bidAmountInfo.serviceKey)
-            Log.d(TAG, "${bidAmountInfo.inqryDiv}")
-            Log.d(TAG, bidAmountInfo.inqryBgnDt)
-            Log.d(TAG, bidAmountInfo.inqryEndDt)
-            Log.d(TAG, "${bidAmountInfo.bidNtceNo}")
-            Log.d(TAG, bidAmountInfo.type)
-
-            setBidConstBasisAmount(bidAmountInfo)
-
-            _bidConstBasisAmount.value?.response?.body?.items?.get(0)?.bssamt?.let {
-                Log.d(
-                    TAG,
-                    "value: $it"
-                )
-            }
-        }
-    }
-
-    private fun setBidConstBasisAmount(param: BidAmountInfo) {
-        RequestServer.bidServiceBefore.getBidConstBasisAmount(
-            numOfRows = param.numOfRows!!,
-            pageNo = param.pageNo!!,
-            serviceKey = param.serviceKey,
-            inqryDiv = param.inqryDiv!!,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
-            bidNtceNo = param.bidNtceNo,
-            type = param.type
-        ).enqueue(object : Callback<BidConstBasisAmountDTO> {
-            override fun onResponse(
-                call: Call<BidConstBasisAmountDTO>,
-                response: Response<BidConstBasisAmountDTO>
-            ) {
-                val body = response.body()!!
-                Log.d(TAG, body.response.body.totalCount)
-                Log.d(TAG, body.response.header.resultCode)
-                _bidConstBasisAmount.value = body
-
-            }
-
-            override fun onFailure(call: Call<BidConstBasisAmountDTO>, t: Throwable) {
-                Log.d(TAG, t.message.toString())
-                _bidConstBasisAmount.value = null
-            }
-        })
-    }
-
     fun getBidConstWorkSearch() {
-
         val param: BidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
         }
-
 
         RequestServer.bidServiceBefore.getBidConstWorkSearch(
             numOfRows = param.numOfRows!!,
@@ -214,5 +154,14 @@ class SearchViewModel : ViewModel() {
 
         })
     }
+}
 
+class SearchViewModelFactory(private val sharedPreferences: SharedPreferences) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(BidInfoSearchViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return BidInfoSearchViewModel(sharedPreferences) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
 }

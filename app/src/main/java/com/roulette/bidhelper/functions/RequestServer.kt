@@ -11,7 +11,12 @@ import com.roulette.bidhelper.models.apis.BidPosRegionDTO
 import com.roulette.bidhelper.models.apis.BidResultListDTO
 import com.roulette.bidhelper.models.apis.BidResultPriceDTO
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.BidServiceSearchDTO
+import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
+import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
 import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidThingSearchDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -153,6 +158,92 @@ object RequestServer {
         })
     }
 
+    fun getBidThingSearch(param: BidSearch) {
+        bidServiceBefore.getBidThingSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            bidClseExcpYn = param.bidClseExcpYn,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidThingSearchDTO> {
+            override fun onResponse(
+                call: Call<BidThingSearchDTO>,
+                response: Response<BidThingSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidThingSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    fun getBidServiceSearch(param: BidSearch) {
+        bidServiceBefore.getBidServiceSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            bidClseExcpYn = param.bidClseExcpYn,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidServiceSearchDTO> {
+            override fun onResponse(
+                call: Call<BidServiceSearchDTO>,
+                response: Response<BidServiceSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidServiceSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
     fun getBidPosRegion(param: BidLimitRegion) {
         bidServiceBefore.getBidPosRegion(
             numOfRows = param.numOfRows!!,
@@ -252,6 +343,135 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidResultListDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    // 나라장터 검색조건에 의한 낙찰된 목록 현황 물품조회
+    fun getBidStatusThingSearch(param: BidSearch) {
+        bidServiceAfter.getBidStatusThingSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusThingSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusThingSearchDTO>,
+                response: Response<BidStatusThingSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidStatusThingSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    // 나라장터 검색조건에 의한 낙찰된 목록 현황 공사조회
+    fun getBidStatusConstWorkSearch(param: BidSearch) {
+        bidServiceAfter.getBidStatusConstWorkSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusConstWorkSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusConstWorkSearchDTO>,
+                response: Response<BidStatusConstWorkSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    // 나라장터 검색조건에 의한 낙찰된 목록 현황 용역조회
+    fun getBidStatusServiceSearch(param: BidSearch) {
+        bidServiceAfter.getBidStatusServiceSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidStatusServiceSearchDTO> {
+            override fun onResponse(
+                call: Call<BidStatusServiceSearchDTO>,
+                response: Response<BidStatusServiceSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
             }
 

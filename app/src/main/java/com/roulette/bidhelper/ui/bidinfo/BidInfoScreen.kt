@@ -1,5 +1,6 @@
 package com.roulette.bidhelper.ui.bidinfo
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -12,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -20,7 +22,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModel
+import com.roulette.bidhelper.R
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
+
+private const val TAG = "BidInfoScreen"
 
 enum class BidInfoScreen {
     Search,
@@ -57,8 +63,11 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-    val sharedViewModel: SearchViewModel = viewModel()
     var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
+    val factory = SearchViewModelFactory(sharedPreferences)
+    val sharedViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
 
     Scaffold(
         topBar = {
@@ -80,6 +89,7 @@ fun BidInfoScreen(
                     onNextButtonClicked = {
 //                        sharedViewModel.getBidConstWorkSearch()
                         sharedViewModel.getBidConstBasisAmount()
+                        sharedViewModel.getBidConstWorkSearch()
                         navController.navigate(BidInfoScreen.List.name)
                     }
                 )
@@ -91,7 +101,14 @@ fun BidInfoScreen(
                     onItemClicked = { item ->
                         sharedViewModel.selectItem(item)
                         selectedItem = item
-                        navController.navigate(BidInfoScreen.Precise.name)
+                        navController.navigate(BidInfoScreen.Precise.name) {
+                            anim {
+                                enter = R.anim.slide_in_right // 새 화면이 오른쪽에서 들어옴
+                                exit = R.anim.slide_out_left // 현재 화면이 왼쪽으로 나감
+                                popEnter = R.anim.slide_out_left // 이전 화면이 왼쪽에서 들어옴
+                                popExit = R.anim.slide_out_right // 현재 화면이 오른쪽으로 나감
+                            }
+                        }
                     }
                 )
             }
