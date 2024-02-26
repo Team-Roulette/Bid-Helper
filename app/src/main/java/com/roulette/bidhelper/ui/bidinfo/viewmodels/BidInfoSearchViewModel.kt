@@ -2,25 +2,24 @@
 
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+
+import androidx.lifecycle.ViewModelProvider
+
 import androidx.lifecycle.viewModelScope
+
 import com.roulette.bidhelper.functions.RequestServer
-import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,12 +64,12 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
 
     init {
         updateUIState(
-            mainCategory = sharedPreferences.getString("mainCategory", mainCategoryList[0])!!,
-            firstCategory = sharedPreferences.getString("firstCategory",
+            mainCategory = sharedPreferences.getString("mainCategoryList", mainCategoryList[0])!!,
+            firstCategory = sharedPreferences.getString("firstCategoryList",
                 if(uiState.mainCategory == mainCategoryList[0]) "업종구분을 먼저 선택하세요" else "")!!,
-            secondCategory = sharedPreferences.getString("secondCategory",
+            secondCategory = sharedPreferences.getString("secondCategoryList",
                 if(uiState.mainCategory == "업종구분을 먼저 선택하세요") "1차업종구분을 먼저 선택하세요" else "")!!,
-            locale = sharedPreferences.getString("locale", placeCategoryList[0])!!
+            locale = sharedPreferences.getString("locationCategoryList", placeCategoryList[0])!!
         )
     }
 
@@ -102,7 +101,10 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
         )
     }
 
+
+
     fun getBidConstWorkSearch() {
+
         val param: BidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
@@ -135,23 +137,27 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             bidClseExcpYn = param.bidClseExcpYn,
             intrntnlDivCd = param.intrntnlDivCd
         ).enqueue(object : Callback<BidConstWorkSearchDTO> {
+
+
             override fun onResponse(
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>
             ) {
+
                 val body = response.body()!!
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
                 _bidConstWorkSearch.value = body
                 _isLoading.value = false
+
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
+
                 Log.e("test", t.message.toString())
                 _bidConstWorkSearch.value = null
                 _isLoading.value = false
             }
-
         })
     }
 }

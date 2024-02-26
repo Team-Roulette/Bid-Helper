@@ -1,7 +1,7 @@
 package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
-
+// 입찰공고목록 정보에 대한 면허제한정보조회
 data class BidLicenseLimitDTO(
     @SerializedName("response")
     val response: Response // API 응답 본문
