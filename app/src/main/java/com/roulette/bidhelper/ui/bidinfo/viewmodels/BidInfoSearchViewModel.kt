@@ -43,12 +43,12 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
 
     init {
         updateUIState(
-            mainCategory = sharedPreferences.getString("mainCategory", mainCategoryList[0])!!,
-            firstCategory = sharedPreferences.getString("firstCategory",
+            mainCategory = sharedPreferences.getString("mainCategoryList", mainCategoryList[0])!!,
+            firstCategory = sharedPreferences.getString("firstCategoryList",
                 if(uiState.mainCategory == mainCategoryList[0]) "업종구분을 먼저 선택하세요" else "")!!,
-            secondCategory = sharedPreferences.getString("secondCategory",
+            secondCategory = sharedPreferences.getString("secondCategoryList",
                 if(uiState.mainCategory == "업종구분을 먼저 선택하세요") "1차업종구분을 먼저 선택하세요" else "")!!,
-            locale = sharedPreferences.getString("locale", placeCategoryList[0])!!
+            locale = sharedPreferences.getString("locationCategoryList", placeCategoryList[0])!!
         )
     }
 
