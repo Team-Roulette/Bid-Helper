@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
@@ -130,21 +129,6 @@ fun FilterScreen(
             },
             "locationCategoryList"
         )
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
-        BidInfoCalendarView(title = R.string.bid_info_input_data_from)
-
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
-        BidInfoCalendarView(title = R.string.bid_info_input_data_to)
 
         Spacer(
             modifier = Modifier
@@ -154,13 +138,6 @@ fun FilterScreen(
         )
         BidInfoBudgetView(title = R.string.bid_info_budget_setting)
 
-        Spacer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(Color.LightGray)
-        )
-        BidInfoSearchView(title = R.string.bid_info_search)
 
         Spacer(
             modifier = Modifier
@@ -436,7 +413,7 @@ fun BidInfoButtonView(
             .fillMaxWidth()
             .padding(vertical = 30.dp)
     ) {
-        BidInfoButton(onClick = onClickSearch, text = "검색", icon = Icons.Filled.Search)
+
         BidInfoButton(onClick = onClickReset, text = "초기화", icon = Icons.Filled.Refresh)
     }
 }

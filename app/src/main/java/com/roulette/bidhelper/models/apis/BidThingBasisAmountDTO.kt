@@ -2,7 +2,7 @@ package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
 
-// 물품 입찰 기초금액 정보를 위한 DTO
+// 입찰공고목록 정보에 대한 물품기초금액조회
 data class BidThingBasisAmountDTO(
     @SerializedName("response") val response: Response // 전체 응답을 포함
 ) {

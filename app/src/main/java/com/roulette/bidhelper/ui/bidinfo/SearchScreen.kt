@@ -1,7 +1,6 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.app.DatePickerDialog
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -55,6 +54,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+
+
+
 private const val TAG = "MainActivity"
 
 @Composable
@@ -63,6 +65,8 @@ fun SearchScreen(
     onNextButtonClicked: () -> Unit,
     viewModel: BidInfoSearchViewModel
 ) {
+
+
     Column(
         modifier = modifier
     ) {

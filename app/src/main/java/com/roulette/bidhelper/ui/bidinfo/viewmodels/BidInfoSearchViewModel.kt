@@ -2,29 +2,20 @@
 
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.roulette.bidhelper.functions.RequestServer
-import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,7 +80,10 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
         )
     }
 
+
+
     fun getBidConstWorkSearch() {
+
         val param: BidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
@@ -122,21 +116,28 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             bidClseExcpYn = param.bidClseExcpYn,
             intrntnlDivCd = param.intrntnlDivCd
         ).enqueue(object : Callback<BidConstWorkSearchDTO> {
+
+
             override fun onResponse(
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>
             ) {
-                val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
-                _bidConstWorkSearch.value = body
+
+                response.body()?.let { body ->
+                    Log.i("test", body.response.body.items[0].bidNtceNm)
+                    Log.i("test", body.response.body.totalCount)
+                    _bidConstWorkSearch.value = body
+                } ?: run {
+                    Log.e("test", "Response body is null")
+                    // 적절한 에러 처리
+                }
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
+
                 Log.e("test", t.message.toString())
                 _bidConstWorkSearch.value = null
             }
-
         })
     }
 }

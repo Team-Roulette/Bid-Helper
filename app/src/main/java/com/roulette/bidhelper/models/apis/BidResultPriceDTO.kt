@@ -2,7 +2,7 @@ package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
 
-// 입찰 결과 가격 정보를 위한 DTO
+// 개찰결과 공사 예비가격상세 목록 조회
 data class BidResultPriceDTO(
     @SerializedName("response")
     val response: Response // 응답 전체를 담는 객체

@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
+// 입찰공고목록 정보에 대한 공사기초금액조회
 
 data class BidConstBasisAmountDTO(
     @SerializedName("response")
