@@ -7,10 +7,12 @@ import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.apis.BidPosRegionDTO
 import com.roulette.bidhelper.models.apis.BidResultListDTO
 import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
 import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.BidThingSearchDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -79,6 +81,62 @@ interface BidService {
         @Query("intrntnlDivCd") intrntnlDivCd: String?, // 국제구분코드
         @Query("type") type: String? // 타입
     ): Call<BidConstWorkSearchDTO>
+
+    @GET("getBidPblancListInfoThngPPSSrch01") // 나라장터 검색조건에 의한 입찰공고물품조회
+    fun getBidThingSearch(
+        @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
+        @Query("pageNo") pageNo: String, // 페이지 번호
+        @Query("ServiceKey") serviceKey: String, // 공공데이터포털에서 받은 인증키
+        @Query("inqryDiv") inqryDiv: String, // 조회구분
+        @Query("inqryBgnDt") inqryBgnDt: String?, // 조회시작일시
+        @Query("inqryEndDt") inqryEndDt: String?, // 조회종료일시
+        @Query("bidNtceNm") bidNtceNm: String?, // 입찰공고명
+        @Query("ntceInsttCd") ntceInsttCd: String?, // 공고기관코드
+        @Query("ntceInsttNm") ntceInsttNm: String?, // 공고기관명
+        @Query("dminsttCd") dminsttCd: String?, // 수요기관코드
+        @Query("dminsttNm") dminsttNm: String?, // 수요기관명
+        @Query("refNo") refNo: String?, // 참조번호
+        @Query("prtcptLmtRgnCd") prtcptLmtRgnCd: String?, // 참가제한지역코드
+        @Query("prtcptLmtRgnNm") prtcptLmtRgnNm: String?, // 참가제한지역명
+        @Query("indstrytyCd") indstrytyCd: String?, // 업종코드
+        @Query("indstrytyNm") indstrytyNm: String?, // 업종명
+        @Query("presmptPrceBgn") presmptPrceBgn: String?, // 추정가격시작
+        @Query("presmptPrceEnd") presmptPrceEnd: String?, // 추정가격종료
+        @Query("dtilPrdctClsfcNoNm") dtilPrdctClsfcNoNm: String?, // 세부품명번호
+        @Query("masYn") masYn: String?, // 다수공급경쟁자여부
+        @Query("prcrmntReqNo") prcrmntReqNo: String?, // 조달요청번호
+        @Query("bidClseExcpYn") bidClseExcpYn: String?, // 입찰마감제외여부
+        @Query("intrntnlDivCd") intrntnlDivCd: String?, // 국제구분코드
+        @Query("type") type: String? // 타입
+    ): Call<BidThingSearchDTO>
+
+    @GET("getBidPblancListInfoServcPPSSrch01") // 나라장터 검색조건에 의한 입찰공고용역조회
+    fun getBidServiceSearch(
+        @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
+        @Query("pageNo") pageNo: String, // 페이지 번호
+        @Query("ServiceKey") serviceKey: String, // 공공데이터포털에서 받은 인증키
+        @Query("inqryDiv") inqryDiv: String, // 조회구분
+        @Query("inqryBgnDt") inqryBgnDt: String?, // 조회시작일시
+        @Query("inqryEndDt") inqryEndDt: String?, // 조회종료일시
+        @Query("bidNtceNm") bidNtceNm: String?, // 입찰공고명
+        @Query("ntceInsttCd") ntceInsttCd: String?, // 공고기관코드
+        @Query("ntceInsttNm") ntceInsttNm: String?, // 공고기관명
+        @Query("dminsttCd") dminsttCd: String?, // 수요기관코드
+        @Query("dminsttNm") dminsttNm: String?, // 수요기관명
+        @Query("refNo") refNo: String?, // 참조번호
+        @Query("prtcptLmtRgnCd") prtcptLmtRgnCd: String?, // 참가제한지역코드
+        @Query("prtcptLmtRgnNm") prtcptLmtRgnNm: String?, // 참가제한지역명
+        @Query("indstrytyCd") indstrytyCd: String?, // 업종코드
+        @Query("indstrytyNm") indstrytyNm: String?, // 업종명
+        @Query("presmptPrceBgn") presmptPrceBgn: String?, // 추정가격시작
+        @Query("presmptPrceEnd") presmptPrceEnd: String?, // 추정가격종료
+        @Query("dtilPrdctClsfcNoNm") dtilPrdctClsfcNoNm: String?, // 세부품명번호
+        @Query("masYn") masYn: String?, // 다수공급경쟁자여부
+        @Query("prcrmntReqNo") prcrmntReqNo: String?, // 조달요청번호
+        @Query("bidClseExcpYn") bidClseExcpYn: String?, // 입찰마감제외여부
+        @Query("intrntnlDivCd") intrntnlDivCd: String?, // 국제구분코드
+        @Query("type") type: String? // 타입
+    ): Call<BidServiceSearchDTO>
 
     @GET("getBidPblancListInfoPrtcptPsblRgn01") // 입찰공고목록 정보에 대한 참가가능지역정보조회
     fun getBidPosRegion(
@@ -210,4 +268,5 @@ interface BidService {
         @Query("intrntnlDivCd") intrntnlDivCd: String?, // 국제구분코드
         @Query("type") type: String? // 타입
     ): Call<BidStatusServiceSearchDTO>
+
 }

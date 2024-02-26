@@ -21,6 +21,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
@@ -62,7 +63,7 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-
+    var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
     val factory = SearchViewModelFactory(sharedPreferences)
@@ -86,6 +87,8 @@ fun BidInfoScreen(
                 SearchScreen(
                     viewModel = sharedViewModel,
                     onNextButtonClicked = {
+//                        sharedViewModel.getBidConstWorkSearch()
+                        sharedViewModel.getBidConstBasisAmount()
                         sharedViewModel.getBidConstWorkSearch()
                         navController.navigate(BidInfoScreen.List.name)
                     }
@@ -95,7 +98,9 @@ fun BidInfoScreen(
             composable(route = BidInfoScreen.List.name) {
                 ListScreen(
                     viewModel = sharedViewModel,
-                    onItemClicked = {
+                    onItemClicked = { item ->
+                        sharedViewModel.selectItem(item)
+                        selectedItem = item
                         navController.navigate(BidInfoScreen.Precise.name) {
                             anim {
                                 enter = R.anim.slide_in_right // 새 화면이 오른쪽에서 들어옴
@@ -108,7 +113,7 @@ fun BidInfoScreen(
                 )
             }
             composable(route = BidInfoScreen.Precise.name) {
-                PreciseScreen()
+                PreciseScreen(item = selectedItem!!)
             }
         }
     }
