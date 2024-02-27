@@ -66,7 +66,7 @@ fun BidInfoScreen(
     var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
 
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("YourPreferenceName", Context.MODE_PRIVATE)
+    val sharedPreferences = context.getSharedPreferences("FilterDB", Context.MODE_PRIVATE)
     val factory = SearchViewModelFactory(sharedPreferences)
     val sharedViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
 
