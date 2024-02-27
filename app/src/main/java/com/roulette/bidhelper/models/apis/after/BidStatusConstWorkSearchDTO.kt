@@ -15,7 +15,7 @@ data class BidStatusConstWorkSearchDTO(
             @SerializedName("numOfRows") val numOfRows: String, // 한 페이지 결과 수
             @SerializedName("pageNo") val pageNo: String, // 페이지 번호
             @SerializedName("totalCount") val totalCount: String // 데이터 총 개수
-        ) {
+        ) /*{
             data class Item(
                 @SerializedName("bidClsfcNo") val bidClsfcNo: String, // 입찰분류번호
                 @SerializedName("bidNtceNm") val bidNtceNm: String, // 입찰공고명
@@ -39,7 +39,7 @@ data class BidStatusConstWorkSearchDTO(
                 @SerializedName("sucsfbidAmt") val sucsfbidAmt: String, // 최종낙찰금액
                 @SerializedName("sucsfbidRate") val sucsfbidRate: String // 최종낙찰률
             )
-        }
+        }*/
 
         data class Header(
             @SerializedName("resultCode") val resultCode: String, // 결과코드

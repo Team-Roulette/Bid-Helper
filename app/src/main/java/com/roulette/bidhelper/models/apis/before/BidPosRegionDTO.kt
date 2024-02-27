@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.models.apis.before
 
 import com.google.gson.annotations.SerializedName
+//  입찰공고목록 정보에 대한 참가가능지역정보조회
 
 // 입찰공고목록 정보에 대한 참가가능지역정보조회
 data class BidPosRegionDTO(
