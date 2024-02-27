@@ -1,8 +1,8 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.after
 
 import com.google.gson.annotations.SerializedName
 
-// 입찰 결과 가격 정보를 위한 DTO
+// 개찰결과 공사예비가격 상세 목록 조회
 data class BidResultPriceDTO(
     @SerializedName("response")
     val response: Response // 응답 전체를 담는 객체
@@ -25,35 +25,35 @@ data class BidResultPriceDTO(
         ) {
             data class Item(
                 @SerializedName("bidClsfcNo")
-                val bidClsfcNo: String?, // 입찰 분류 번호
+                val bidClsfcNo: String, // 입찰 분류 번호
                 @SerializedName("bidNtceNm")
-                val bidNtceNm: String?, // 입찰 공고명
+                val bidNtceNm: String, // 입찰 공고명
                 @SerializedName("bidNtceNo")
-                val bidNtceNo: String?, // 입찰 공고번호
+                val bidNtceNo: String, // 입찰 공고번호
                 @SerializedName("bidNtceOrd")
-                val bidNtceOrd: String?, // 입찰 공고차수
+                val bidNtceOrd: String, // 입찰 공고차수
                 @SerializedName("dminsttCd")
-                val dminsttCd: String?, // 수요기관 코드
+                val dminsttCd: String, // 수요기관 코드
                 @SerializedName("dminsttNm")
-                val dminsttNm: String?, // 수요기관명
+                val dminsttNm: String, // 수요기관명
                 @SerializedName("inptDt")
-                val inptDt: String?, // 입력 일시
+                val inptDt: String, // 입력 일시
                 @SerializedName("ntceInsttCd")
-                val ntceInsttCd: String?, // 공고기관 코드
+                val ntceInsttCd: String, // 공고기관 코드
                 @SerializedName("ntceInsttNm")
-                val ntceInsttNm: String?, // 공고기관명
+                val ntceInsttNm: String, // 공고기관명
                 @SerializedName("opengCorpInfo")
-                val opengCorpInfo: String?, // 개찰 업체 정보
+                val opengCorpInfo: String, // 개찰 업체 정보
                 @SerializedName("opengDt")
-                val opengDt: String?, // 개찰 일시
+                val opengDt: String, // 개찰 일시
                 @SerializedName("progrsDivCdNm")
-                val progrsDivCdNm: String?, // 진행 구분 코드명
+                val progrsDivCdNm: String, // 진행 구분 코드명
                 @SerializedName("prtcptCnum")
-                val prtcptCnum: String?, // 참가업체 수
+                val prtcptCnum: String, // 참가업체 수
                 @SerializedName("rbidNo")
-                val rbidNo: String?, // 재입찰 번호
+                val rbidNo: String, // 재입찰 번호
                 @SerializedName("rsrvtnPrceFileExistnceYn")
-                val rsrvtnPrceFileExistnceYn: String? // 예비가격 파일 존재 여부
+                val rsrvtnPrceFileExistnceYn: String // 예비가격 파일 존재 여부
             )
         }
 

@@ -599,6 +599,10 @@ val secondCategoryList_3_37 = listOf(
 
 val categoryMap = mapOf(
     null to emptyList(),
+    "==공사 전체==" to emptyList(),
+    "==구매 전체==" to emptyList(),
+    "==용역 전체==" to emptyList(),
+
     "공사" to firstCategoryList_1,
     "구매" to firstCategoryList_2,
     "용역" to firstCategoryList_3,

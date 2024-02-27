@@ -3,20 +3,21 @@ package com.roulette.bidhelper.functions
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
+import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.apis.BidLimitRegion
-import com.roulette.bidhelper.models.apis.BidPosRegionDTO
-import com.roulette.bidhelper.models.apis.BidResultListDTO
-import com.roulette.bidhelper.models.apis.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.BidServiceSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
-import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
-import com.roulette.bidhelper.models.apis.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidResultListDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidPosRegionDTO
+import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -65,7 +66,7 @@ object RequestServer {
         })
     }
 
-    /*fun getBidConstBasisAmount(param: BidAmountInfo) {
+    fun getBidConstBasisAmount(param: BidAmountInfo) {
         bidServiceBefore.getBidConstBasisAmount(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -88,7 +89,7 @@ object RequestServer {
                 Log.i("test", t.message.toString())
             }
         })
-    }*/
+    }
 
     fun getBidCalcAInfo(param: BidAmountInfo) {
         bidServiceBefore.getBidCalcAInfo(
