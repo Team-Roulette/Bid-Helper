@@ -4,7 +4,6 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -87,9 +86,7 @@ fun HomeScreen(
             }
 
             composable(route = HomeScreen.Filter.name) {
-                FilterScreen(
-                    onNextButtonClicked = {}
-                )
+                FilterScreen()
             }
         }
     }
