@@ -1,5 +1,3 @@
-@file:JvmName("BidInfoListViewModelKt")
-
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
 import android.content.SharedPreferences
