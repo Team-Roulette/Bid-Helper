@@ -1,4 +1,4 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.after
 
 import com.google.gson.annotations.SerializedName
 

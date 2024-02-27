@@ -1,9 +1,9 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.after
 
 import com.google.gson.annotations.SerializedName
 
-// 입찰 결과 가격 정보를 위한 DTO
-data class BidResultPriceDTO(
+// 개찰결과 공사 목록 조회
+data class BidResultListDTO(
     @SerializedName("response")
     val response: Response // 응답 전체를 담는 객체
 ) {
@@ -32,28 +32,34 @@ data class BidResultPriceDTO(
                 val bidNtceNo: String, // 입찰 공고번호
                 @SerializedName("bidNtceOrd")
                 val bidNtceOrd: String, // 입찰 공고차수
-                @SerializedName("dminsttCd")
-                val dminsttCd: String, // 수요기관 코드
-                @SerializedName("dminsttNm")
-                val dminsttNm: String, // 수요기관명
+                @SerializedName("bidwinrSlctnAplBssCntnts")
+                val bidwinrSlctnAplBssCntnts: String, // 낙찰자 선정 적용 기준 내용
+                @SerializedName("bsisPlnprc")
+                val bsisPlnprc: String, // 기초 계획가격
+                @SerializedName("bssamt")
+                val bssamt: String, // 기초금액
+                @SerializedName("bssamtBssUpNum")
+                val bssamtBssUpNum: String, // 기초금액 기준 상위 번호
+                @SerializedName("compnoRsrvtnPrceMkngDt")
+                val compnoRsrvtnPrceMkngDt: String, // 예비가격 작성일
+                @SerializedName("compnoRsrvtnPrceSno")
+                val compnoRsrvtnPrceSno: String, // 예비가격 일련번호
+                @SerializedName("drwtNum")
+                val drwtNum: String, // 추첨 번호
+                @SerializedName("drwtYn")
+                val drwtYn: String, // 추첨 여부
                 @SerializedName("inptDt")
                 val inptDt: String, // 입력 일시
-                @SerializedName("ntceInsttCd")
-                val ntceInsttCd: String, // 공고기관 코드
-                @SerializedName("ntceInsttNm")
-                val ntceInsttNm: String, // 공고기관명
-                @SerializedName("opengCorpInfo")
-                val opengCorpInfo: String, // 개찰 업체 정보
-                @SerializedName("opengDt")
-                val opengDt: String, // 개찰 일시
-                @SerializedName("progrsDivCdNm")
-                val progrsDivCdNm: String, // 진행 구분 코드명
-                @SerializedName("prtcptCnum")
-                val prtcptCnum: String, // 참가업체 수
+                @SerializedName("plnprc")
+                val plnprc: String, // 계획가격
+                @SerializedName("PrearngPrcePurcnstcst")
+                val prearngPrcePurcnstcst: String, // 예정가격 계산 기준
                 @SerializedName("rbidNo")
                 val rbidNo: String, // 재입찰 번호
-                @SerializedName("rsrvtnPrceFileExistnceYn")
-                val rsrvtnPrceFileExistnceYn: String // 예비가격 파일 존재 여부
+                @SerializedName("rlOpengDt")
+                val rlOpengDt: String, // 실제 개찰 일시
+                @SerializedName("totRsrvtnPrceNum")
+                val totRsrvtnPrceNum: String // 총 예비가격 번호
             )
         }
 

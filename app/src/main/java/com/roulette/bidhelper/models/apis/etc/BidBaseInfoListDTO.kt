@@ -1,8 +1,9 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.etc
 
 
 import com.google.gson.annotations.SerializedName
 
+// 업종 및 근거법규 정보 조회
 data class BidBaseInfoListDTO(
     @SerializedName("response")
     val response: Response

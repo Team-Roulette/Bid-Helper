@@ -1,19 +1,19 @@
 package com.roulette.bidhelper.functions
 
-import com.roulette.bidhelper.models.apis.BidBaseInfoListDTO
-import com.roulette.bidhelper.models.apis.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.BidLicenseLimitDTO
-import com.roulette.bidhelper.models.apis.BidPosRegionDTO
-import com.roulette.bidhelper.models.apis.BidResultListDTO
-import com.roulette.bidhelper.models.apis.BidResultPriceDTO
-import com.roulette.bidhelper.models.apis.BidServiceSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
-import com.roulette.bidhelper.models.apis.BidThingBasisAmountDTO
-import com.roulette.bidhelper.models.apis.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidResultListDTO
+import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
+import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.before.BidPosRegionDTO
+import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidThingBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -270,7 +270,7 @@ interface BidService {
         @Query("type") type: String? // 타입
     ): Call<BidStatusServiceSearchDTO>
 
-    @GET("getIndstrytyBaseLawrgltInfoList02")
+    @GET("getIndstrytyBaseLawrgltInfoList02") // 업종 및 근거법규 정보 조회
     fun getBaseInfoList(
         @Query("numOfRows") numOfRows: String, // 한 페이지 결과 수
         @Query("pageNo") pageNo: String, // 페이지 번호,

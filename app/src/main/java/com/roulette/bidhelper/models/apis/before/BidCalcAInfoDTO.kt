@@ -1,7 +1,8 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.before
 
 import com.google.gson.annotations.SerializedName
 
+// 입찰공고목록 정보에 대한 입찰가격산식A정보조회
 data class BidCalcAInfoDTO(
     @SerializedName("response")
     val response: Response // API 응답 본문
