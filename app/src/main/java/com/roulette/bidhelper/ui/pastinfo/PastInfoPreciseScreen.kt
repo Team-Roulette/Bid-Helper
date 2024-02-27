@@ -26,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.roulette.bidhelper.models.apis.after.Item
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoPreciseViewModel
 
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
@@ -34,18 +37,22 @@ val title = listOf(
 
 @Composable
 fun PastInfoPreciseScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preciseViewModel: PastInfoPreciseViewModel = viewModel(),
+    item: Item
 ) {
+    preciseViewModel.item = item
     Column(
         modifier = modifier
             .fillMaxSize()
     ){
-        PastInfoTabLayout()
+        PastInfoTabLayout(viewModel = preciseViewModel)
     }
 }
 
 @Composable
 fun PastInfoSummaryScreen(
+    itemList: List<String>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -55,8 +62,8 @@ fun PastInfoSummaryScreen(
             .padding(horizontal = 25.dp, vertical = 35.dp)
             .border(width = 1.dp, color = Color.LightGray)
     ){
-        title.forEach{title->
-            PastInfoTextView(title = title, content= "title")
+        for(i in title.indices){
+            PastInfoTextView(title = title[i], content= itemList[i])
             PastInfoHorizontalSpacer(modifier = Modifier)
         }
     }
@@ -108,6 +115,7 @@ fun PastInfoHorizontalSpacer(
 
 @Composable
 private fun PastInfoTabLayout(
+    viewModel: PastInfoPreciseViewModel,
     modifier:Modifier = Modifier
 ) {
     val list = listOf("공고요약", "상세정보")
@@ -126,15 +134,18 @@ private fun PastInfoTabLayout(
                 )
             }
         }
-        TabContent(selectedTabIndex = selectedIndex)
+        TabContent(viewModel = viewModel ,selectedTabIndex = selectedIndex)
     }
 }
 
 @Composable
-fun TabContent(selectedTabIndex: Int, modifier: Modifier = Modifier) {
+fun TabContent(
+    viewModel: PastInfoPreciseViewModel,
+    selectedTabIndex: Int,
+    modifier: Modifier = Modifier) {
     when (selectedTabIndex) {
-        0 -> PastInfoSummaryScreen()
-        1 -> PastInfoSummaryScreen()
+        0 -> PastInfoSummaryScreen(itemList = viewModel.getItemAsStringList())
+        1 -> PastInfoSummaryScreen(itemList = viewModel.getItemAsStringList())
         else -> Text("Selection not valid", color = Color.Red)
     }
 }

@@ -29,12 +29,11 @@ import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 @Composable
 fun PastInfoListScreen(
     viewModel: PastInfoSharedViewModel,
-    onItemClicked:() -> Unit,
+    onItemClicked:(Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val bidResultUiState = viewModel.bidResultUiState
 
-    when (bidResultUiState) {
+    when (val bidResultUiState = viewModel.bidResultUiState) {
         is BidResultUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
         is BidResultUiState.Success -> ResultScreen(
             itemList = bidResultUiState.items,
@@ -57,7 +56,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 @Composable
 fun ResultScreen(
     modifier: Modifier = Modifier,
-    onItemClicked: () -> Unit,
+    onItemClicked: (Item) -> Unit,
     itemList: List<Item>) {
     LazyColumn(
         modifier = modifier) {
@@ -75,13 +74,13 @@ fun ResultScreen(
 fun ListItem(
     item: Item,
     modifier: Modifier = Modifier,
-    onItemClicked: () -> Unit
+    onItemClicked: (Item) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 15.dp)
-            .clickable (enabled = true, onClick = onItemClicked)
+            .clickable (enabled = true) { onItemClicked(item) }
     ) {
         Text(text = item.bidNtceNm?: "", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold,
             maxLines = 1, overflow = TextOverflow.Ellipsis)
