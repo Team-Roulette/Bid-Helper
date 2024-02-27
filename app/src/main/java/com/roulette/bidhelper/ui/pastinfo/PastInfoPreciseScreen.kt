@@ -27,7 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.roulette.bidhelper.models.apis.Item
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoPreciseViewModel
 
 val title = listOf(

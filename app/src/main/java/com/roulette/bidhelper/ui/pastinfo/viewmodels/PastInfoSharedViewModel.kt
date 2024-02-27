@@ -15,6 +15,11 @@ import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 
 private const val TAG = "PastInfoSharedViewModel"
@@ -49,6 +54,14 @@ class PastInfoSharedViewModel : ViewModel() {
         "","","","","","",
         "","","","",""))
 
+    init {
+        updateUIState(
+            dateFrom = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+            dateTo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+        )
+    }
+
+
     fun updateUIState(
         mainCategory: String = uiState.mainCategory,
         firstCategory: String = uiState.firstCategory,
@@ -77,11 +90,16 @@ class PastInfoSharedViewModel : ViewModel() {
 
     fun setPastInfoSearchList() {
         bidResultUiState = BidResultUiState.Loading
+
         val bidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
+            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
+            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
         }
+
+        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
         when (uiState.mainCategory) {
             mainCategoryList[1] -> getStatusConstWorkList(bidSearch)
             mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
@@ -90,6 +108,17 @@ class PastInfoSharedViewModel : ViewModel() {
                 Log.d(TAG, "누구 맘대로 알바감?")
             }
         }
+    }
+
+    private fun getFormattedDate(date: String, time:String): String {
+        val originalFormatString = "yyyy/MM/dd"
+        val newFormatString = "yyyyMMdd"
+
+        val originalFormat = SimpleDateFormat(originalFormatString, Locale.getDefault())
+        val newFormat = SimpleDateFormat(newFormatString, Locale.getDefault())
+
+        val formattedDate = originalFormat.parse(date)!!
+        return newFormat.format(formattedDate)+time
     }
 
     private fun getStatusThingSearchList(param: BidSearch){
@@ -165,9 +194,8 @@ class PastInfoSharedViewModel : ViewModel() {
                 response: Response<BidStatusConstWorkSearchDTO>
             ) {
                 val body = response.body()
-                bidResultUiState = BidResultUiState.Success(
-                    body?.response?.body?.items!!
-                )
+                if(body?.response?.body?.items != null)
+                    bidResultUiState = BidResultUiState.Success(body.response.body.items)
             }
 
             override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
