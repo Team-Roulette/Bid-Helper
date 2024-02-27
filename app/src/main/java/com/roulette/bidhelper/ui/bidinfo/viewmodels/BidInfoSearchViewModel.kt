@@ -11,11 +11,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
-
 import com.roulette.bidhelper.functions.RequestServer
-import com.roulette.bidhelper.models.apis.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import retrofit2.Call

@@ -23,6 +23,7 @@ android {
         buildConfigField("String", "API_SERVICE_KEY", getProperty("api.serviceKey"))
         buildConfigField("String", "BASE_URL_BEFORE", getProperty("url.baseUrl.before"))
         buildConfigField("String", "BASE_URL_AFTER", getProperty("url.baseUrl.after"))
+        buildConfigField("String", "BASE_URL_CODE", getProperty("url.baseUrl.code"))
     }
 
     buildTypes {

@@ -7,10 +7,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer.bidServiceAfter
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.BidStatusConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.BidStatusServiceSearchDTO
-import com.roulette.bidhelper.models.apis.Item
-import com.roulette.bidhelper.models.apis.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
+import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import retrofit2.Call
 import retrofit2.Callback

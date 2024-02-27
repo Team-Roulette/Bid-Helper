@@ -1,8 +1,9 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.before
 
 import com.google.gson.annotations.SerializedName
 // 입찰공고목록 정보에 대한 공사기초금액조회
 
+// 입찰공고목록 정보에 대한 공사기초금액조회
 data class BidConstBasisAmountDTO(
     @SerializedName("response")
     val response: Response // API 응답 본문

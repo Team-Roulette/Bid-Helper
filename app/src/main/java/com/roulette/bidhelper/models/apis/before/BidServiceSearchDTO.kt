@@ -1,8 +1,9 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.before
 
 
 import com.google.gson.annotations.SerializedName
 
+// 나라장터 검색조건에 의한 입찰공고용역조회
 data class BidServiceSearchDTO(
     @SerializedName("response")
     val response: Response // API 응답 구조를 담는 메인 객체

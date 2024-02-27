@@ -1,6 +1,7 @@
-package com.roulette.bidhelper.models.apis
+package com.roulette.bidhelper.models.apis.before
 
 import com.google.gson.annotations.SerializedName
+
 // 입찰공고목록 정보에 대한 면허제한정보조회
 data class BidLicenseLimitDTO(
     @SerializedName("response")

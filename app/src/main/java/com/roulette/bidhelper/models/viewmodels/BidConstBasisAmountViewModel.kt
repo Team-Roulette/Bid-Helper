@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
