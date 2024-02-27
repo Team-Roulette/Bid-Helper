@@ -1,5 +1,3 @@
-@file:JvmName("BidInfoListViewModelKt")
-
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
 import android.content.SharedPreferences
@@ -20,6 +18,9 @@ import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.reflect.KMutableProperty
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 private const val TAG = "SearchViewModel"
 
@@ -61,6 +62,20 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
                 if(uiState.mainCategory == "업종구분을 먼저 선택하세요") "1차업종구분을 먼저 선택하세요" else "")!!,
             locale = sharedPreferences.getString("locationCategoryList", placeCategoryList[0])!!
         )
+        val properties = uiState::class.memberProperties
+            .filterIsInstance<KMutableProperty<*>>()
+
+        sharedPreferences.all.forEach { (key, value) ->
+            val property = properties.find { it.name == key }
+            property?.let {
+                it.isAccessible = true
+                when (val v = it.getter.call(uiState)) {
+                    is String -> it.setter.call(uiState, value.toString())
+                    // 다른 타입의 프로퍼티가 있을 경우 여기에 처리 로직 추가
+                    // 예: is Int -> it.setter.call(uiState, value.toString().toInt())
+                }
+            }
+        }
     }
 
     fun updateUIState(
