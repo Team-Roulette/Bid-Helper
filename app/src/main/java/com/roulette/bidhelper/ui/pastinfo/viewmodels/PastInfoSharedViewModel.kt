@@ -44,6 +44,11 @@ class PastInfoSharedViewModel : ViewModel() {
     var bidResultUiState: BidResultUiState by mutableStateOf(BidResultUiState.Loading)
         private set
 
+    var item: Item by mutableStateOf(Item("","","","",
+        "","","","","","",
+        "","","","","","",
+        "","","","",""))
+
     fun updateUIState(
         mainCategory: String = uiState.mainCategory,
         firstCategory: String = uiState.firstCategory,
