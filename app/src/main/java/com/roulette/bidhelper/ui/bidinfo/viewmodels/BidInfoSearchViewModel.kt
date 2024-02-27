@@ -11,13 +11,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 private const val TAG = "SearchViewModel"
 
@@ -33,6 +37,12 @@ data class SearchUiState(
     var maxPrice: String = "",
     var searchName: String = ""
 )
+
+sealed interface ResultUiState {
+    data class Success(val items: List<Item>) : ResultUiState
+    data object Error : ResultUiState
+    data object Loading : ResultUiState
+}
 
 class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
@@ -87,6 +97,38 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             maxPrice = maxPrice,
             searchName = searchName
         )
+    }
+
+    fun setPastInfoSearchList() {
+        //bidResultUiState = BidResultUiState.Loading
+
+        val bidSearch = BidSearch().apply {
+            numOfRows = "100"
+            pageNo = "1"
+            inqryDiv = "1"
+            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
+            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
+        }
+
+        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
+        when (uiState.mainCategory) {
+//            mainCategoryList[1] -> getStatusConstWorkList(bidSearch)
+//            mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
+//            mainCategoryList[3] -> getStatusServiceSearchList(bidSearch)
+            else -> {
+            }
+        }
+    }
+
+    private fun getFormattedDate(date: String, time:String): String {
+        val originalFormatString = "yyyy/MM/dd"
+        val newFormatString = "yyyyMMdd"
+
+        val originalFormat = SimpleDateFormat(originalFormatString, Locale.getDefault())
+        val newFormat = SimpleDateFormat(newFormatString, Locale.getDefault())
+
+        val formattedDate = originalFormat.parse(date)!!
+        return newFormat.format(formattedDate)+time
     }
 
 
