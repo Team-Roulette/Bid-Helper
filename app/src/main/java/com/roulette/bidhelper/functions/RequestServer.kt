@@ -480,7 +480,6 @@ object RequestServer {
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
             }
-
             override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
             }
@@ -489,9 +488,9 @@ object RequestServer {
     }
 
     // 업종 및 근거 법규 정보 조회
-    fun getBaseInfoList(param: BidCommonParams) {
+    fun getBaseInfoList(param: BidCommonParams, listener: OnBaseInfoListReceivedListener) {
         bidServiceCode.getBaseInfoList(
-            numOfRows = "10",
+            numOfRows = "100",
             pageNo = "1",
             serviceKey = param.serviceKey,
             indstrytyClsfcCd = null,
@@ -508,11 +507,13 @@ object RequestServer {
             ) {
                 Log.i("test", response.toString())
                 val body = response.body()!!
-                body.response.body.items.forEach {
-                    Log.i("test", it.indstrytyCd + it.indstrytyNm)
-                }
+                val items = body.response.body.items
+                listener.onReceived(items)
+//                items.forEach {
+//                    Log.i("test", it.indstrytyCd +" = " + it.indstrytyNm+"\n")
+//                }
+                return
             }
-
             override fun onFailure(call: Call<BidBaseInfoListDTO>, t: Throwable) {
                 Log.e("test", t.toString())
             }
@@ -520,3 +521,8 @@ object RequestServer {
         })
     }
 }
+
+interface OnBaseInfoListReceivedListener {
+    fun onReceived(items: List<BidBaseInfoListDTO.Response.Body.Item>)
+}
+

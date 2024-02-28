@@ -30,6 +30,12 @@ data class BidLimitRegion( // 입찰공고목록 정보에 대한 면허제한�
     @SerializedName("bidNtceOrd") var bidNtceOrd: String? = null // 검색하고자 하는 입찰공고차수 (조회구분이 2인 경우 필수)
 ) : BidAmountInfo()
 
+data class IndSearch(   //  업종검색
+    @SerializedName("indstrytyClsfcCd") var indstrytyClsfcCd: String? = null,    // 2자리 분류코드
+    @SerializedName("indstrytyCd") var indstrytyCd: String? = null, // 4자리 업종코드
+    @SerializedName("indstrytyNm") var indstrytyNm: String? = null, // 업종명
+):BidCommonParams()
+
 data class BidSearch( // 나라장터검색조건에 의한 입찰공고공사조회
     @SerializedName("bidNtceNm") var bidNtceNm: String? = null, // 공고명
     @SerializedName("bidNm") var bidNm: String? = null, // 공고명(방위사업청 연계건)
