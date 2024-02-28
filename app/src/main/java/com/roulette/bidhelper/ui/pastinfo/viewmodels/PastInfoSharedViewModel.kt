@@ -105,7 +105,6 @@ class PastInfoSharedViewModel : ViewModel() {
             mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
             mainCategoryList[3] -> getStatusServiceSearchList(bidSearch)
             else -> {
-                Log.d(TAG, "누구 맘대로 알바감?")
             }
         }
     }
