@@ -3,21 +3,23 @@ package com.roulette.bidhelper.functions
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.before.BidLicenseLimitDTO
+import com.roulette.bidhelper.models.apis.BidCommonParams
 import com.roulette.bidhelper.models.apis.BidLimitRegion
-import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.after.BidResultListDTO
+import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
+import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidLicenseLimitDTO
 import com.roulette.bidhelper.models.apis.before.BidPosRegionDTO
 import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidThingBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RequestServer {
     private const val BASE_URL_BEFORE = BuildConfig.BASE_URL_BEFORE
     private const val BASE_URL_AFTER = BuildConfig.BASE_URL_AFTER
+    private const val BASE_URL_CODE = BuildConfig.BASE_URL_CODE
     
     val retrofitBefore = Retrofit.Builder()
         .baseUrl(BASE_URL_BEFORE)
@@ -36,9 +39,15 @@ object RequestServer {
         .baseUrl(BASE_URL_AFTER)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+    val retrofitCode = Retrofit.Builder()
+        .baseUrl(BASE_URL_CODE)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
 
     val bidServiceBefore = retrofitBefore.create(BidService::class.java) // 입찰 정보 retrofit 객체
     val bidServiceAfter = retrofitAfter.create(BidService::class.java) // 낙찰 정보 retrofit 객체
+    val bidServiceCode = retrofitCode.create(BidService::class.java) // 업종 및 근거 법규 조회 retrogit 객체
 
     fun getBidThingBasisAmount(param: BidAmountInfo) {
         bidServiceBefore.getBidThingBasisAmount(
@@ -474,6 +483,38 @@ object RequestServer {
 
             override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    // 업종 및 근거 법규 정보 조회
+    fun getBaseInfoList(param: BidCommonParams) {
+        bidServiceCode.getBaseInfoList(
+            numOfRows = "10",
+            pageNo = "1",
+            serviceKey = param.serviceKey,
+            indstrytyClsfcCd = null,
+            indstrytyNm = null,
+            indstrytyCd = null,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            indstrytyUseYn = null,
+            type = param.type
+        ).enqueue(object: Callback<BidBaseInfoListDTO> {
+            override fun onResponse(
+                call: Call<BidBaseInfoListDTO>,
+                response: Response<BidBaseInfoListDTO>
+            ) {
+                Log.i("test", response.toString())
+                val body = response.body()!!
+                body.response.body.items.forEach {
+                    Log.i("test", it.indstrytyCd + it.indstrytyNm)
+                }
+            }
+
+            override fun onFailure(call: Call<BidBaseInfoListDTO>, t: Throwable) {
+                Log.e("test", t.toString())
             }
 
         })
