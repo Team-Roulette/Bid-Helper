@@ -16,7 +16,6 @@ import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,11 +40,7 @@ data class SearchUiState(
     var searchName: String = ""
 )
 
-sealed interface ResultUiState {
-    data class Success(val items: List<Item>) : ResultUiState
-    data object Error : ResultUiState
-    data object Loading : ResultUiState
-}
+
 
 class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
@@ -56,10 +51,10 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
     private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
     val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
 
-    private val _selectedItem = MutableLiveData<BidConstWorkSearchDTO.Response.Body.Item>()
-    val selectedItem: LiveData<BidConstWorkSearchDTO.Response.Body.Item> = _selectedItem
+    private val _selectedItem = MutableLiveData<Item>()
+    val selectedItem: LiveData<Item> = _selectedItem
 
-    fun selectItem(item: BidConstWorkSearchDTO.Response.Body.Item) {
+    fun selectItem(item: Item) {
         _selectedItem.value = item
     }
 
