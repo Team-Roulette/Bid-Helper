@@ -22,7 +22,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
 
@@ -63,7 +63,7 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-    var selectedItem: BidConstWorkSearchDTO.Response.Body.Item? = null
+    var selectedItem: Item? = null
 
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("FilterDB", Context.MODE_PRIVATE)

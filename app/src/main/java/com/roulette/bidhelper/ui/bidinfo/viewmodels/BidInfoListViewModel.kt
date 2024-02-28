@@ -20,6 +20,8 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+private const val TAG = "BidInfoListViewModel"
+
 sealed interface ResultUiState {
     data class Success(val items: List<Item>) : ResultUiState
     data object Error : ResultUiState
@@ -44,18 +46,18 @@ class BidInfoListViewModel: ViewModel() {
         _selectedItem.value = item
     }
 
-    fun setPastInfoSearchList() {
+    /*fun setPastInfoSearchList() {
         uiState = ResultUiState.Loading
 
         val bidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
-            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
+            inqryBgnDt = getFormattedDate(uiState, "0000")
             inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
         }
 
-        Log.d(com.roulette.bidhelper.ui.pastinfo.viewmodels.TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
+        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
         when (uiState.mainCategory) {
             mainCategoryList[1] -> getBidConstWorkSearch(bidSearch)
             mainCategoryList[2] -> getBidConstWorkSearch(bidSearch)
@@ -64,10 +66,10 @@ class BidInfoListViewModel: ViewModel() {
                 getBidConstWorkSearch(bidSearch)
             }
         }
-    }
+    }*/
 
     fun getBidConstWorkSearch(
-        val bidSearch: BidSearch
+        bidSearch: BidSearch
     ) {
         val param: BidSearch = BidSearch().apply {
             numOfRows = "100"
@@ -102,7 +104,6 @@ class BidInfoListViewModel: ViewModel() {
             intrntnlDivCd = param.intrntnlDivCd
         ).enqueue(object : Callback<BidConstWorkSearchDTO> {
 
-
             override fun onResponse(
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>
@@ -117,7 +118,7 @@ class BidInfoListViewModel: ViewModel() {
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
 
                 Log.e("test", t.message.toString())
-                _bidConstWorkSearch.value = null
+                //_bidConstWorkSearch.value = null
             }
         })
     }

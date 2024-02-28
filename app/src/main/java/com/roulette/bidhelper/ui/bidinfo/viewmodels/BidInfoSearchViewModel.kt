@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.after.Item
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
@@ -37,6 +37,7 @@ data class SearchUiState(
     var priceType: String = "",
     var minPrice: String = "",
     var maxPrice: String = "",
+    var industryName: String = "",
     var searchName: String = ""
 )
 
@@ -93,7 +94,8 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
         priceType: String = uiState.priceType,
         minPrice: String = uiState.minPrice,
         maxPrice: String = uiState.maxPrice,
-        searchName: String = uiState.searchName,
+        industryName: String = uiState.industryName,
+        searchName: String = uiState.searchName
     ) {
         Log.d(TAG, "$mainCategory , $firstCategory, $secondCategory")
 
@@ -107,6 +109,7 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             priceType = priceType,
             minPrice = minPrice,
             maxPrice = maxPrice,
+            industryName = industryName,
             searchName = searchName
         )
     }
@@ -195,7 +198,7 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
 
                 Log.e("test", t.message.toString())
-                _bidConstWorkSearch.value = null
+                //_bidConstWorkSearch.value = null
             }
         })
     }

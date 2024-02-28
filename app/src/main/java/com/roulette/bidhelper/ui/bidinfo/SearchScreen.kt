@@ -81,32 +81,12 @@ fun SearchScreen(
         )
 
         SpacerView(modifier = Modifier)
-        BidInfoSpinnerView(title = R.string.bid_info_first_category,
-            list = if(categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
-            else categoryMap[viewModel.uiState.mainCategory]!!,
-            currentValue = viewModel.uiState.firstCategory,
-            changeUiState = {
-                viewModel.updateUIState(firstCategory = it, secondCategory = categoryMap[it]!!.get(0))
-
-            }
+        BidInfoSearchView(
+            title = R.string.bid_info_industry_name,
+            content = viewModel.uiState.industryName,
+            changeUiState = { viewModel.updateUIState(industryName = it) }
         )
 
-        SpacerView(modifier = Modifier)
-        BidInfoSpinnerView(
-            title = R.string.bid_info_second_category,
-            list = if(categoryMap[viewModel.uiState.firstCategory] == null) emptyList()
-            else categoryMap[viewModel.uiState.firstCategory]!!,
-            currentValue = viewModel.uiState.secondCategory,
-            changeUiState = {viewModel.updateUIState(secondCategory = it)}
-        )
-
-        SpacerView(modifier = Modifier)
-        BidInfoSpinnerView(
-            title = R.string.bid_info_local_limit,
-            list = placeCategoryList,
-            currentValue = viewModel.uiState.locale,
-            changeUiState = {viewModel.updateUIState(locale = it)}
-        )
 
         SpacerView(modifier = Modifier)
         BidInfoCalendarView(
