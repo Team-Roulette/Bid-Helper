@@ -3,7 +3,7 @@ package com.roulette.bidhelper.models.apis.after
 import com.google.gson.annotations.SerializedName
 
 // 개찰결과 공사예비가격 상세 목록 조회
-data class BidResultPriceDTO(
+data class BidConstWorkResultPriceDTO(
     @SerializedName("response")
     val response: Response // 응답 전체를 담는 객체
 ) {

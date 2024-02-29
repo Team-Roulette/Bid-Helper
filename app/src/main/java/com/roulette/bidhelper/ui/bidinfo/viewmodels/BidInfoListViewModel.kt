@@ -5,8 +5,6 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidResultUiState
@@ -14,7 +12,6 @@ import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
-import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,18 +27,18 @@ class BidInfoListViewModel : ViewModel() {
     var uiState by mutableStateOf(BidResultUiState.Loading)
         private set
 
-    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
-    val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
+//    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
+//    val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
+//
+//    private val _bidItemSearch = MutableLiveData<List<Item>>()
+//    val bidItemSearch: LiveData<List<Item>> = _bidItemSearch
+//
+//    private val _selectedItem = MutableLiveData<Item>()
+//    val selectedItem: LiveData<Item> = _selectedItem
 
-    private val _bidItemSearch = MutableLiveData<List<Item>>()
-    val bidItemSearch: LiveData<List<Item>> = _bidItemSearch
-
-    private val _selectedItem = MutableLiveData<Item>()
-    val selectedItem: LiveData<Item> = _selectedItem
-
-    fun selectItem(item: Item) {
-        _selectedItem.value = item
-    }
+//    fun selectItem(item: Item) {
+//        _selectedItem.value = item
+//    }
 
     /* fun setPastInfoSearchList() {
         uiState = ResultUiState.Loading
@@ -109,7 +106,6 @@ class BidInfoListViewModel : ViewModel() {
                 Log.i("test", body.response.body.totalCount)
                 val list = body.response.body.items
                 bidInfoList.value = list
-                // Bid Info List value들 다 매핑해야함
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
@@ -154,6 +150,8 @@ class BidInfoListViewModel : ViewModel() {
                 val body = response.body()!!
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
+                val list = body.response.body.items
+                bidInfoList.value = list
             }
 
             override fun onFailure(call: Call<BidThingSearchDTO>, t: Throwable) {
@@ -197,6 +195,8 @@ class BidInfoListViewModel : ViewModel() {
                 val body = response.body()!!
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
+                val list = body.response.body.items
+                bidInfoList.value = list
             }
 
             override fun onFailure(call: Call<BidServiceSearchDTO>, t: Throwable) {
