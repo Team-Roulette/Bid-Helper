@@ -34,6 +34,7 @@ data class PastInfoUiState(
     var priceType: String = "",
     var minPrice: String = "",
     var maxPrice: String = "",
+    var industryName: String = "",
     var searchName: String = ""
 )
 
@@ -72,6 +73,7 @@ class PastInfoSharedViewModel : ViewModel() {
         priceType: String = uiState.priceType,
         minPrice: String = uiState.minPrice,
         maxPrice: String = uiState.maxPrice,
+        industryName: String = uiState.industryName,
         searchName: String = uiState.searchName
     ) {
         uiState = PastInfoUiState(
@@ -84,6 +86,7 @@ class PastInfoSharedViewModel : ViewModel() {
             priceType = priceType,
             minPrice = minPrice,
             maxPrice = maxPrice,
+            industryName = industryName,
             searchName = searchName
         )
     }

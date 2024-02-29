@@ -78,7 +78,13 @@ fun SearchScreen(
             title = R.string.bid_info_main_category,
             list = mainCategoryList,
             currentValue = viewModel.uiState.mainCategory,
-            changeUiState = { viewModel.updateUIState(mainCategory = it, firstCategory = categoryMap[it]!!.get(0), secondCategory = "") }
+            changeUiState = {
+                viewModel.updateUIState(
+                    mainCategory = it,
+                    firstCategory = categoryMap[it]!!.get(0),
+                    secondCategory = ""
+                )
+            }
         )
 
         SpacerView(modifier = Modifier)
@@ -86,14 +92,17 @@ fun SearchScreen(
             title = R.string.bid_info_industry_name,
             content = viewModel.uiState.industryName,
             changeUiState = { viewModel.updateUIState(industryName = it) },
-            onClicked = onIndustryTextClicked
+            textFieldEnabled = false,
+            modifier = Modifier
+                .clickable(onClick = onIndustryTextClicked)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         )
 
 
         SpacerView(modifier = Modifier)
         BidInfoCalendarView(
             title = R.string.bid_info_input_data_from,
-            selectedDate =  viewModel.uiState.dateFrom,
+            selectedDate = viewModel.uiState.dateFrom,
             changeUiState = { viewModel.updateUIState(dateFrom = it) }
         )
 
@@ -111,7 +120,11 @@ fun SearchScreen(
             minPrice = viewModel.uiState.minPrice,
             maxPrice = viewModel.uiState.maxPrice,
             changeUiState = { priceType, minPrice, maxPrice ->
-              viewModel.updateUIState(priceType = priceType, minPrice = minPrice, maxPrice = maxPrice)
+                viewModel.updateUIState(
+                    priceType = priceType,
+                    minPrice = minPrice,
+                    maxPrice = maxPrice
+                )
             }
         )
 
@@ -119,7 +132,8 @@ fun SearchScreen(
         BidInfoSearchView(
             title = R.string.bid_info_search,
             content = viewModel.uiState.searchName,
-            changeUiState = { viewModel.updateUIState(searchName = it) }
+            changeUiState = { viewModel.updateUIState(searchName = it) },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
         )
 
         SpacerView(modifier = Modifier)
@@ -264,7 +278,7 @@ fun BidInfoCalendarView(
             )
         }
 
-        if(showDialog.value) {
+        if (showDialog.value) {
             datePickerDialog.show()
             showDialog.value = false
         }
@@ -281,9 +295,6 @@ fun BidInfoBudgetView(
     maxPrice: String,
     changeUiState: (String, String, String) -> Unit
 ) {
-    val list = listOf("기초금액", "추정가격")
-    val expanded = remember { mutableStateOf(false) }
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -296,79 +307,39 @@ fun BidInfoBudgetView(
             modifier = Modifier.fillMaxWidth(0.3f)
         )
 
-        Column(
+        Row(
             modifier = modifier
                 .fillMaxWidth()
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { expanded.value = !expanded.value }
-                    .border(width = 1.dp, color = Color.LightGray)
-                    .padding(vertical = 7.dp, horizontal = 15.dp)
-            ){
-                Text(
-                    text = priceType,
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.fillMaxWidth(.9f)
-                )
-                Icon(
-                    imageVector = Icons.Filled.ArrowDropDown,
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth()
-                )
+            OutlinedTextField(
+                value = minPrice,
+                label = { Text(text = "최소(억)", style = MaterialTheme.typography.bodySmall) },
+                textStyle = MaterialTheme.typography.labelSmall,
+                onValueChange = {
+                    changeUiState(priceType, it, maxPrice)
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ), // 키보드 타입을 숫자패드로 설정,
+                modifier = modifier.width(100.dp)
+            )
 
-                DropdownMenu(expanded = expanded.value, onDismissRequest = {
-                    expanded.value = false
-                }) {
-                    list.forEach {
-                        DropdownMenuItem(
-                            text = { Text(text = it) },
-                            onClick = {
-                                changeUiState(it, minPrice, maxPrice)
-                                expanded.value = false
-                            }
-                        )
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.fillMaxWidth(.1f))
 
-            Row(
-                modifier = modifier
-                    .fillMaxWidth()
-            ) {
-                OutlinedTextField(
-                    value = minPrice,
-                    label = { Text(text = "최소(억)", style = MaterialTheme.typography.bodySmall) },
-                    textStyle = MaterialTheme.typography.labelSmall,
-                    onValueChange = {
-                        changeUiState(priceType, it, maxPrice)
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ), // 키보드 타입을 숫자패드로 설정,
-                    modifier = modifier.width(100.dp)
-                )
-
-                Spacer(modifier = Modifier.fillMaxWidth(.1f))
-
-                OutlinedTextField(
-                    value = maxPrice,
-                    label = { Text(text = "최대(억)", style = MaterialTheme.typography.bodySmall) },
-                    textStyle = MaterialTheme.typography.labelSmall,
-                    onValueChange = {
-                        changeUiState(priceType, minPrice, it)
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Done
-                    ), // 키보드 타입을 숫자패드로 설정,
-                    modifier = modifier.width(100.dp)
-                )
-
-            }
+            OutlinedTextField(
+                value = maxPrice,
+                label = { Text(text = "최대(억)", style = MaterialTheme.typography.bodySmall) },
+                textStyle = MaterialTheme.typography.labelSmall,
+                onValueChange = {
+                    changeUiState(priceType, minPrice, it)
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ), // 키보드 타입을 숫자패드로 설정,
+                modifier = modifier.width(100.dp)
+            )
         }
     }
 }
@@ -377,14 +348,14 @@ fun BidInfoBudgetView(
 fun BidInfoSearchView(
     @StringRes
     title: Int,
-    content:String,
+    content: String,
     changeUiState: (String) -> Unit,
-    onClicked: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textFieldEnabled: Boolean = true,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 10.dp, horizontal = 20.dp)
     ) {
@@ -402,7 +373,7 @@ fun BidInfoSearchView(
         ) {
             BasicTextField(
                 value = content,
-                enabled = false,
+                enabled = textFieldEnabled,
                 textStyle = MaterialTheme.typography.labelSmall,
                 onValueChange = {
                     changeUiState(it)
@@ -410,13 +381,12 @@ fun BidInfoSearchView(
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Done
                 ),
-                modifier = Modifier
-                    .padding(horizontal = 16.dp, vertical = 10.dp)
-                    .clickable(onClick = onClicked)
+                modifier = modifier
             )
         }
     }
 }
+
 
 @Composable
 fun BidInfoButtonView(
@@ -438,7 +408,7 @@ fun BidInfoButtonView(
 
 @Composable
 fun BidInfoButton(
-    onClick:() -> Unit,
+    onClick: () -> Unit,
     text: String,
     icon: ImageVector
 ) {
