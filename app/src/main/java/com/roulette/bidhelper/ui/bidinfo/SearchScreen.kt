@@ -65,6 +65,7 @@ private const val TAG = "MainActivity"
 fun SearchScreen(
     modifier: Modifier = Modifier,
     onNextButtonClicked: () -> Unit,
+    onIndustryTextClicked: () -> Unit,
     viewModel: BidInfoSearchViewModel
 ) {
 
@@ -84,7 +85,8 @@ fun SearchScreen(
         BidInfoSearchView(
             title = R.string.bid_info_industry_name,
             content = viewModel.uiState.industryName,
-            changeUiState = { viewModel.updateUIState(industryName = it) }
+            changeUiState = { viewModel.updateUIState(industryName = it) },
+            onClicked = onIndustryTextClicked
         )
 
 
@@ -377,6 +379,7 @@ fun BidInfoSearchView(
     title: Int,
     content:String,
     changeUiState: (String) -> Unit,
+    onClicked: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -399,6 +402,7 @@ fun BidInfoSearchView(
         ) {
             BasicTextField(
                 value = content,
+                enabled = false,
                 textStyle = MaterialTheme.typography.labelSmall,
                 onValueChange = {
                     changeUiState(it)
@@ -408,6 +412,7 @@ fun BidInfoSearchView(
                 ),
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 10.dp)
+                    .clickable(onClick = onClicked)
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -31,7 +32,8 @@ private const val TAG = "BidInfoScreen"
 enum class BidInfoScreen {
     Search,
     List,
-    Precise
+    Precise,
+    Industry
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -91,13 +93,18 @@ fun BidInfoScreen(
 //                        sharedViewModel.getBidConstWorkSearch()
                         sharedViewModel.getBidConstWorkSearch()
                         navController.navigate(BidInfoScreen.List.name)
+                    },
+                    onIndustryTextClicked = {
+                        navController.navigate(BidInfoScreen.Industry.name)
                     }
+
                 )
             }
 
             composable(route = BidInfoScreen.List.name) {
                 ListScreen(
                     viewModel = sharedViewModel,
+
                     onItemClicked = { item ->
                         sharedViewModel.selectItem(item)
                         selectedItem = item
@@ -118,6 +125,18 @@ fun BidInfoScreen(
                     item = selectedItem!!
                 )
             }
+            composable(route = BidInfoScreen.Industry.name) {
+                IndustrySearchScreen(
+                    onClick = {
+                        Log.d(TAG, it[R.string.industry_search_industry_name]!!)
+                        sharedViewModel.updateUIState(
+                            industryName = it[R.string.industry_search_industry_name]!!
+                        )
+                        navController.navigateUp()
+                    }
+                )
+            }
+
         }
     }
 }

@@ -3,6 +3,7 @@ package com.roulette.bidhelper.ui.bidinfo
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,28 +31,74 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.models.apis.IndSearch
+import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.IndustryCodeSearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.IndustryDataState
 
 @Composable
 fun IndustrySearchScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: IndustryCodeSearchViewModel = viewModel(),
+    onClick: (Map<Int, String>) -> Unit
 ) {
     Column(
         modifier = modifier.fillMaxSize()
     ){
         IndustrySpacerView()
-        CategoryCodeSearchView(title = R.string.industry_category_code, content = "", changeUiState = {})
+        CategoryCodeSearchView(
+            title = R.string.industry_category_code,
+            content = viewModel.industryUiState.industryClassificationCode,
+            changeUiState = {
+                viewModel.updateUiState(
+                    industryClassificationCode = it
+                )
+            }
+        )
 
         IndustrySpacerView()
-        NameSearchView(title = R.string.industry_name, content = "", changeUiState = {})
+        NameSearchView(
+            title = R.string.industry_name,
+            content = viewModel.industryUiState.industryName,
+            changeUiState = {
+                viewModel.updateUiState(
+                    industryName = it
+                )
+            }
+        )
 
         IndustrySpacerView()
-        CodeSearchView(title = R.string.industry_code, content = "", changeUiState = {})
+        CodeSearchView(
+            title = R.string.industry_code,
+            content = viewModel.industryUiState.industryCode,
+            changeUiState = {
+                viewModel.updateUiState(
+                    industryCode = it
+                )
+            },
+            onClick = {
+                viewModel.searchIndustry()
+            }
+        )
 
         IndustrySpacerView()
-        CodeListView()
+        when(val uiState = viewModel.industryDataState) {
+            is IndustryDataState.Success -> {
+                CodeListView(
+                    itemList = uiState.items,
+                    viewModel = viewModel,
+                    onClick = onClick
+                )
+            }
+            is IndustryDataState.Loading -> {}
+            is IndustryDataState.Error -> {}
+        }
+
     }
 }
 
@@ -88,7 +135,8 @@ private fun CategoryCodeSearchView(
                     changeUiState(it)
                 },
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 10.dp)
@@ -140,7 +188,7 @@ private fun NameSearchView(
                     changeUiState(it)
                 },
                 keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Next
                 ),
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 10.dp)
@@ -155,6 +203,7 @@ private fun CodeSearchView(
     title: Int,
     content:String,
     changeUiState: (String) -> Unit,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -182,6 +231,7 @@ private fun CodeSearchView(
                     changeUiState(it)
                 },
                 keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
                 ),
                 modifier = Modifier
@@ -190,7 +240,7 @@ private fun CodeSearchView(
         }
 
         Button(
-            onClick = {},
+            onClick = onClick,
             contentPadding = PaddingValues(0.dp),
             colors = ButtonDefaults.buttonColors(
                 contentColor = Color.Black,
@@ -209,14 +259,19 @@ private fun CodeSearchView(
 @Composable
 private fun CodeListView(
     modifier: Modifier = Modifier,
-    itemList: List<String> = listOf("aaa", "bbb", "ccc"),
+    onClick: (Map<Int, String>) -> Unit,
+    viewModel: IndustryCodeSearchViewModel,
+    itemList: List<BidBaseInfoListDTO.Response.Body.Item>?,
 ) {
     LazyColumn() {
-        items(itemList) {
-            CodeListItem(
-                modifier = Modifier.fillMaxWidth(),
-                item = it
-            )
+        if(itemList != null) {
+            items(itemList) {
+                CodeListItem(
+                    modifier = Modifier.fillMaxWidth(),
+                    itemMap = viewModel.getItemAsMap(it),
+                    onClick = onClick
+                )
+            }
         }
     }
 }
@@ -224,20 +279,22 @@ private fun CodeListView(
 @Composable
 private fun CodeListItem(
     modifier: Modifier = Modifier,
-    item: String,
+    onClick: (Map<Int, String>) -> Unit = {},
+    itemMap: Map<Int, String>,
     title: List<Int> = listOf(
-        R.string.industry_search_number,
         R.string.industry_search_category_code,
         R.string.industry_search_category_name,
         R.string.industry_search_code,
         R.string.industry_search_industry_name,
-        R.string.industry_search_included_relation,
         R.string.industry_search_related_law,
         R.string.industry_search_related_rule,
     )
 ) {
     Column(
         modifier = Modifier.padding(20.dp)
+            .clickable(enabled = true) {
+                onClick(itemMap)
+            }
     ){
         for(i in title.indices){
             Row {
@@ -246,10 +303,12 @@ private fun CodeListItem(
                     modifier = Modifier.fillMaxWidth(0.3f)
                 )
 
-                Text(
-                    text = item,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                itemMap[title[i]]?.let {
+                    Text(
+                        text = it,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
             }
         }
     }
@@ -272,6 +331,8 @@ private fun IndustrySpacerView(
 @Composable
 fun IndustryScreenPreview() {
     Surface {
-        IndustrySearchScreen()
+        IndustrySearchScreen(
+            onClick = {}
+        )
     }
 }
