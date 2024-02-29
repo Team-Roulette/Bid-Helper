@@ -6,14 +6,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class BidResultPriceViewModel : ViewModel() {
-    private val _bidResultPrice = MutableLiveData<BidResultPriceDTO>()
-    val bidResultPrice: LiveData<BidResultPriceDTO> = _bidResultPrice
+    private val _bidResultPrice = MutableLiveData<BidConstWorkResultPriceDTO>()
+    val bidResultPrice: LiveData<BidConstWorkResultPriceDTO> = _bidResultPrice
 
     fun setBidResultPrice(param: BidAmountInfo) {
         RequestServer.bidServiceAfter.getBidResultPrice(
@@ -25,17 +25,17 @@ class BidResultPriceViewModel : ViewModel() {
             inqryEndDt = param.inqryEndDt,
             bidNtceNo = param.bidNtceNo,
             type = param.type
-        ).enqueue(object : Callback<BidResultPriceDTO> {
+        ).enqueue(object : Callback<BidConstWorkResultPriceDTO> {
             override fun onResponse(
-                call: Call<BidResultPriceDTO>,
-                response: Response<BidResultPriceDTO>
+                call: Call<BidConstWorkResultPriceDTO>,
+                response: Response<BidConstWorkResultPriceDTO>
             ) {
                 val body = response.body()!!
                 Log.i("test", body.response.header.resultMsg+"낙찰 가격")
                 _bidResultPrice.value = body
             }
 
-            override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
+            override fun onFailure(call: Call<BidConstWorkResultPriceDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
                 _bidResultPrice.value = null
             }
