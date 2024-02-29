@@ -27,7 +27,7 @@ data class BidStatusServiceSearchDTO(
 data class Item(
     @SerializedName("bidClsfcNo") val bidClsfcNo: String, // 입찰분류번호
     @SerializedName("bidNtceNm") val bidNtceNm: String, // 입찰공고명
-    @SerializedName("bidNtceNo") val bidNtceNo: String, // 입찰공고번호
+    @SerializedName("bidNtceNo") val bidNtceNo: String, // 입찰공고번호   ///////////// ***
     @SerializedName("bidNtceOrd") val bidNtceOrd: String, // 입찰공고차수
     @SerializedName("bidwinnrAdrs") val bidwinnrAdrs: String, // 최종낙찰업체주소
     @SerializedName("bidwinnrBizno") val bidwinnrBizno: String, // 최종낙찰업체사업자등록번호
