@@ -25,10 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.before.Item
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
 
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
@@ -38,15 +37,13 @@ lateinit var contents: List<String>
 
 @Composable
 fun PreciseScreen(
-    viewModel: BidInfoSearchViewModel,
-    modifier: Modifier = Modifier,
-    item: Item
+    viewModel: BidInfoPreciseViewModel,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
     ){
-        viewModel.selectItem(item)
         viewModel.selectedItem.value?.apply {
             contents = listOf(
                 bidNtceNm,
@@ -110,6 +107,8 @@ fun BidInfoTextView(
         Text(
             text = content,
             style = MaterialTheme.typography.displaySmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
@@ -128,7 +127,7 @@ fun BidInfoHorizontalSpacer(
 }
 
 @Composable
-private fun BidInfoTabLayout(
+fun BidInfoTabLayout(
     modifier:Modifier = Modifier
 ) {
     val list = listOf("공고요약", "상세정보")

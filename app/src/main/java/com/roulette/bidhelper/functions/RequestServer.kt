@@ -3,14 +3,15 @@ package com.roulette.bidhelper.functions
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidCommonParams
 import com.roulette.bidhelper.models.apis.BidLimitRegion
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.IndSearch
 import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidResultListDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
@@ -484,16 +485,16 @@ object RequestServer {
     }
 
     // 업종 및 근거 법규 정보 조회
-    fun getBaseInfoList(param: BidCommonParams, listener: OnBaseInfoListReceivedListener) {
+    fun getBaseInfoList(param: IndSearch, listener: OnBaseInfoListReceivedListener) {
         bidServiceCode.getBaseInfoList(
             numOfRows = "100",
             pageNo = "1",
             serviceKey = param.serviceKey,
-            indstrytyClsfcCd = null,
-            indstrytyNm = null,
-            indstrytyCd = null,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
+            indstrytyClsfcCd = param.indstrytyClsfcCd,
+            indstrytyNm = param.indstrytyNm,
+            indstrytyCd = param.indstrytyCd,
+            inqryBgnDt = null,
+            inqryEndDt = null,
             indstrytyUseYn = null,
             type = param.type
         ).enqueue(object: Callback<BidBaseInfoListDTO> {
@@ -528,7 +529,7 @@ interface onBidResultPriceListRecievedListener {
 }
 
 interface OnPastInfoListReceivedListener {
-    fun onReceived(items: List<com.roulette.bidhelper.models.apis.after.Item>)
+    fun onReceived(items: List<Item>)
 }
 
 

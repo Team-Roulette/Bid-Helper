@@ -3,6 +3,7 @@ package com.roulette.bidhelper.models.apis
 import com.google.gson.annotations.SerializedName
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.after.Item
+import com.roulette.bidhelper.models.apis.before.SearchItem
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -20,13 +21,19 @@ sealed interface BidResultUiState {
     data object Loading : BidResultUiState
 }
 
+sealed interface BidInfoUiState {
+    data class Success(val items: List<SearchItem>) : BidInfoUiState
+    data object Error : BidInfoUiState
+    data object Loading : BidInfoUiState
+}
+
 open class BidCommonParams( // 요청 기본 파라미터
     @SerializedName("numOfRows") var numOfRows: String? = null, // 한 페이지 결과 수
     @SerializedName("pageNo") var pageNo: String? = null, // 페이지 번호,
     @SerializedName("ServiceKey") val serviceKey: String = BuildConfig.API_SERVICE_KEY, // 공공데이터포탈에서 받은 인증키
     @SerializedName("inqryDiv") var inqryDiv: String? = null, // 검색하고자하는 조회구분 1.입력일시, 2.입찰공고번호
-    @SerializedName("inqryBgnDt") var inqryBgnDt: String = targetTime(3), // 검색하고자하는 조회시작일시
-    @SerializedName("inqryEndDt") var inqryEndDt: String = targetTime(0), // 검색하고자하는 조회종료일시
+    @SerializedName("inqryBgnDt") var inqryBgnDt: String? = targetTime(3), // 검색하고자하는 조회시작일시
+    @SerializedName("inqryEndDt") var inqryEndDt: String? = targetTime(0), // 검색하고자하는 조회종료일시
     @SerializedName("type") val type: String = "json",// 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
 )
 

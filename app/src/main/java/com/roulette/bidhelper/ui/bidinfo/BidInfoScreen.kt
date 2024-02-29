@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,7 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.before.Item
+import com.roulette.bidhelper.models.apis.before.SearchItem
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoListViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
@@ -34,7 +35,8 @@ private const val TAG = "BidInfoScreen"
 enum class BidInfoScreen {
     Search,
     List,
-    Precise
+    Precise,
+    Industry
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,14 +68,14 @@ fun BidInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-    var selectedItem: Item? = null
+    var selectedItem: SearchItem? = null
 
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("FilterDB", Context.MODE_PRIVATE)
     val factory = SearchViewModelFactory(sharedPreferences)
     val searchViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
-    lateinit var listViewModel: BidInfoListViewModel
-    lateinit var preciseViewModel: BidInfoPreciseViewModel
+    val listViewModel: BidInfoListViewModel = BidInfoListViewModel()
+    val preciseViewModel: BidInfoPreciseViewModel = BidInfoPreciseViewModel()
 
     Scaffold(
         topBar = {
@@ -88,7 +90,7 @@ fun BidInfoScreen(
             navController = navController,
             startDestination = BidInfoScreen.Search.name,
             modifier = Modifier.padding(innerPadding)
-        ){
+        ) {
             composable(route = BidInfoScreen.Search.name) {
                 SearchScreen(
                     viewModel = searchViewModel,
@@ -96,6 +98,9 @@ fun BidInfoScreen(
                         val param = setBidSearch(searchViewModel)
                         listViewModel.getBidSearchResult(searchViewModel.uiState.mainCategory, param)
                         navController.navigate(BidInfoScreen.List.name)
+                    },
+                    onIndustryTextClicked = {
+                        navController.navigate(BidInfoScreen.Industry.name)
                     }
                 )
             }
@@ -104,8 +109,7 @@ fun BidInfoScreen(
                 ListScreen(
                     viewModel = listViewModel,
                     onItemClicked = { item ->
-                        searchViewModel.selectItem(item)
-                        selectedItem = item
+                        preciseViewModel.selectItem(item)
                         navController.navigate(BidInfoScreen.Precise.name) {
                             anim {
                                 enter = R.anim.slide_in_right // 새 화면이 오른쪽에서 들어옴
@@ -119,10 +123,21 @@ fun BidInfoScreen(
             }
             composable(route = BidInfoScreen.Precise.name) {
                 PreciseScreen(
-                    viewModel = searchViewModel,
-                    item = selectedItem!!
+                    viewModel = preciseViewModel
                 )
             }
+            composable(route = BidInfoScreen.Industry.name) {
+                IndustrySearchScreen(
+                    onClick = {
+                        Log.d(TAG, it[R.string.industry_search_industry_name]!!)
+                        searchViewModel.updateUIState(
+                            industryName = it[R.string.industry_search_industry_name]!!
+                        )
+                        navController.navigateUp()
+                    }
+                )
+            }
+
         }
     }
 }
@@ -132,15 +147,15 @@ fun setBidSearch(searchViewModel: BidInfoSearchViewModel): BidSearch {
         numOfRows = "10"
         pageNo = "1"
         inqryDiv = "1"
-        searchViewModel.uiState.apply {
-            inqryBgnDt = dateFrom
-            inqryEndDt = dateTo
-            presmptPrceBgn = minPrice
-            presmptPrceEnd = maxPrice
-            bidNm = searchName
-            bidNtceNm = searchName
-            indstrytyNm = industryName
-        }
+//        searchViewModel.uiState.apply {
+//            inqryBgnDt = dateFrom
+//            inqryEndDt = dateTo
+//            presmptPrceBgn = minPrice
+//            presmptPrceEnd = maxPrice
+//            bidNm = searchName
+//            bidNtceNm = searchName
+//            indstrytyNm = industryName
+//        }
     }
 }
 

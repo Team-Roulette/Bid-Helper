@@ -18,12 +18,16 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.roulette.bidhelper.R
+import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
+import com.roulette.bidhelper.ui.bidinfo.IndustrySearchScreen
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 enum class PastInfoScreen {
     Search,
     List,
-    Precise
+    Precise,
+    Industry
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,6 +81,9 @@ fun PastInfoScreen(
                     onNextButtonClicked = {
                         sharedViewModel.setPastInfoSearchList()
                         navController.navigate(PastInfoScreen.List.name)
+                    },
+                    onIndustryTextClicked = {
+                        navController.navigate(BidInfoScreen.Industry.name)
                     }
                 )
             }
@@ -93,6 +100,17 @@ fun PastInfoScreen(
 
             composable(route = PastInfoScreen.Precise.name) {
                 PastInfoPreciseScreen(item = sharedViewModel.item)
+            }
+
+            composable(route = BidInfoScreen.Industry.name) {
+                IndustrySearchScreen(
+                    onClick = {
+                        sharedViewModel.updateUIState(
+                            industryName = it[R.string.industry_search_industry_name]!!
+                        )
+                        navController.navigateUp()
+                    }
+                )
             }
         }
     }

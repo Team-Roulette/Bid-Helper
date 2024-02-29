@@ -7,11 +7,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer
-import com.roulette.bidhelper.models.apis.BidResultUiState
+import com.roulette.bidhelper.models.apis.BidInfoUiState
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.before.SearchItem
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import retrofit2.Call
 import retrofit2.Callback
@@ -22,9 +23,9 @@ import java.util.Locale
 private const val TAG = "BidInfoListViewModel"
 
 class BidInfoListViewModel : ViewModel() {
-    var bidInfoList: MutableState<List<*>?> = mutableStateOf(null)
+    var bidInfoList: MutableState<List<SearchItem>?> = mutableStateOf(null)
 
-    var uiState by mutableStateOf(BidResultUiState.Loading)
+    var uiState: BidInfoUiState by mutableStateOf(BidInfoUiState.Loading)
         private set
 
 //    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
@@ -106,6 +107,7 @@ class BidInfoListViewModel : ViewModel() {
                 Log.i("test", body.response.body.totalCount)
                 val list = body.response.body.items
                 bidInfoList.value = list
+                uiState = BidInfoUiState.Success(list)
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
@@ -151,6 +153,7 @@ class BidInfoListViewModel : ViewModel() {
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
                 val list = body.response.body.items
+                uiState = BidInfoUiState.Success(list)
                 bidInfoList.value = list
             }
 
@@ -193,10 +196,11 @@ class BidInfoListViewModel : ViewModel() {
                 response: Response<BidServiceSearchDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
+//                Log.i("test", body.response.body.items[0].bidNtceNm)
+//                Log.i("test", body.response.body.totalCount)
                 val list = body.response.body.items
                 bidInfoList.value = list
+                uiState = BidInfoUiState.Success(list)
             }
 
             override fun onFailure(call: Call<BidServiceSearchDTO>, t: Throwable) {

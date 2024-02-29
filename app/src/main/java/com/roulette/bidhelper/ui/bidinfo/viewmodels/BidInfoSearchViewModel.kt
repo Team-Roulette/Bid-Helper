@@ -5,17 +5,12 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roulette.bidhelper.functions.RequestServer.getBidConstWorkSearch
 import com.roulette.bidhelper.functions.RequestServer.getBidServiceSearch
 import com.roulette.bidhelper.functions.RequestServer.getBidThingSearch
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
-import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import java.text.SimpleDateFormat
@@ -42,19 +37,6 @@ data class SearchUiState(
 
 class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences) : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
-
-    private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
-    val bidConstBasisAmount: LiveData<BidConstBasisAmountDTO> = _bidConstBasisAmount
-
-    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
-    val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
-
-    private val _selectedItem = MutableLiveData<Item>()
-    val selectedItem: LiveData<Item> = _selectedItem
-
-    fun selectItem(item: Item) {
-        _selectedItem.value = item
-    }
 
     init {
         updateUIState(
