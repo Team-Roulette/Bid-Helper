@@ -11,9 +11,6 @@ import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
-import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoUiState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

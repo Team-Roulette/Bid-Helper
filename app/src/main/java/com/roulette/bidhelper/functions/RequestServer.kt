@@ -21,16 +21,24 @@ import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidThingBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
 import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RequestServer {
     private const val BASE_URL_BEFORE = BuildConfig.BASE_URL_BEFORE
     private const val BASE_URL_AFTER = BuildConfig.BASE_URL_AFTER
     private const val BASE_URL_CODE = BuildConfig.BASE_URL_CODE
+
+    val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃 10초
+        .readTimeout(120, TimeUnit.SECONDS) // 읽기 타임아웃 30초
+        .writeTimeout(120, TimeUnit.SECONDS) // 쓰기 타임아웃 15초
+        .build()
     
     val retrofitBefore = Retrofit.Builder()
         .baseUrl(BASE_URL_BEFORE)
@@ -38,6 +46,7 @@ object RequestServer {
         .build()
     val retrofitAfter = Retrofit.Builder()
         .baseUrl(BASE_URL_AFTER)
+        .client(okHttpClient) // 설정한 OkHttp 클라이언트 사용
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val retrofitCode = Retrofit.Builder()
@@ -401,7 +410,7 @@ object RequestServer {
     }
 
     // 나라장터 검색조건에 의한 낙찰된 목록 현황 공사 조회
-    fun getBidStatusConstWorkSearch(param: BidSearch, listener : OnPastInfoListReceivedListener) {
+    fun getBidStatusConstWorkSearch(param: BidSearch, listener : OnPastInfoListReceivedListener, retryCount: Int = 0) {
         bidServiceAfter.getBidStatusConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -437,7 +446,13 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
-                Log.e("test", t.message.toString())
+                if (retryCount < 5) {
+                    Log.e("Retry", "Retrying... Attempt: $retryCount")
+                    getBidStatusConstWorkSearch(param, listener, retryCount + 1)
+                } else {
+                    Log.e("test", t.message.toString())
+                }
+                //Log.e("test", t.message.toString())
             }
 
         })
