@@ -2,6 +2,7 @@ package com.roulette.bidhelper.models.apis
 
 import com.google.gson.annotations.SerializedName
 import com.roulette.bidhelper.BuildConfig
+import com.roulette.bidhelper.models.apis.after.Item
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -11,6 +12,12 @@ fun targetTime(month: Long): String {
     time = LocalDateTime.now().minusMonths(month)
     if(month != 0L) time = time.withHour(0).withMinute(0)
     return time.format(formatter)
+}
+
+sealed interface BidResultUiState {
+    data class Success(val items: List<Item>) : BidResultUiState
+    data object Error : BidResultUiState
+    data object Loading : BidResultUiState
 }
 
 open class BidCommonParams( // 요청 기본 파라미터

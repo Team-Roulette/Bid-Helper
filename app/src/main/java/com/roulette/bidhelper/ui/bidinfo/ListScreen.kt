@@ -17,19 +17,18 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.before.Item
-import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoListViewModel
 
 @Composable
 fun ListScreen(
-    viewModel: BidInfoSearchViewModel,
+    viewModel: BidInfoListViewModel<Any?>,
     onItemClicked: (Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     val itemList = viewModel.bidConstWorkSearch
-    val itemList2 = viewModel.bidConstBasisAmount
+//    val itemList2 = viewModel.bidConstBasisAmount
     val lifecycleOwner = LocalLifecycleOwner.current
 
     LazyColumn(

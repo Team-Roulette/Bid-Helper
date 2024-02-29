@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer.bidServiceAfter
+import com.roulette.bidhelper.models.apis.BidResultUiState
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
@@ -18,7 +19,6 @@ import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.Locale
 
 
@@ -37,11 +37,7 @@ data class PastInfoUiState(
     var searchName: String = ""
 )
 
-sealed interface BidResultUiState {
-    data class Success(val items: List<Item>) : BidResultUiState
-    data object Error : BidResultUiState
-    data object Loading : BidResultUiState
-}
+
 
 class PastInfoSharedViewModel : ViewModel() {
     var uiState by mutableStateOf(PastInfoUiState())

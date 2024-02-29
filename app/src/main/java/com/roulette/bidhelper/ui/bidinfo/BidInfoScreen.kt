@@ -22,7 +22,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.before.Item
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoListViewModel
+import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.SearchViewModelFactory
 
@@ -68,7 +71,9 @@ fun BidInfoScreen(
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("FilterDB", Context.MODE_PRIVATE)
     val factory = SearchViewModelFactory(sharedPreferences)
-    val sharedViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
+    val searchViewModel: BidInfoSearchViewModel = viewModel(factory = factory)
+    lateinit var listViewModel: BidInfoListViewModel
+    lateinit var preciseViewModel: BidInfoPreciseViewModel
 
     Scaffold(
         topBar = {
@@ -86,10 +91,10 @@ fun BidInfoScreen(
         ){
             composable(route = BidInfoScreen.Search.name) {
                 SearchScreen(
-                    viewModel = sharedViewModel,
+                    viewModel = searchViewModel,
                     onNextButtonClicked = {
-//                        sharedViewModel.getBidConstWorkSearch()
-                        sharedViewModel.getBidConstWorkSearch()
+                        val param = setBidSearch(searchViewModel)
+                        listViewModel.getBidSearchResult(searchViewModel.uiState.mainCategory, param)
                         navController.navigate(BidInfoScreen.List.name)
                     }
                 )
@@ -97,9 +102,9 @@ fun BidInfoScreen(
 
             composable(route = BidInfoScreen.List.name) {
                 ListScreen(
-                    viewModel = sharedViewModel,
+                    viewModel = listViewModel,
                     onItemClicked = { item ->
-                        sharedViewModel.selectItem(item)
+                        searchViewModel.selectItem(item)
                         selectedItem = item
                         navController.navigate(BidInfoScreen.Precise.name) {
                             anim {
@@ -114,10 +119,27 @@ fun BidInfoScreen(
             }
             composable(route = BidInfoScreen.Precise.name) {
                 PreciseScreen(
-                    viewModel = sharedViewModel,
+                    viewModel = searchViewModel,
                     item = selectedItem!!
                 )
             }
+        }
+    }
+}
+
+fun setBidSearch(searchViewModel: BidInfoSearchViewModel): BidSearch {
+    return BidSearch().apply {
+        numOfRows = "10"
+        pageNo = "1"
+        inqryDiv = "1"
+        searchViewModel.uiState.apply {
+            inqryBgnDt = dateFrom
+            inqryEndDt = dateTo
+            presmptPrceBgn = minPrice
+            presmptPrceEnd = maxPrice
+            bidNm = searchName
+            bidNtceNm = searchName
+            indstrytyNm = industryName
         }
     }
 }

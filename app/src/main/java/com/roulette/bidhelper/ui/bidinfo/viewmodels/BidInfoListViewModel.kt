@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.ui.bidinfo.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -8,12 +9,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.RequestServer
+import com.roulette.bidhelper.models.apis.BidResultUiState
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
+import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoUiState
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,14 +24,10 @@ import java.util.Locale
 
 private const val TAG = "BidInfoListViewModel"
 
-sealed interface ResultUiState {
-    data class Success(val items: List<Item>) : ResultUiState
-    data object Error : ResultUiState
-    data object Loading : ResultUiState
-}
+class BidInfoListViewModel : ViewModel() {
+    var bidInfoList: MutableState<List<*>?> = mutableStateOf(null)
 
-class BidInfoListViewModel: ViewModel() {
-    var uiState by mutableStateOf(ResultUiState.Loading)
+    var uiState by mutableStateOf(BidResultUiState.Loading)
         private set
 
     private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
@@ -38,7 +36,6 @@ class BidInfoListViewModel: ViewModel() {
     private val _bidItemSearch = MutableLiveData<List<Item>>()
     val bidItemSearch: LiveData<List<Item>> = _bidItemSearch
 
-
     private val _selectedItem = MutableLiveData<Item>()
     val selectedItem: LiveData<Item> = _selectedItem
 
@@ -46,14 +43,14 @@ class BidInfoListViewModel: ViewModel() {
         _selectedItem.value = item
     }
 
-    /*fun setPastInfoSearchList() {
+    /* fun setPastInfoSearchList() {
         uiState = ResultUiState.Loading
 
         val bidSearch = BidSearch().apply {
             numOfRows = "100"
             pageNo = "1"
             inqryDiv = "1"
-            inqryBgnDt = getFormattedDate(uiState, "0000")
+            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
             inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
         }
 
@@ -66,17 +63,16 @@ class BidInfoListViewModel: ViewModel() {
                 getBidConstWorkSearch(bidSearch)
             }
         }
-    }*/
-
-    fun getBidConstWorkSearch(
-        bidSearch: BidSearch
-    ) {
-        val param: BidSearch = BidSearch().apply {
-            numOfRows = "100"
-            pageNo = "1"
-            inqryDiv = "1"
+    } */
+    fun getBidSearchResult(category: String, param: BidSearch) {
+        when(category) {
+            mainCategoryList[1] -> getBidConstWorkSearch(param)
+            mainCategoryList[2] -> getBidThingSearch(param)
+            mainCategoryList[3] -> getBidServiceSearch(param)
         }
+    }
 
+    private fun getBidConstWorkSearch(param: BidSearch) {
         RequestServer.bidServiceBefore.getBidConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -103,7 +99,6 @@ class BidInfoListViewModel: ViewModel() {
             bidClseExcpYn = param.bidClseExcpYn,
             intrntnlDivCd = param.intrntnlDivCd
         ).enqueue(object : Callback<BidConstWorkSearchDTO> {
-
             override fun onResponse(
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>
@@ -112,7 +107,9 @@ class BidInfoListViewModel: ViewModel() {
                 val body = response.body()!!
                 Log.i("test", body.response.body.items[0].bidNtceNm)
                 Log.i("test", body.response.body.totalCount)
-                _bidConstWorkSearch.value = body
+                val list = body.response.body.items
+                bidInfoList.value = list
+                // Bid Info List value들 다 매핑해야함
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
@@ -120,6 +117,92 @@ class BidInfoListViewModel: ViewModel() {
                 Log.e("test", t.message.toString())
                 //_bidConstWorkSearch.value = null
             }
+        })
+    }
+
+    private fun getBidThingSearch(param: BidSearch) {
+        RequestServer.bidServiceBefore.getBidThingSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            bidClseExcpYn = param.bidClseExcpYn,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidThingSearchDTO> {
+            override fun onResponse(
+                call: Call<BidThingSearchDTO>,
+                response: Response<BidThingSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidThingSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
+        })
+    }
+
+    private fun getBidServiceSearch(param: BidSearch) {
+        RequestServer.bidServiceBefore.getBidServiceSearch(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            type = param.type,
+            bidNtceNm = param.bidNtceNm,
+            ntceInsttCd = param.ntceInsttCd,
+            ntceInsttNm = param.ntceInsttNm,
+            dminsttCd = param.dminsttCd,
+            dminsttNm = param.dminsttNm,
+            refNo = param.refNo,
+            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
+            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
+            indstrytyCd = param.indstrytyCd,
+            indstrytyNm = param.indstrytyNm,
+            presmptPrceBgn = param.presmptPrceBgn,
+            presmptPrceEnd = param.presmptPrceEnd,
+            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
+            masYn = param.masYn,
+            prcrmntReqNo = param.prcrmntReqNo,
+            bidClseExcpYn = param.bidClseExcpYn,
+            intrntnlDivCd = param.intrntnlDivCd
+        ).enqueue(object : Callback<BidServiceSearchDTO> {
+            override fun onResponse(
+                call: Call<BidServiceSearchDTO>,
+                response: Response<BidServiceSearchDTO>
+            ) {
+                val body = response.body()!!
+                Log.i("test", body.response.body.items[0].bidNtceNm)
+                Log.i("test", body.response.body.totalCount)
+            }
+
+            override fun onFailure(call: Call<BidServiceSearchDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+
         })
     }
 
