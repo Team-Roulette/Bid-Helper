@@ -15,11 +15,11 @@ import com.roulette.bidhelper.ui.bidinfo.BidInfoSpinnerView
 import com.roulette.bidhelper.ui.bidinfo.SpacerView
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSearchViewModel
 
 @Composable
 fun PastInfoSearchScreen(
-    viewModel: PastInfoSharedViewModel,
+    viewModel: PastInfoSearchViewModel,
     onNextButtonClicked: () -> Unit,
     onIndustryTextClicked: ()-> Unit,
     modifier: Modifier = Modifier
@@ -88,7 +88,7 @@ fun PastInfoSearchScreen(
 
         SpacerView(modifier = Modifier)
         BidInfoButtonView(
-            onClickReset = {},
+            onClickReset = { viewModel.resetFilter() },
             onClickSearch = onNextButtonClicked
         )
     }

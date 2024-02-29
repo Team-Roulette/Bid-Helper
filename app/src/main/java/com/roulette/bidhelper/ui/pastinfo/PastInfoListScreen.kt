@@ -24,23 +24,24 @@ import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.models.apis.BidResultUiState
 import com.roulette.bidhelper.models.apis.after.Item
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoListViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastResultUiState
 
 @Composable
 fun PastInfoListScreen(
-    viewModel: PastInfoSharedViewModel,
+    modifier: Modifier = Modifier,
+    pastInfoViewModel: PastInfoListViewModel,
     onItemClicked:(Item) -> Unit,
-    modifier: Modifier = Modifier
 ) {
 
-    when (val bidResultUiState = viewModel.bidResultUiState) {
-        is BidResultUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
-        is BidResultUiState.Success -> ResultScreen(
-            itemList = bidResultUiState.items,
+    when (val pastResultUiState = pastInfoViewModel.pastResultUiState) {
+        is PastResultUiState.Loading -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is PastResultUiState.Success -> ResultScreen(
+            itemList = pastResultUiState.items,
             modifier = modifier.fillMaxWidth(),
             onItemClicked = onItemClicked
         )
-        is BidResultUiState.Error -> LoadingScreen(modifier = modifier.fillMaxSize())
+        is PastResultUiState.Error -> LoadingScreen(modifier = modifier.fillMaxSize())
     }
 }
 
