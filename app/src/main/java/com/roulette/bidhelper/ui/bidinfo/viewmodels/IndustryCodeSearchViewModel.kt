@@ -9,7 +9,6 @@ import com.roulette.bidhelper.R
 import com.roulette.bidhelper.functions.OnBaseInfoListReceivedListener
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.IndSearch
-import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
 
 data class IndustryUiState(

@@ -7,14 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
-import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.BidInfoBudgetView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoButtonView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoCalendarView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoSearchView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoSpinnerView
 import com.roulette.bidhelper.ui.bidinfo.SpacerView
-import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel

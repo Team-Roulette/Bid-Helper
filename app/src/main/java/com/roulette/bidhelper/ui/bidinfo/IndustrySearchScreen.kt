@@ -36,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roulette.bidhelper.R
-import com.roulette.bidhelper.models.apis.IndSearch
 import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.IndustryCodeSearchViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.IndustryDataState

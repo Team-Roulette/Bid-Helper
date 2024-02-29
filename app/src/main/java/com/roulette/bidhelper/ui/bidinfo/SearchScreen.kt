@@ -1,11 +1,6 @@
 package com.roulette.bidhelper.ui.bidinfo
 
 import android.app.DatePickerDialog
-
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
-
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
@@ -53,7 +48,6 @@ import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
-import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -68,7 +62,6 @@ fun SearchScreen(
     onIndustryTextClicked: () -> Unit,
     viewModel: BidInfoSearchViewModel
 ) {
-
 
     Column(
         modifier = modifier

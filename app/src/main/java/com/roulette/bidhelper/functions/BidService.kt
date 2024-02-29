@@ -1,7 +1,7 @@
 package com.roulette.bidhelper.functions
 
-import com.roulette.bidhelper.models.apis.after.BidResultListDTO
 import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
+import com.roulette.bidhelper.models.apis.after.BidResultListDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO

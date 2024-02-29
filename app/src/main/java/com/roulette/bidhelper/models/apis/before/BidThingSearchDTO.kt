@@ -17,20 +17,20 @@ data class BidThingSearchDTO(
             @SerializedName("totalCount") val totalCount: String // 총 항목 수
         ) {
             data class Item(
-                @SerializedName("bidNtceNo") val bidNtceNo: String, // 입찰공고번호
-                @SerializedName("bidNtceNm") val bidNtceNm: String, // 입찰공고명
+                @SerializedName("bidNtceNo") override val bidNtceNo: String, // 입찰공고번호
+                @SerializedName("bidNtceNm") override val bidNtceNm: String, // 입찰공고명
                 @SerializedName("ntceInsttCd") val ntceInsttCd: String, // 공고기관코드
-                @SerializedName("dminsttNm") val dminsttNm: String, // 수요기관명
+                @SerializedName("dminsttNm") override val dminsttNm: String, // 수요기관명
                 @SerializedName("bidMethdNm") val bidMethdNm: String, // 입찰방식명
                 @SerializedName("opengDt") val opengDt: String, // 개찰일시
-                @SerializedName("bidBeginDt") val bidBeginDt: String, // 입찰개시일시
-                @SerializedName("bidClseDt") val bidClseDt: String, // 입찰마감일시
+                @SerializedName("bidBeginDt") override val bidBeginDt: String, // 입찰개시일시
+                @SerializedName("bidClseDt") override val bidClseDt: String, // 입찰마감일시
                 @SerializedName("arsltApplDocRcptDt") val arsltApplDocRcptDt: String, // 실적신청서 접수일시
                 @SerializedName("arsltApplDocRcptMthdNm") val arsltApplDocRcptMthdNm: String, // 실적신청서접수방법명
                 @SerializedName("asignBdgtAmt") val asignBdgtAmt: String, // 배정예산금액
                 @SerializedName("bfSpecRgstNo") val bfSpecRgstNo: String, // 사전규격등록번호
                 @SerializedName("bidGrntymnyPaymntYn") val bidGrntymnyPaymntYn: String, // 입찰보증금납부여부
-                @SerializedName("bidNtceDt") val bidNtceDt: String, // 입찰공고일시
+                @SerializedName("bidNtceDt") override val bidNtceDt: String, // 입찰공고일시
                 @SerializedName("bidNtceDtlUrl") val bidNtceDtlUrl: String, // 입찰공고상세URL
                 @SerializedName("bidNtceUrl") val bidNtceUrl: String, // 입찰공고URL
                 @SerializedName("bidPrtcptFee") val bidPrtcptFee: String, // 입찰참가수수료
@@ -41,14 +41,14 @@ data class BidThingSearchDTO(
                 @SerializedName("chgNtceRsn") val chgNtceRsn: String, // 변경공고사유
                 @SerializedName("cmmnSpldmdAgrmntClseDt") val cmmnSpldmdAgrmntClseDt: String, // 공동수급협정마감일시
                 @SerializedName("cmmnSpldmdAgrmntRcptdocMethd") val cmmnSpldmdAgrmntRcptdocMethd: String, // 공동수급협정서접수방식
-                @SerializedName("cmmnSpldmdCorpRgnLmtYn") val cmmnSpldmdCorpRgnLmtYn: String, // 공동수급업체지역제한여부
+                @SerializedName("cmmnSpldmdCorpRgnLmtYn") override val cmmnSpldmdCorpRgnLmtYn: String, // 공동수급업체지역제한여부
                 @SerializedName("cmmnSpldmdMethdCd") val cmmnSpldmdMethdCd: String, // 공동수급방식코드
                 @SerializedName("cmmnSpldmdMethdNm") val cmmnSpldmdMethdNm: String, // 공동수급방식명
                 @SerializedName("cntrctCnclsMthdNm") val cntrctCnclsMthdNm: String, // 계약체결방법명
                 @SerializedName("crdtrNm") val crdtrNm: String, // 채권자명
                 @SerializedName("d2bMngAssmntLwstlmtRt") val d2bMngAssmntLwstlmtRt: String, // 방사청관리사정하한율
                 @SerializedName("d2bMngAssmntUplmtRt") val d2bMngAssmntUplmtRt: String, // 방사청관리사정상한율
-                @SerializedName("d2bMngBssamt") val d2bMngBssamt: String, // 방사청관리기초금액
+                @SerializedName("d2bMngBssamt") override val d2bMngBssamt: String, // 방사청관리기초금액
                 @SerializedName("d2bMngCntrctKindNm") val d2bMngCntrctKindNm: String, // 방사청관리계약종류명
                 @SerializedName("d2bMngCntrybndDedtBgnDate") val d2bMngCntrybndDedtBgnDate: String, // 방사청관리국채납기시작일자
                 @SerializedName("d2bMngCntrybndDedtEndDate") val d2bMngCntrybndDedtEndDate: String, // 방사청관리국채납기종료일자
@@ -87,7 +87,7 @@ data class BidThingSearchDTO(
                 @SerializedName("intrbidYn") val intrbidYn: String, // 국제입찰여부
                 @SerializedName("linkInsttNm") val linkInsttNm: String, // 연계기관명
                 @SerializedName("mnfctYn") val mnfctYn: String, // 제조여부
-                @SerializedName("ntceInsttNm") val ntceInsttNm: String, // 공고기관명
+                @SerializedName("ntceInsttNm") override val ntceInsttNm: String, // 공고기관명
                 @SerializedName("ntceInsttOfclEmailAdrs") val ntceInsttOfclEmailAdrs: String, // 공고기관담당자이메일주소
                 @SerializedName("ntceInsttOfclNm") val ntceInsttOfclNm: String, // 공고기관담당자명
                 @SerializedName("ntceInsttOfclTelNo") val ntceInsttOfclTelNo: String, // 공고기관담당자전화번호
@@ -120,13 +120,13 @@ data class BidThingSearchDTO(
                 @SerializedName("prdctUnit") val prdctUnit: String, // 물품단위
                 @SerializedName("prdctUprc") val prdctUprc: String, // 물품단가
                 @SerializedName("prearngPrceDcsnMthdNm") val prearngPrceDcsnMthdNm: String, // 예정가격결정방법명
-                @SerializedName("presmptPrce") val presmptPrce: String, // 추정가격
+                @SerializedName("presmptPrce") override val presmptPrce: String, // 추정가격
                 @SerializedName("purchsObjPrdctList") val purchsObjPrdctList: String, // 구매대상물품목록
                 @SerializedName("rbidOpengDt") val rbidOpengDt: String, // 재입찰개찰일시
                 @SerializedName("rbidPermsnYn") val rbidPermsnYn: String, // 재입찰허용여부
                 @SerializedName("reNtceYn") val reNtceYn: String, // 재공고여부
                 @SerializedName("refNo") val refNo: String, // 참조번호
-                @SerializedName("rgstDt") val rgstDt: String, // 등록일시
+                @SerializedName("rgstDt") override val rgstDt: String, // 등록일시
                 @SerializedName("rgstTyNm") val rgstTyNm: String, // 등록유형명
                 @SerializedName("rsrvtnPrceReMkngMthdNm") val rsrvtnPrceReMkngMthdNm: String, // 예비가격재작성방법명
                 @SerializedName("stdNtceDocUrl") val stdNtceDocUrl: String, // 표준공고서URL
@@ -137,7 +137,7 @@ data class BidThingSearchDTO(
                 @SerializedName("untyNtceNo") val untyNtceNo: String, // 통합공고번호
                 @SerializedName("VAT") val vAT: String, // 부가가치세
                 @SerializedName("indutyVAT") val indutyVAT: String // 주공종부가가치세
-            )
+            ) : SearchItem
         }
 
         data class Header(

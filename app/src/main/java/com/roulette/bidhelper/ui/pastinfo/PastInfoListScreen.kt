@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.models.apis.BidResultUiState
 import com.roulette.bidhelper.models.apis.after.Item
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.BidResultUiState
 import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
 
 @Composable

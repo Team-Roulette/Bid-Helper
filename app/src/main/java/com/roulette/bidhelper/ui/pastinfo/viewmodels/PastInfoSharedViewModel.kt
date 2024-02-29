@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.roulette.bidhelper.functions.OnPastInfoListReceivedListener
 import com.roulette.bidhelper.functions.RequestServer
+import com.roulette.bidhelper.models.apis.BidResultUiState
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
@@ -32,11 +33,7 @@ data class PastInfoUiState(
     var searchName: String = ""
 )
 
-sealed interface BidResultUiState {
-    data class Success(val items: List<Item>) : BidResultUiState
-    data object Error : BidResultUiState
-    data object Loading : BidResultUiState
-}
+
 
 class PastInfoSharedViewModel : ViewModel() {
     var uiState by mutableStateOf(PastInfoUiState())

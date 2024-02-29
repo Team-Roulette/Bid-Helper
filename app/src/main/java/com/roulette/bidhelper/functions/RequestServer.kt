@@ -3,7 +3,6 @@ package com.roulette.bidhelper.functions
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidCommonParams
 import com.roulette.bidhelper.models.apis.BidLimitRegion
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.IndSearch
@@ -12,6 +11,7 @@ import com.roulette.bidhelper.models.apis.after.BidResultListDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
@@ -529,7 +529,7 @@ interface onBidResultPriceListRecievedListener {
 }
 
 interface OnPastInfoListReceivedListener {
-    fun onReceived(items: List<com.roulette.bidhelper.models.apis.after.Item>)
+    fun onReceived(items: List<Item>)
 }
 
 
