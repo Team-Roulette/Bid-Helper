@@ -1,7 +1,7 @@
 package com.roulette.bidhelper.functions
 
 import com.roulette.bidhelper.models.apis.after.BidResultListDTO
-import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
+import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
@@ -175,7 +175,7 @@ interface BidService {
         @Query("inqryEndDt") inqryEndDt: String?, // 검색하고자하는 조회종료일시
         @Query("bidNtceNo") bidNtceNo: String?, // 검색하고자하는 입찰공고번호, 조회구분 4인 경우 필수
         @Query("type") type: String? // 오픈API 리턴 타입을 JSON으로 받고 싶을 경우 'json' 으로 지정
-    ): Call<BidResultPriceDTO>
+    ): Call<BidConstWorkResultPriceDTO>
 
     @GET("getOpengResultListInfoCnstwk") // 개찰결과 공사 목록 조회
     fun getBidResultList(

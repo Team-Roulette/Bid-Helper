@@ -7,8 +7,8 @@ import com.roulette.bidhelper.models.apis.BidCommonParams
 import com.roulette.bidhelper.models.apis.BidLimitRegion
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.IndSearch
+import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidResultListDTO
-import com.roulette.bidhelper.models.apis.after.BidResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
@@ -307,8 +307,8 @@ object RequestServer {
             }
         })
     }
-
-    fun getBidResultPrice(param: BidAmountInfo) {
+    // 개찰결과 공사 예비가격상세목록 조회
+    fun getBidConstWorkResultPrice(param: BidAmountInfo, listener:onBidResultPriceListRecievedListener) {
         bidServiceAfter.getBidResultPrice(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -318,19 +318,17 @@ object RequestServer {
             inqryEndDt = param.inqryEndDt,
             bidNtceNo = param.bidNtceNo,
             type = param.type
-        ).enqueue(object : Callback<BidResultPriceDTO>{
+        ).enqueue(object : Callback<BidConstWorkResultPriceDTO>{
             override fun onResponse(
-                call: Call<BidResultPriceDTO>,
-                response: Response<BidResultPriceDTO>
+                call: Call<BidConstWorkResultPriceDTO>,
+                response: Response<BidConstWorkResultPriceDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.header.resultMsg+"낙찰 가격")
+                listener.onReceived(body.response.body.items)
             }
-
-            override fun onFailure(call: Call<BidResultPriceDTO>, t: Throwable) {
+            override fun onFailure(call: Call<BidConstWorkResultPriceDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
             }
-
         })
     }
 
@@ -361,7 +359,7 @@ object RequestServer {
     }
 
     // 나라장터 검색조건에 의한 낙찰된 목록 현황 물품조회
-    fun getBidStatusThingSearch(param: BidSearch) {
+    fun getBidStatusThingSearch(param: BidSearch, listener : OnPastInfoListReceivedListener) {
         bidServiceAfter.getBidStatusThingSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -392,8 +390,7 @@ object RequestServer {
                 response: Response<BidStatusThingSearchDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
+                listener.onReceived(body.response.body.items)
             }
 
             override fun onFailure(call: Call<BidStatusThingSearchDTO>, t: Throwable) {
@@ -403,8 +400,8 @@ object RequestServer {
         })
     }
 
-    // 나라장터 검색조건에 의한 낙찰된 목록 현황 공사조회
-    fun getBidStatusConstWorkSearch(param: BidSearch) {
+    // 나라장터 검색조건에 의한 낙찰된 목록 현황 공사 조회
+    fun getBidStatusConstWorkSearch(param: BidSearch, listener : OnPastInfoListReceivedListener) {
         bidServiceAfter.getBidStatusConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -435,8 +432,8 @@ object RequestServer {
                 response: Response<BidStatusConstWorkSearchDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
+                listener.onReceived(body.response.body.items)
+
             }
 
             override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
@@ -446,8 +443,8 @@ object RequestServer {
         })
     }
 
-    // 나라장터 검색조건에 의한 낙찰된 목록 현황 용역조회
-    fun getBidStatusServiceSearch(param: BidSearch) {
+    // 나라장터 검색조건에 의한 낙찰된 목록 현황 용역 조회
+    fun getBidStatusServiceSearch(param: BidSearch, listener : OnPastInfoListReceivedListener) {
         bidServiceAfter.getBidStatusServiceSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -478,8 +475,7 @@ object RequestServer {
                 response: Response<BidStatusServiceSearchDTO>
             ) {
                 val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
+                listener.onReceived(body.response.body.items)
             }
             override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
@@ -526,4 +522,15 @@ object RequestServer {
 interface OnBaseInfoListReceivedListener {
     fun onReceived(items: List<BidBaseInfoListDTO.Response.Body.Item>)
 }
+
+
+interface onBidResultPriceListRecievedListener {
+    fun onReceived(items: List<BidConstWorkResultPriceDTO.Response.Body.Item>)
+}
+
+interface OnPastInfoListReceivedListener {
+    fun onReceived(items: List<com.roulette.bidhelper.models.apis.after.Item>)
+}
+
+
 
