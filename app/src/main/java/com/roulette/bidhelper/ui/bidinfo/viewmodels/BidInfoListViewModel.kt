@@ -97,6 +97,7 @@ class BidInfoListViewModel : ViewModel() {
             bidClseExcpYn = param.bidClseExcpYn,
             intrntnlDivCd = param.intrntnlDivCd
         ).enqueue(object : Callback<BidConstWorkSearchDTO> {
+
             override fun onResponse(
                 call: Call<BidConstWorkSearchDTO>,
                 response: Response<BidConstWorkSearchDTO>

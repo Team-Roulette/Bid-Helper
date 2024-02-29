@@ -11,6 +11,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -19,9 +22,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.BidInfoScreen
 import com.roulette.bidhelper.ui.bidinfo.IndustrySearchScreen
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSearchViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastListViewModelFactory
 
 enum class PastInfoScreen {
     Search,
@@ -59,7 +64,15 @@ fun PastInfoScreen(
     modifier: Modifier = Modifier
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
-    val sharedViewModel: PastInfoSharedViewModel = viewModel()
+    val searchViewModel: PastInfoSearchViewModel = viewModel()
+
+    var selectedItem: Item by remember{
+        mutableStateOf(Item("","","","",
+            "","","","","","",
+            "","","","","","",
+            "","","","",""))
+    }
+
 
     Scaffold(
         topBar = {
@@ -77,9 +90,9 @@ fun PastInfoScreen(
         ){
             composable(route = PastInfoScreen.Search.name) {
                 PastInfoSearchScreen(
-                    viewModel = sharedViewModel,
+                    viewModel = searchViewModel,
                     onNextButtonClicked = {
-                        sharedViewModel.setPastInfoSearchList()
+                        //sharedViewModel.setPastInfoSearchList()
                         navController.navigate(PastInfoScreen.List.name)
                     },
                     onIndustryTextClicked = {
@@ -90,22 +103,24 @@ fun PastInfoScreen(
 
             composable(route = PastInfoScreen.List.name) {
                 PastInfoListScreen(
-                    viewModel = sharedViewModel,
+                    pastInfoViewModel = viewModel(
+                        factory = PastListViewModelFactory(uiState = searchViewModel.uiState)
+                    ),
                     onItemClicked = {clickedItem ->
-                        sharedViewModel.item = clickedItem
+                        selectedItem = clickedItem
                         navController.navigate(PastInfoScreen.Precise.name)
                     }
                 )
             }
 
             composable(route = PastInfoScreen.Precise.name) {
-                PastInfoPreciseScreen(item = sharedViewModel.item)
+                PastInfoPreciseScreen(item = selectedItem)
             }
 
             composable(route = BidInfoScreen.Industry.name) {
                 IndustrySearchScreen(
                     onClick = {
-                        sharedViewModel.updateUIState(
+                        searchViewModel.updateUIState(
                             industryName = it[R.string.industry_search_industry_name]!!
                         )
                         navController.navigateUp()
@@ -123,6 +138,7 @@ private fun getTitle(
         "Search" -> "낙찰정보 - 상세검색"
         "List" -> "낙찰정보 - 리스트"
         "Precise" -> "공고 정보"
+        "Industry" -> "업종 검색"
         else -> "낙찰정보 - 상세검색"
     }
 }
