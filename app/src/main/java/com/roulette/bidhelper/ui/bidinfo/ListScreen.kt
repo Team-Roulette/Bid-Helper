@@ -18,12 +18,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 @Composable
 fun ListScreen(
     viewModel: BidInfoSearchViewModel,
-    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit,
+    onItemClicked: (Item) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -48,9 +49,9 @@ fun ListScreen(
 
 @Composable
 fun ListItem(
-    item: BidConstWorkSearchDTO.Response.Body.Item,
+    item: Item,
     modifier: Modifier = Modifier,
-    onItemClicked: (BidConstWorkSearchDTO.Response.Body.Item) -> Unit
+    onItemClicked: (Item) -> Unit
 ) {
     Column(
         modifier = modifier

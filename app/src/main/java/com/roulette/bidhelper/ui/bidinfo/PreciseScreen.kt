@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 
 val title = listOf(
@@ -39,7 +40,7 @@ lateinit var contents: List<String>
 fun PreciseScreen(
     viewModel: BidInfoSearchViewModel,
     modifier: Modifier = Modifier,
-    item: BidConstWorkSearchDTO.Response.Body.Item
+    item: Item
 ) {
     Column(
         modifier = modifier
