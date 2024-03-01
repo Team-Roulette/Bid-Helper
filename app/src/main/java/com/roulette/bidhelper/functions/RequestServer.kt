@@ -570,12 +570,15 @@ interface OnBaseInfoListReceivedListener {
     fun onReceived(items: List<BidBaseInfoListDTO.Response.Body.Item>)
 }
 
+
 interface OnBidResultPriceListReceivedListener {
+
     fun onReceived(items: List<BidConstWorkResultPriceDTO.Response.Body.Item>)
 }
 
 interface OnPastInfoListReceivedListener {
     fun onReceived(items: List<com.roulette.bidhelper.models.apis.after.Item>)
 }
+
 
 

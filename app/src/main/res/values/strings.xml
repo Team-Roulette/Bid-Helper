@@ -15,6 +15,8 @@
     <string name="bid_info_second_category">2차구분</string>
     <string name="bid_info_warning_second_category">1차업종구분을 먼저 선택하세요</string>
 
+    <string name="bid_info_industry_name">업종</string>
+
     <string name="bid_info_local_limit">지역제한</string>
 
     <string name="bid_info_input_data_from">입력일\n(from)</string>
@@ -26,6 +28,19 @@
     <string name="bid_info_search">공고명</string>
     <string name="past_info_input_data_to">\"개찰일(to)</string>
     <string name="past_info_input_data_from">개찰일(from)</string>
+
+    <!--IndustryScreen Texts-->
+    <string name="industry_category_code">업종분류코드</string>
+    <string name="industry_name">업종명</string>
+    <string name="industry_code">업종코드</string>
+    <string name="industry_search_number">No.</string>
+    <string name="industry_search_category_code">분류코드</string>
+    <string name="industry_search_category_name">분류명</string>
+    <string name="industry_search_code">코드</string>
+    <string name="industry_search_industry_name">업종명</string>
+    <string name="industry_search_included_relation">포함업종관계</string>
+    <string name="industry_search_related_law">근거법령</string>
+    <string name="industry_search_related_rule">관련규정</string>
 
 
 </resources>

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.roulette.bidhelper.functions.RequestServer
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.before.Item
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
@@ -18,6 +19,8 @@ import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Locale
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -34,8 +37,11 @@ data class SearchUiState(
     var priceType: String = "",
     var minPrice: String = "",
     var maxPrice: String = "",
+    var industryName: String = "",
     var searchName: String = ""
 )
+
+
 
 class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
@@ -46,10 +52,10 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
     private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
     val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
 
-    private val _selectedItem = MutableLiveData<BidConstWorkSearchDTO.Response.Body.Item>()
-    val selectedItem: LiveData<BidConstWorkSearchDTO.Response.Body.Item> = _selectedItem
+    private val _selectedItem = MutableLiveData<Item>()
+    val selectedItem: LiveData<Item> = _selectedItem
 
-    fun selectItem(item: BidConstWorkSearchDTO.Response.Body.Item) {
+    fun selectItem(item: Item) {
         _selectedItem.value = item
     }
 
@@ -88,7 +94,8 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
         priceType: String = uiState.priceType,
         minPrice: String = uiState.minPrice,
         maxPrice: String = uiState.maxPrice,
-        searchName: String = uiState.searchName,
+        industryName: String = uiState.industryName,
+        searchName: String = uiState.searchName
     ) {
         Log.d(TAG, "$mainCategory , $firstCategory, $secondCategory")
 
@@ -102,8 +109,41 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             priceType = priceType,
             minPrice = minPrice,
             maxPrice = maxPrice,
+            industryName = industryName,
             searchName = searchName
         )
+    }
+
+    fun setPastInfoSearchList() {
+        //bidResultUiState = BidResultUiState.Loading
+
+        val bidSearch = BidSearch().apply {
+            numOfRows = "100"
+            pageNo = "1"
+            inqryDiv = "1"
+            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
+            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
+        }
+
+        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
+        when (uiState.mainCategory) {
+//            mainCategoryList[1] -> getStatusConstWorkList(bidSearch)
+//            mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
+//            mainCategoryList[3] -> getStatusServiceSearchList(bidSearch)
+            else -> {
+            }
+        }
+    }
+
+    private fun getFormattedDate(date: String, time:String): String {
+        val originalFormatString = "yyyy/MM/dd"
+        val newFormatString = "yyyyMMdd"
+
+        val originalFormat = SimpleDateFormat(originalFormatString, Locale.getDefault())
+        val newFormat = SimpleDateFormat(newFormatString, Locale.getDefault())
+
+        val formattedDate = originalFormat.parse(date)!!
+        return newFormat.format(formattedDate)+time
     }
 
 
@@ -158,7 +198,7 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
 
                 Log.e("test", t.message.toString())
-                _bidConstWorkSearch.value = null
+                //_bidConstWorkSearch.value = null
             }
         })
     }

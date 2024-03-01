@@ -31,7 +31,6 @@ import kotlin.coroutines.resume
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         showRate("조달청", 2)  // 조달청 물품 낙찰 결과별 사정률 조회
         setContent {
             BidHelperTheme {
