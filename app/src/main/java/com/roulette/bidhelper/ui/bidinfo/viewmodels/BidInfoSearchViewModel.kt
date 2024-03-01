@@ -13,7 +13,10 @@ import com.roulette.bidhelper.functions.RequestServer.getBidThingSearch
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoUiState
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.memberProperties
@@ -22,10 +25,10 @@ import kotlin.reflect.jvm.isAccessible
 private const val TAG = "SearchViewModel"
 
 data class SearchUiState(
-    var mainCategory: String = "",
+    var mainCategory: String = mainCategoryList[0],
     var firstCategory: String = "",
     var secondCategory: String = "",
-    var locale: String = "",
+    var locale: String = placeCategoryList[0],
     var dateFrom: String = "",
     var dateTo: String = "",
     var priceType: String = "",
@@ -39,7 +42,7 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences) :
     var uiState by mutableStateOf(SearchUiState())
 
     init {
-        updateUIState(
+        /*updateUIState(
             mainCategory = sharedPreferences.getString("mainCategoryList", mainCategoryList[0])!!,
             firstCategory = sharedPreferences.getString("firstCategoryList",
                 if(uiState.mainCategory == mainCategoryList[0]) "업종구분을 먼저 선택하세요" else "")!!,
@@ -60,7 +63,9 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences) :
                     // 예: is Int -> it.setter.call(uiState, value.toString().toInt())
                 }
             }
-        }
+        }*/
+
+        resetFilter()
     }
 
     fun updateUIState(
@@ -93,28 +98,14 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences) :
         )
     }
 
-    fun setPastInfoSearchList() {
-        //bidResultUiState = BidResultUiState.Loading
-
-        val bidSearch = BidSearch().apply {
-            numOfRows = "100"
-            pageNo = "1"
-            inqryDiv = "1"
-            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
-            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
-        }
-
-        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
-        when (uiState.mainCategory) {
-            mainCategoryList[1] -> getBidConstWorkSearch(bidSearch)
-            mainCategoryList[2] -> getBidThingSearch(bidSearch)
-            mainCategoryList[3] -> getBidServiceSearch(bidSearch)
-            else -> {
-            }
-        }
+    fun resetFilter() {
+        uiState = SearchUiState(
+            dateFrom = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
+            dateTo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
+        )
     }
 
-    private fun getFormattedDate(date: String, time:String): String {
+    fun getFormattedDate(date: String, time:String): String {
         val originalFormatString = "yyyy/MM/dd"
         val newFormatString = "yyyyMMdd"
 

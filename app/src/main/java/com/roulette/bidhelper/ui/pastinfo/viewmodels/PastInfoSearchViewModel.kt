@@ -30,10 +30,7 @@ class PastInfoSearchViewModel : ViewModel() {
     var uiState by mutableStateOf(PastInfoUiState())
 
     init {
-        updateUIState(
-            dateFrom = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")),
-            dateTo = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"))
-        )
+        resetFilter()
     }
 
 

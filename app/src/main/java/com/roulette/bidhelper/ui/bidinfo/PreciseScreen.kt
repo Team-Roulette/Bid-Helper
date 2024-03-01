@@ -97,7 +97,7 @@ fun BidInfoTextView(
             style = MaterialTheme.typography.displaySmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier
-                .width(80.dp)
+                .width(100.dp)
                 .padding(10.dp)
         )
         Spacer(modifier = Modifier

@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -20,10 +22,15 @@ import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.BidInfoHorizontalSpacer
 import com.roulette.bidhelper.ui.bidinfo.BidInfoTextView
-
+/*
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
     "지역제한", "업종", "입찰일", "등록일", "기초금액", "추정가격"
+)*/
+
+val title = listOf(
+    "공고명", "공고번호", "수요기관", "참가업체수","최종낙찰업체", "최종낙찰금액", "최종낙찰률",
+    "등록일", "개찰일", "낙찰일", "연계기관명"
 )
 
 @Composable
@@ -44,10 +51,13 @@ fun PastInfoSummaryScreen(
     itemList: List<String>,
     modifier: Modifier = Modifier
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .verticalScroll(scrollState)
             .padding(horizontal = 25.dp, vertical = 35.dp)
             .border(width = 1.dp, color = Color.LightGray)
     ){
@@ -96,9 +106,17 @@ private fun PastInfoTabContent(
 }
 
 fun getItemAsStringList(item: Item): List<String> {
+
+/*    val listTitle = listOf(
+        "공고명", "공고번호", "수요기관", "참가업체수",
+        "최종낙찰업체", "최종낙찰금액", "최종낙찰률", "등록일",
+         "개찰일", "낙찰일", "연계기관명"
+    )*/
+
     return listOf(
-        item.bidNtceNm, item.bidNtceNo, item.dminsttNm, item.dminsttNm,
-        "지역제한", item.ntceDivCd, item.fnlSucsfDate, item.rgstDt, "기초금액", "추정가격"
+        item.bidNtceNm, item.bidNtceNo, item.dminsttNm, item.prtcptCnum,
+        item.bidwinnrNm, item.sucsfbidAmt, item.sucsfbidRate, item.rgstDt,
+        item.rlOpengDt, item.fnlSucsfDate, item.linkInsttNm
     )
 }
 
