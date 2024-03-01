@@ -69,7 +69,7 @@ val Typography = Typography(
     displaySmall = TextStyle(
         fontFamily = InterFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
+        fontSize = 12.sp,
         lineHeight = 8.sp,
         letterSpacing = 0.5.sp
     ),

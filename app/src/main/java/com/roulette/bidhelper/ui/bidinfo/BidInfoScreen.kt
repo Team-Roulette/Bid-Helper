@@ -25,6 +25,7 @@ import androidx.navigation.compose.rememberNavController
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.before.SearchItem
+import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoListViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
@@ -64,8 +65,8 @@ fun BidInfoTopAppBar(
 
 @Composable
 fun BidInfoScreen(
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController()
 ) {
     val backStartEntry by navController.currentBackStackEntryAsState()
     var selectedItem: SearchItem? = null
@@ -98,6 +99,9 @@ fun BidInfoScreen(
                         val param = setBidSearch(searchViewModel)
                         listViewModel.getBidSearchResult(searchViewModel.uiState.mainCategory, param)
                         navController.navigate(BidInfoScreen.List.name)
+                    },
+                    onResetButtonClicked = {
+                        searchViewModel.resetFilter()
                     },
                     onIndustryTextClicked = {
                         navController.navigate(BidInfoScreen.Industry.name)
@@ -143,19 +147,22 @@ fun BidInfoScreen(
 }
 
 fun setBidSearch(searchViewModel: BidInfoSearchViewModel): BidSearch {
+
+    val bidMinPrice = ((searchViewModel.uiState.minPrice.ifEmpty { "0" }).toInt() * 100000000)
+    val bidMaxPrice = ((searchViewModel.uiState.maxPrice.ifEmpty { "0" }).toInt() * 100000000)
+
     return BidSearch().apply {
         numOfRows = "10"
         pageNo = "1"
         inqryDiv = "1"
-//        searchViewModel.uiState.apply {
-//            inqryBgnDt = dateFrom
-//            inqryEndDt = dateTo
-//            presmptPrceBgn = minPrice
-//            presmptPrceEnd = maxPrice
-//            bidNm = searchName
-//            bidNtceNm = searchName
-//            indstrytyNm = industryName
-//        }
+        searchViewModel.apply {
+            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
+            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
+            presmptPrceBgn = if(bidMinPrice == 0) null else bidMinPrice.toString()
+            presmptPrceEnd = if(bidMaxPrice == 0) null else bidMaxPrice.toString()
+            prtcptLmtRgnNm = if(uiState.locale == placeCategoryList[0]) null else uiState.locale
+            bidNtceNm = uiState.searchName.ifEmpty { null }
+        }
     }
 }
 
@@ -166,6 +173,7 @@ private fun getTitle(
         "Search" -> "입찰정보 - 상세검색"
         "List" -> "입찰정보 - 리스트"
         "Precise" -> "공고 정보"
+        "Industry" -> "입찰정보 - 상세검색 - 업종검색"
         else -> "입찰정보 - 상세검색"
     }
 }

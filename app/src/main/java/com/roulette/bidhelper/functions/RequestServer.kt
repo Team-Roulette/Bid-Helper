@@ -398,8 +398,9 @@ object RequestServer {
                 call: Call<BidStatusThingSearchDTO>,
                 response: Response<BidStatusThingSearchDTO>
             ) {
-                val body = response.body()!!
-                listener.onReceived(body.response.body.items)
+                val body = response.body()
+                if(body?.response?.body?.items != null)
+                    listener.onReceived(body.response.body.items)
             }
 
             override fun onFailure(call: Call<BidStatusThingSearchDTO>, t: Throwable) {
@@ -440,8 +441,9 @@ object RequestServer {
                 call: Call<BidStatusConstWorkSearchDTO>,
                 response: Response<BidStatusConstWorkSearchDTO>
             ) {
-                val body = response.body()!!
-                listener.onReceived(body.response.body.items)
+                val body = response.body()
+                if(body?.response?.body?.items != null)
+                    listener.onReceived(body.response.body.items)
 
             }
 
@@ -489,8 +491,9 @@ object RequestServer {
                 call: Call<BidStatusServiceSearchDTO>,
                 response: Response<BidStatusServiceSearchDTO>
             ) {
-                val body = response.body()!!
-                listener.onReceived(body.response.body.items)
+                val body = response.body()
+                if(body?.response?.body?.items != null)
+                    listener.onReceived(body.response.body.items)
             }
             override fun onFailure(call: Call<BidStatusServiceSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
