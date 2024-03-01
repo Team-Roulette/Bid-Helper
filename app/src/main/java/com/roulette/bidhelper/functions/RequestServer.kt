@@ -306,9 +306,57 @@ object RequestServer {
             }
         })
     }
+    //개찰결과 물품 예비가격상세목록 조회
+    fun getBidThingResultPrice(param: BidAmountInfo, listener:OnBidResultPriceListReceivedListener) {
+        bidServiceAfter.getBidThingResultPrice(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            bidNtceNo = param.bidNtceNo,
+            type = param.type
+        ).enqueue(object : Callback<BidConstWorkResultPriceDTO>{
+            override fun onResponse(
+                call: Call<BidConstWorkResultPriceDTO>,
+                response: Response<BidConstWorkResultPriceDTO>
+            ) {
+                val body = response.body()!!
+                listener.onReceived(body.response.body.items)
+            }
+            override fun onFailure(call: Call<BidConstWorkResultPriceDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+        })
+    }
     // 개찰결과 공사 예비가격상세목록 조회
-    fun getBidConstWorkResultPrice(param: BidAmountInfo, listener:onBidResultPriceListRecievedListener) {
-        bidServiceAfter.getBidResultPrice(
+    fun getBidConstWorkResultPrice(param: BidAmountInfo, listener:OnBidResultPriceListReceivedListener) {
+        bidServiceAfter.getBidConstWorkResultPrice(
+            numOfRows = param.numOfRows!!,
+            pageNo = param.pageNo!!,
+            serviceKey = param.serviceKey,
+            inqryDiv = param.inqryDiv!!,
+            inqryBgnDt = param.inqryBgnDt,
+            inqryEndDt = param.inqryEndDt,
+            bidNtceNo = param.bidNtceNo,
+            type = param.type
+        ).enqueue(object : Callback<BidConstWorkResultPriceDTO>{
+            override fun onResponse(
+                call: Call<BidConstWorkResultPriceDTO>,
+                response: Response<BidConstWorkResultPriceDTO>
+            ) {
+                val body = response.body()!!
+                listener.onReceived(body.response.body.items)
+            }
+            override fun onFailure(call: Call<BidConstWorkResultPriceDTO>, t: Throwable) {
+                Log.e("test", t.message.toString())
+            }
+        })
+    }
+    //개찰결과 용역 예비가격상세목록 조회
+    fun getBidServiceResultPrice(param: BidAmountInfo, listener:OnBidResultPriceListReceivedListener) {
+        bidServiceAfter.getBidServiceResultPrice(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
             serviceKey = param.serviceKey,
@@ -522,7 +570,7 @@ interface OnBaseInfoListReceivedListener {
     fun onReceived(items: List<BidBaseInfoListDTO.Response.Body.Item>)
 }
 
-interface onBidResultPriceListRecievedListener {
+interface OnBidResultPriceListReceivedListener {
     fun onReceived(items: List<BidConstWorkResultPriceDTO.Response.Body.Item>)
 }
 
