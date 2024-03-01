@@ -1,13 +1,13 @@
 package com.roulette.bidhelper
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+
 import com.roulette.bidhelper.functions.OnBidResultPriceListReceivedListener
 import com.roulette.bidhelper.functions.OnPastInfoListReceivedListener
 import com.roulette.bidhelper.functions.RequestServer
@@ -17,6 +17,7 @@ import com.roulette.bidhelper.models.apis.BidAmountInfo
 import com.roulette.bidhelper.models.apis.BidSearch
 import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.Item
+
 import com.roulette.bidhelper.ui.home.HomeScreen
 import com.roulette.bidhelper.ui.theme.BidHelperTheme
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,9 @@ import kotlin.coroutines.resume
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         showRate("조달청", 2)  // 조달청 물품 낙찰 결과별 사정률 조회
+
         setContent {
             BidHelperTheme {
                 // A surface container using the 'background' color from the theme

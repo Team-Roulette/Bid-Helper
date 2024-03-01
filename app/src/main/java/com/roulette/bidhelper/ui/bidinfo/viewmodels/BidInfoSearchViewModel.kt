@@ -5,20 +5,14 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.roulette.bidhelper.functions.RequestServer
+import com.roulette.bidhelper.functions.RequestServer.getBidConstWorkSearch
+import com.roulette.bidhelper.functions.RequestServer.getBidServiceSearch
+import com.roulette.bidhelper.functions.RequestServer.getBidThingSearch
 import com.roulette.bidhelper.models.apis.BidSearch
-import com.roulette.bidhelper.models.apis.before.Item
-import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
-import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.text.SimpleDateFormat
 import java.util.Locale
 import kotlin.reflect.KMutableProperty
@@ -41,23 +35,8 @@ data class SearchUiState(
     var searchName: String = ""
 )
 
-
-
-class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  : ViewModel() {
+class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences) : ViewModel() {
     var uiState by mutableStateOf(SearchUiState())
-
-    private val _bidConstBasisAmount = MutableLiveData<BidConstBasisAmountDTO>()
-    val bidConstBasisAmount: LiveData<BidConstBasisAmountDTO> = _bidConstBasisAmount
-
-    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
-    val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
-
-    private val _selectedItem = MutableLiveData<Item>()
-    val selectedItem: LiveData<Item> = _selectedItem
-
-    fun selectItem(item: Item) {
-        _selectedItem.value = item
-    }
 
     init {
         updateUIState(
@@ -127,9 +106,9 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
 
         Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
         when (uiState.mainCategory) {
-//            mainCategoryList[1] -> getStatusConstWorkList(bidSearch)
-//            mainCategoryList[2] -> getStatusThingSearchList(bidSearch)
-//            mainCategoryList[3] -> getStatusServiceSearchList(bidSearch)
+            mainCategoryList[1] -> getBidConstWorkSearch(bidSearch)
+            mainCategoryList[2] -> getBidThingSearch(bidSearch)
+            mainCategoryList[3] -> getBidServiceSearch(bidSearch)
             else -> {
             }
         }
@@ -144,63 +123,6 @@ class BidInfoSearchViewModel(private val sharedPreferences: SharedPreferences)  
 
         val formattedDate = originalFormat.parse(date)!!
         return newFormat.format(formattedDate)+time
-    }
-
-
-
-    fun getBidConstWorkSearch() {
-
-        val param: BidSearch = BidSearch().apply {
-            numOfRows = "100"
-            pageNo = "1"
-            inqryDiv = "1"
-        }
-
-        RequestServer.bidServiceBefore.getBidConstWorkSearch(
-            numOfRows = param.numOfRows!!,
-            pageNo = param.pageNo!!,
-            serviceKey = param.serviceKey,
-            inqryDiv = param.inqryDiv!!,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
-            type = param.type,
-            bidNtceNm = param.bidNtceNm,
-            ntceInsttCd = param.ntceInsttCd,
-            ntceInsttNm = param.ntceInsttNm,
-            dminsttCd = param.dminsttCd,
-            dminsttNm = param.dminsttNm,
-            refNo = param.refNo,
-            prtcptLmtRgnCd = param.prtcptLmtRgnCd,
-            prtcptLmtRgnNm = param.prtcptLmtRgnNm,
-            indstrytyCd = param.indstrytyCd,
-            indstrytyNm = param.indstrytyNm,
-            presmptPrceBgn = param.presmptPrceBgn,
-            presmptPrceEnd = param.presmptPrceEnd,
-            dtilPrdctClsfcNoNm = param.dtilPrdctClsfcNoNm,
-            masYn = param.masYn,
-            prcrmntReqNo = param.prcrmntReqNo,
-            bidClseExcpYn = param.bidClseExcpYn,
-            intrntnlDivCd = param.intrntnlDivCd
-        ).enqueue(object : Callback<BidConstWorkSearchDTO> {
-
-
-            override fun onResponse(
-                call: Call<BidConstWorkSearchDTO>,
-                response: Response<BidConstWorkSearchDTO>
-            ) {
-
-                val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
-                _bidConstWorkSearch.value = body
-            }
-
-            override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
-
-                Log.e("test", t.message.toString())
-                //_bidConstWorkSearch.value = null
-            }
-        })
     }
 }
 

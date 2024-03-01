@@ -1,8 +1,11 @@
 package com.roulette.bidhelper.ui.pastinfo
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.BidInfoBudgetView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoButtonView
@@ -10,15 +13,15 @@ import com.roulette.bidhelper.ui.bidinfo.BidInfoCalendarView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoSearchView
 import com.roulette.bidhelper.ui.bidinfo.BidInfoSpinnerView
 import com.roulette.bidhelper.ui.bidinfo.SpacerView
-import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
 import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSharedViewModel
+import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoSearchViewModel
 
 @Composable
 fun PastInfoSearchScreen(
-    viewModel: PastInfoSharedViewModel,
+    viewModel: PastInfoSearchViewModel,
     onNextButtonClicked: () -> Unit,
+    onIndustryTextClicked: ()-> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -33,20 +36,14 @@ fun PastInfoSearchScreen(
         )
 
         SpacerView(modifier = Modifier)
-        BidInfoSpinnerView(title = R.string.bid_info_first_category,
-            list = if (categoryMap[viewModel.uiState.mainCategory] == null) emptyList()
-            else categoryMap[viewModel.uiState.mainCategory]!!,
-            currentValue = viewModel.uiState.firstCategory,
-            changeUiState = { viewModel.updateUIState(firstCategory = it) }
-        )
-
-        SpacerView(modifier = Modifier)
-        BidInfoSpinnerView(
-            title = R.string.bid_info_second_category,
-            list = if (categoryMap[viewModel.uiState.firstCategory] == null) emptyList()
-            else categoryMap[viewModel.uiState.firstCategory]!!,
-            currentValue = viewModel.uiState.secondCategory,
-            changeUiState = { viewModel.updateUIState(secondCategory = it) }
+        BidInfoSearchView(
+            title = R.string.bid_info_industry_name,
+            content = viewModel.uiState.industryName,
+            changeUiState = { viewModel.updateUIState(industryName = it) },
+            textFieldEnabled = false,
+            modifier = Modifier
+                .clickable(onClick = onIndustryTextClicked)
+                .padding(horizontal = 16.dp, vertical = 10.dp)
         )
 
         SpacerView(modifier = Modifier)
@@ -85,11 +82,13 @@ fun PastInfoSearchScreen(
         BidInfoSearchView(
             title = R.string.bid_info_search,
             content = viewModel.uiState.searchName,
-            changeUiState = { viewModel.updateUIState(searchName = it) })
+            changeUiState = { viewModel.updateUIState(searchName = it) },
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+        )
 
         SpacerView(modifier = Modifier)
         BidInfoButtonView(
-            onClickReset = {},
+            onClickReset = { viewModel.resetFilter() },
             onClickSearch = onNextButtonClicked
         )
     }

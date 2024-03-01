@@ -1,18 +1,11 @@
 package com.roulette.bidhelper.ui.pastinfo
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -21,14 +14,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.roulette.bidhelper.models.apis.after.Item
-import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastInfoPreciseViewModel
+import com.roulette.bidhelper.ui.bidinfo.BidInfoHorizontalSpacer
+import com.roulette.bidhelper.ui.bidinfo.BidInfoTextView
 
 val title = listOf(
     "공고명", "공고번호", "발주처명", "수요처명",
@@ -38,15 +29,13 @@ val title = listOf(
 @Composable
 fun PastInfoPreciseScreen(
     modifier: Modifier = Modifier,
-    preciseViewModel: PastInfoPreciseViewModel = viewModel(),
     item: Item
 ) {
-    preciseViewModel.item = item
     Column(
         modifier = modifier
             .fillMaxSize()
     ){
-        PastInfoTabLayout(viewModel = preciseViewModel)
+        PastInfoTabLayout(item = item)
     }
 }
 
@@ -63,59 +52,15 @@ fun PastInfoSummaryScreen(
             .border(width = 1.dp, color = Color.LightGray)
     ){
         for(i in title.indices){
-            PastInfoTextView(title = title[i], content= itemList[i])
-            PastInfoHorizontalSpacer(modifier = Modifier)
+            BidInfoTextView(title = title[i], content= itemList[i])
+            BidInfoHorizontalSpacer(modifier = Modifier)
         }
     }
 }
 
 @Composable
-fun PastInfoTextView(
-    title: String,
-    content: String,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = modifier
-            .height(50.dp)
-            .fillMaxWidth()
-    ){
-        Text(
-            text = title,
-            style = MaterialTheme.typography.displaySmall,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .width(80.dp)
-                .padding(10.dp)
-        )
-        Spacer(modifier = Modifier
-            .width(1.dp)
-            .fillMaxHeight()
-            .background(color = Color.LightGray))
-        Text(
-            text = content,
-            style = MaterialTheme.typography.displaySmall,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        )
-    }
-}
-
-@Composable
-fun PastInfoHorizontalSpacer(
-    modifier: Modifier
-) {
-    Spacer(modifier = modifier
-        .height(1.dp)
-        .fillMaxWidth()
-        .background(color = Color.LightGray))
-}
-
-@Composable
 private fun PastInfoTabLayout(
-    viewModel: PastInfoPreciseViewModel,
+    item: Item,
     modifier:Modifier = Modifier
 ) {
     val list = listOf("공고요약", "상세정보")
@@ -134,20 +79,27 @@ private fun PastInfoTabLayout(
                 )
             }
         }
-        TabContent(viewModel = viewModel ,selectedTabIndex = selectedIndex)
+        PastInfoTabContent(selectedTabIndex = selectedIndex, item = item)
     }
 }
 
 @Composable
-fun TabContent(
-    viewModel: PastInfoPreciseViewModel,
+private fun PastInfoTabContent(
     selectedTabIndex: Int,
+    item: Item,
     modifier: Modifier = Modifier) {
     when (selectedTabIndex) {
-        0 -> PastInfoSummaryScreen(itemList = viewModel.getItemAsStringList())
-        1 -> PastInfoSummaryScreen(itemList = viewModel.getItemAsStringList())
+        0 -> PastInfoSummaryScreen(itemList = getItemAsStringList(item))
+        1 -> PastInfoSummaryScreen(itemList = getItemAsStringList(item))
         else -> Text("Selection not valid", color = Color.Red)
     }
+}
+
+fun getItemAsStringList(item: Item): List<String> {
+    return listOf(
+        item.bidNtceNm, item.bidNtceNo, item.dminsttNm, item.dminsttNm,
+        "지역제한", item.ntceDivCd, item.fnlSucsfDate, item.rgstDt, "기초금액", "추정가격"
+    )
 }
 
 
