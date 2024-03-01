@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.ui.bidinfo.BidInfoHorizontalSpacer
+import com.roulette.bidhelper.ui.bidinfo.BidInfoSummaryScreen
 import com.roulette.bidhelper.ui.bidinfo.BidInfoTextView
 /*
 val title = listOf(
@@ -43,28 +44,6 @@ fun PastInfoPreciseScreen(
             .fillMaxSize()
     ){
         PastInfoTabLayout(item = item)
-    }
-}
-
-@Composable
-fun PastInfoSummaryScreen(
-    itemList: List<String>,
-    modifier: Modifier = Modifier
-) {
-    val scrollState = rememberScrollState()
-
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .verticalScroll(scrollState)
-            .padding(horizontal = 25.dp, vertical = 35.dp)
-            .border(width = 1.dp, color = Color.LightGray)
-    ){
-        for(i in title.indices){
-            BidInfoTextView(title = title[i], content= itemList[i])
-            BidInfoHorizontalSpacer(modifier = Modifier)
-        }
     }
 }
 
@@ -99,8 +78,8 @@ private fun PastInfoTabContent(
     item: Item,
     modifier: Modifier = Modifier) {
     when (selectedTabIndex) {
-        0 -> PastInfoSummaryScreen(itemList = getItemAsStringList(item))
-        1 -> PastInfoSummaryScreen(itemList = getItemAsStringList(item))
+        0 -> BidInfoSummaryScreen(titles = title, contents = getItemAsStringList(item))
+        //1 -> PastInfoSummaryScreen(itemList = getItemAsStringList(item))
         else -> Text("Selection not valid", color = Color.Red)
     }
 }
