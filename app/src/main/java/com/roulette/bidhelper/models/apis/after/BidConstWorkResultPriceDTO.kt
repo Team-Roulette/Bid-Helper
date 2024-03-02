@@ -2,7 +2,9 @@ package com.roulette.bidhelper.models.apis.after
 
 import com.google.gson.annotations.SerializedName
 
-// 개찰결과 공사예비가격 상세 목록 조회
+// 개찰결과 공사 예비가격 상세 목록 조회
+// 물품 및 용역도 거의 비슷하니까 이걸로 쓰자
+
 data class BidConstWorkResultPriceDTO(
     @SerializedName("response")
     val response: Response // 응답 전체를 담는 객체
