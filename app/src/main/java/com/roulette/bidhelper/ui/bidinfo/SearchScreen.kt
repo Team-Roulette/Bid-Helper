@@ -48,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.R
 import com.roulette.bidhelper.ui.bidinfo.spinners.categoryMap
 import com.roulette.bidhelper.ui.bidinfo.spinners.mainCategoryList
+import com.roulette.bidhelper.ui.bidinfo.spinners.placeCategoryList
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoSearchViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -58,6 +59,7 @@ private const val TAG = "MainActivity"
 @Composable
 fun SearchScreen(
     modifier: Modifier = Modifier,
+    onResetButtonClicked:() -> Unit,
     onNextButtonClicked: () -> Unit,
     onIndustryTextClicked: () -> Unit,
     viewModel: BidInfoSearchViewModel
@@ -91,6 +93,13 @@ fun SearchScreen(
                 .padding(horizontal = 16.dp, vertical = 10.dp)
         )
 
+        SpacerView(modifier = Modifier)
+        BidInfoSpinnerView(
+            title = R.string.bid_info_local_limit,
+            list = placeCategoryList,
+            currentValue = viewModel.uiState.locale,
+            changeUiState = { viewModel.updateUIState(locale = it) }
+        )
 
         SpacerView(modifier = Modifier)
         BidInfoCalendarView(
@@ -131,7 +140,7 @@ fun SearchScreen(
 
         SpacerView(modifier = Modifier)
         BidInfoButtonView(
-            onClickReset = {},
+            onClickReset = onResetButtonClicked,
             onClickSearch = onNextButtonClicked
         )
     }

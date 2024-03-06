@@ -89,7 +89,7 @@ fun CalculatorScreen(
 }
 
 @Composable
-private fun CalculatorView(
+fun CalculatorView(
     price: Price,
     modifier: Modifier = Modifier
 ) {

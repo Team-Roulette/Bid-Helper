@@ -31,8 +31,7 @@ import com.roulette.bidhelper.ui.pastinfo.viewmodels.PastListViewModelFactory
 enum class PastInfoScreen {
     Search,
     List,
-    Precise,
-    Industry
+    Precise
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

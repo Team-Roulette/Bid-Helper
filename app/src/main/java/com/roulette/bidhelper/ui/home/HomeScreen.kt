@@ -54,9 +54,9 @@ fun HomeScreen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        Spacer(
+        /*Spacer(
             modifier = Modifier.height(50.dp)
-        )
+        )*/
 
         NavHost(
             navController = navController,
@@ -85,9 +85,9 @@ fun HomeScreen(
                 CalculatorScreen()
             }
 
-            composable(route = HomeScreen.Filter.name) {
+            /*composable(route = HomeScreen.Filter.name) {
                 FilterScreen()
-            }
+            }*/
         }
     }
 
@@ -130,18 +130,19 @@ fun HomeBody(
         )
 
         HomeButton(
+            bottomRadius = 10.dp,
             titleRes = R.string.home_card_bid_calculator,
             bgColorRes = R.color.color_home_button_3,
             onClick = {navController.navigate(HomeScreen.Calculator.name)},
             modifier = modifier.fillMaxWidth()
         )
 
-        HomeButton(
+        /*HomeButton(
             bottomRadius = 10.dp,
             titleRes = R.string.home_card_bid_filter,
             bgColorRes = R.color.color_home_button_4,
             onClick = {navController.navigate(HomeScreen.Filter.name)},
-        )
+        )*/
     }
 }
 

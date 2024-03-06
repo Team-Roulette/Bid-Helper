@@ -28,41 +28,17 @@ class BidInfoListViewModel : ViewModel() {
     var uiState: BidInfoUiState by mutableStateOf(BidInfoUiState.Loading)
         private set
 
-//    private val _bidConstWorkSearch = MutableLiveData<BidConstWorkSearchDTO>()
-//    val bidConstWorkSearch: LiveData<BidConstWorkSearchDTO> = _bidConstWorkSearch
-//
-//    private val _bidItemSearch = MutableLiveData<List<Item>>()
-//    val bidItemSearch: LiveData<List<Item>> = _bidItemSearch
-//
-//    private val _selectedItem = MutableLiveData<Item>()
-//    val selectedItem: LiveData<Item> = _selectedItem
-
-//    fun selectItem(item: Item) {
-//        _selectedItem.value = item
-//    }
-
-    /* fun setPastInfoSearchList() {
-        uiState = ResultUiState.Loading
-
-        val bidSearch = BidSearch().apply {
-            numOfRows = "100"
-            pageNo = "1"
-            inqryDiv = "1"
-            inqryBgnDt = getFormattedDate(uiState.dateFrom, "0000")
-            inqryEndDt = getFormattedDate(uiState.dateTo, "2359")
-        }
-
-        Log.d(TAG, bidSearch.inqryBgnDt+" " +bidSearch.inqryEndDt)
-        when (uiState.mainCategory) {
-            mainCategoryList[1] -> getBidConstWorkSearch(bidSearch)
-            mainCategoryList[2] -> getBidConstWorkSearch(bidSearch)
-            mainCategoryList[3] -> getBidConstWorkSearch(bidSearch)
-            else -> {
-                getBidConstWorkSearch(bidSearch)
-            }
-        }
-    } */
     fun getBidSearchResult(category: String, param: BidSearch) {
+        uiState = BidInfoUiState.Loading
+
+        Log.d(TAG,
+            param.inqryBgnDt+"\n"+
+                    param.inqryEndDt+"\n"+
+                    param.presmptPrceBgn+"\n"+
+                    param.presmptPrceEnd+"\n"+
+                    param.prtcptLmtRgnNm+"\n"+
+                    param.bidNtceNm)
+
         when(category) {
             mainCategoryList[1] -> getBidConstWorkSearch(param)
             mainCategoryList[2] -> getBidThingSearch(param)
@@ -103,12 +79,14 @@ class BidInfoListViewModel : ViewModel() {
                 response: Response<BidConstWorkSearchDTO>
             ) {
 
-                val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
-                val list = body.response.body.items
-                bidInfoList.value = list
-                uiState = BidInfoUiState.Success(list)
+                val body = response.body()
+                Log.d(TAG, "OnResponse of BidConstWorkSearch Called")
+                if(body?.response?.body?.items != null) {
+                    Log.d(TAG, "And entered if-block")
+                    val list = body.response.body.items
+                    bidInfoList.value = list
+                    uiState = BidInfoUiState.Success(list)
+                }
             }
 
             override fun onFailure(call: Call<BidConstWorkSearchDTO>, t: Throwable) {
@@ -150,18 +128,17 @@ class BidInfoListViewModel : ViewModel() {
                 call: Call<BidThingSearchDTO>,
                 response: Response<BidThingSearchDTO>
             ) {
-                val body = response.body()!!
-                Log.i("test", body.response.body.items[0].bidNtceNm)
-                Log.i("test", body.response.body.totalCount)
-                val list = body.response.body.items
-                uiState = BidInfoUiState.Success(list)
-                bidInfoList.value = list
+                val body = response.body()
+                if(body?.response?.body?.items != null) {
+                    val list = body.response.body.items
+                    bidInfoList.value = list
+                    uiState = BidInfoUiState.Success(list)
+                }
             }
 
             override fun onFailure(call: Call<BidThingSearchDTO>, t: Throwable) {
                 Log.e("test", t.message.toString())
             }
-
         })
     }
 
@@ -196,12 +173,12 @@ class BidInfoListViewModel : ViewModel() {
                 call: Call<BidServiceSearchDTO>,
                 response: Response<BidServiceSearchDTO>
             ) {
-                val body = response.body()!!
-//                Log.i("test", body.response.body.items[0].bidNtceNm)
-//                Log.i("test", body.response.body.totalCount)
-                val list = body.response.body.items
-                bidInfoList.value = list
-                uiState = BidInfoUiState.Success(list)
+                val body = response.body()
+                if(body?.response?.body?.items != null) {
+                    val list = body.response.body.items
+                    bidInfoList.value = list
+                    uiState = BidInfoUiState.Success(list)
+                }
             }
 
             override fun onFailure(call: Call<BidServiceSearchDTO>, t: Throwable) {
