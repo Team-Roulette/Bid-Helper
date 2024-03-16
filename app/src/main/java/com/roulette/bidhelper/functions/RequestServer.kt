@@ -3,14 +3,15 @@ package com.roulette.bidhelper.functions
 import android.util.Log
 import com.roulette.bidhelper.BuildConfig
 import com.roulette.bidhelper.models.apis.BidAmountInfo
-import com.roulette.bidhelper.models.apis.BidCommonParams
 import com.roulette.bidhelper.models.apis.BidLimitRegion
 import com.roulette.bidhelper.models.apis.BidSearch
+import com.roulette.bidhelper.models.apis.IndSearch
 import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 import com.roulette.bidhelper.models.apis.after.BidResultListDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusConstWorkSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusServiceSearchDTO
 import com.roulette.bidhelper.models.apis.after.BidStatusThingSearchDTO
+import com.roulette.bidhelper.models.apis.after.Item
 import com.roulette.bidhelper.models.apis.before.BidCalcAInfoDTO
 import com.roulette.bidhelper.models.apis.before.BidConstBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidConstWorkSearchDTO
@@ -20,16 +21,24 @@ import com.roulette.bidhelper.models.apis.before.BidServiceSearchDTO
 import com.roulette.bidhelper.models.apis.before.BidThingBasisAmountDTO
 import com.roulette.bidhelper.models.apis.before.BidThingSearchDTO
 import com.roulette.bidhelper.models.apis.etc.BidBaseInfoListDTO
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 object RequestServer {
     private const val BASE_URL_BEFORE = BuildConfig.BASE_URL_BEFORE
     private const val BASE_URL_AFTER = BuildConfig.BASE_URL_AFTER
     private const val BASE_URL_CODE = BuildConfig.BASE_URL_CODE
+
+    val okHttpClient = OkHttpClient.Builder()
+        .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃 10초
+        .readTimeout(120, TimeUnit.SECONDS) // 읽기 타임아웃 30초
+        .writeTimeout(120, TimeUnit.SECONDS) // 쓰기 타임아웃 15초
+        .build()
     
     val retrofitBefore = Retrofit.Builder()
         .baseUrl(BASE_URL_BEFORE)
@@ -37,6 +46,7 @@ object RequestServer {
         .build()
     val retrofitAfter = Retrofit.Builder()
         .baseUrl(BASE_URL_AFTER)
+        .client(okHttpClient) // 설정한 OkHttp 클라이언트 사용
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     val retrofitCode = Retrofit.Builder()
@@ -448,7 +458,7 @@ object RequestServer {
     }
 
     // 나라장터 검색조건에 의한 낙찰된 목록 현황 공사 조회
-    fun getBidStatusConstWorkSearch(param: BidSearch, listener : OnPastInfoListReceivedListener) {
+    fun getBidStatusConstWorkSearch(param: BidSearch, listener : OnPastInfoListReceivedListener, retryCount: Int = 0) {
         bidServiceAfter.getBidStatusConstWorkSearch(
             numOfRows = param.numOfRows!!,
             pageNo = param.pageNo!!,
@@ -484,7 +494,13 @@ object RequestServer {
             }
 
             override fun onFailure(call: Call<BidStatusConstWorkSearchDTO>, t: Throwable) {
-                Log.e("test", t.message.toString())
+                if (retryCount < 5) {
+                    Log.e("Retry", "Retrying... Attempt: $retryCount")
+                    getBidStatusConstWorkSearch(param, listener, retryCount + 1)
+                } else {
+                    Log.e("test", t.message.toString())
+                }
+                //Log.e("test", t.message.toString())
             }
 
         })
@@ -532,16 +548,16 @@ object RequestServer {
     }
 
     // 업종 및 근거 법규 정보 조회
-    fun getBaseInfoList(param: BidCommonParams, listener: OnBaseInfoListReceivedListener) {
+    fun getBaseInfoList(param: IndSearch, listener: OnBaseInfoListReceivedListener) {
         bidServiceCode.getBaseInfoList(
             numOfRows = "100",
             pageNo = "1",
             serviceKey = param.serviceKey,
-            indstrytyClsfcCd = null,
-            indstrytyNm = null,
-            indstrytyCd = null,
-            inqryBgnDt = param.inqryBgnDt,
-            inqryEndDt = param.inqryEndDt,
+            indstrytyClsfcCd = param.indstrytyClsfcCd,
+            indstrytyNm = param.indstrytyNm,
+            indstrytyCd = param.indstrytyCd,
+            inqryBgnDt = null,
+            inqryEndDt = null,
             indstrytyUseYn = null,
             type = param.type
         ).enqueue(object: Callback<BidBaseInfoListDTO> {
@@ -577,7 +593,7 @@ interface OnBidResultPriceListReceivedListener {
 }
 
 interface OnPastInfoListReceivedListener {
-    fun onReceived(items: List<com.roulette.bidhelper.models.apis.after.Item>)
+    fun onReceived(items: List<Item>)
 }
 
 
