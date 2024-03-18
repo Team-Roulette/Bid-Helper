@@ -15,14 +15,26 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import kotlin.coroutines.resume
 
-class AssessmentRate {
-    // showRate : 지금은 발주처별 과거건의 예정가격이랑 기초금액을 확인함 (투찰률 계산)
-    // idx 구분 : 0-물품, 1-공사, 2-용역
-    // count : 뽑아올 사정률 리스트 갯수
+// showRate : 지금은 발주처별 과거건의 예정가격이랑 기초금액을 확인함 (투찰률 계산)
+// idx 구분 : 0-물품, 1-공사, 2-용역
+// count : 뽑아올 사정률 리스트 갯수
 
-    // 수정 : 공고번호로 A정보를 각각 조회해서(기초금액조회API에 있음)(A값 요소별로 있으면 더해서) -> 위의 예가, 기초가와 A포함 투찰률로 변경해야함
-    // listCount는 20개로 하자, 일단은 80개씩 불러옴. 유효한 데이터 20개만 뽑아서 넣기
-    fun getAssessmentRateList(instName: String, idx:Int, listCount:Int) : MutableList<BidConstWorkResultPriceDTO.Response.Body.Item> {
+// 수정 : 공고번호로 A정보를 각각 조회해서(기초금액조회API에 있음)(A값 요소별로 있으면 더해서) -> 위의 예가, 기초가와 A포함 투찰률로 변경해야함
+// listCount는 20개로 하자, 일단은 80개씩 불러옴. 유효한 데이터 20개만 뽑아서 넣기
+interface AssessmentRateInterface {
+    fun getAssessmentRateList(instName: String, idx:Int, listCount:Int) : MutableList<BidConstWorkResultPriceDTO.Response.Body.Item>
+    suspend fun getBidStatusThingSearch(instName: String): List<Item>
+    suspend fun getBidStatusConstWorkSearch(instName: String): List<Item>
+    suspend fun getBidStatusServiceSearch(instName: String): List<Item>
+    suspend fun getBidThingResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item>
+    suspend fun getBidConstWorkResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item>
+    suspend fun getBidServiceResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item>
+}
+
+
+class AssessmentRate: AssessmentRateInterface {
+
+    override fun getAssessmentRateList(instName: String, idx:Int, listCount:Int) : MutableList<BidConstWorkResultPriceDTO.Response.Body.Item> {
         var answer:MutableList<BidConstWorkResultPriceDTO.Response.Body.Item> = mutableListOf()
 
         CoroutineScope(Dispatchers.Main).launch {
@@ -79,7 +91,7 @@ class AssessmentRate {
         return answer
     }
 
-    suspend fun getBidStatusThingSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidStatusThingSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidStatusThingSearch(BidSearch().apply {
             numOfRows = "80"
             pageNo = "1"
@@ -92,7 +104,7 @@ class AssessmentRate {
             }
         })
     }
-    suspend fun getBidStatusConstWorkSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidStatusConstWorkSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidStatusConstWorkSearch(BidSearch().apply {
             numOfRows = "80"
             pageNo = "1"
@@ -105,7 +117,7 @@ class AssessmentRate {
             }
         })
     }
-    suspend fun getBidStatusServiceSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidStatusServiceSearch(instName: String): List<Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidStatusServiceSearch(BidSearch().apply {
             numOfRows = "80"
             pageNo = "1"
@@ -118,7 +130,7 @@ class AssessmentRate {
             }
         })
     }
-    suspend fun getBidThingResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidThingResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidThingResultPrice(BidAmountInfo().apply {
             numOfRows = "1"
             pageNo = "1"
@@ -133,7 +145,7 @@ class AssessmentRate {
             }
         })
     }
-    suspend fun getBidConstWorkResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidConstWorkResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidConstWorkResultPrice(BidAmountInfo().apply {
             numOfRows = "1"
             pageNo = "1"
@@ -148,7 +160,7 @@ class AssessmentRate {
             }
         })
     }
-    suspend fun getBidServiceResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
+    override suspend fun getBidServiceResultPrice(bidNtceNo_: String): List<BidConstWorkResultPriceDTO.Response.Body.Item> = suspendCancellableCoroutine { continuation ->
         RequestServer.getBidServiceResultPrice(BidAmountInfo().apply {
             numOfRows = "1"
             pageNo = "1"
