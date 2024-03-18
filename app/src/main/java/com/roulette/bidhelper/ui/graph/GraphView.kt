@@ -1,5 +1,6 @@
-package com.roulette.bidhelper.ui.bidinfo.graph
+package com.roulette.bidhelper.ui.graph
 
+import android.graphics.Typeface
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,19 +21,26 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PointMode
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.view.ContentInfoCompat.Flags
+
 
 @Composable
 fun GraphView(
-    dataPoints:List<Float> = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 10f),
+    dataPoints:List<Float> = listOf(2f, 0f, 0f, 0f, 0f, 0f, 0f, 1f),
     graphHeight:Dp = 250.dp,
     paddingSize:Dp = 10.dp,
     borderColor: Color = Color.LightGray,
@@ -43,7 +51,6 @@ fun GraphView(
     averageColor: Color = Color.Red
 ) {
     val scrollState = rememberScrollState()
-
     LaunchedEffect(key1 = Unit) {
         scrollState.scrollTo(scrollState.maxValue)
     }
@@ -56,37 +63,15 @@ fun GraphView(
             .border(width = borderWidth, color = borderColor, shape = RoundedCornerShape(0.dp))
     ) {
 
-        /*line showing average of the elements*/
-        Column(
-            verticalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
-        ) {
-            Spacer(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = if(averageOf(dataPoints) > 0) averageOf(dataPoints).dp else 0.dp,
-                        bottom = if(averageOf(dataPoints) < 0) (averageOf(dataPoints).dp * -1) else 0.dp
-                    )
-                    .height(1.dp)
-                    .background(color = averageColor)
-            )
-        }
-
-        /*Horizontal lines showing level*/
-        Column(
+        GridLineView(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            GraphLineAndTextView("102")
-            GraphLineAndTextView("101")
-            GraphLineAndTextView("100")
-            GraphLineAndTextView("99")
-            GraphLineAndTextView("98")
-        }
+            verticalArrangement = Arrangement.SpaceEvenly)
+
+        AverageLineView(
+            modifier = Modifier.fillMaxSize()
+        )
 
         LineGraph(
-            dataPoints = dataPoints,
             graphWidth = graphWidth,
             graphColor = graphColor,
             modifier = Modifier
@@ -96,6 +81,24 @@ fun GraphView(
                 .padding(vertical = graphPadding)
         )
 
+    }
+}
+
+// Horizontal Lines Showing Levels
+@Composable
+fun GridLineView(
+    modifier: Modifier = Modifier,
+    verticalArrangement: Arrangement.HorizontalOrVertical
+) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = verticalArrangement
+    ) {
+        GraphLineAndTextView("102")
+        GraphLineAndTextView("101")
+        GraphLineAndTextView("100")
+        GraphLineAndTextView("99")
+        GraphLineAndTextView("98")
     }
 }
 
@@ -130,33 +133,75 @@ fun GraphLineAndTextView(
 }
 
 @Composable
-fun LineGraph(
-    dataPoints: List<Float>,
-    graphWidth: Dp,
-    graphColor: Color,
-    modifier: Modifier = Modifier
-) {
+fun AverageLineView(
+    modifier: Modifier = Modifier,
+    offset: Float = 2F,
+    strokeWidth: Float = 3f
+){
     Canvas(modifier = modifier) {
-        val strokeWidth = graphWidth.toPx()
-        val path = Path()
+        drawLine(
+            start = Offset(0F, size.height / offset),
+            end = Offset(size.width, size.height / offset),
+            strokeWidth = strokeWidth,
+            color = Color.Red
+        )
+    }
+}
 
-        // 그래프의 시작점
-        if (dataPoints.isNotEmpty()) {
-            path.moveTo(0f, size.height - (dataPoints.first() / dataPoints.maxOrNull()!! * size.height))
+@Composable
+fun LineGraph(
+    modifier: Modifier = Modifier,
+    dataPoints:List<Float> = listOf(70f, 20f, 30f, 40f, 80f, 10f, 30f, 50f),
+    baseNumber: Float = 100f,
+    graphHeight:Dp = 250.dp,
+    paddingSize:Dp = 10.dp,
+    borderColor: Color = Color.LightGray,
+    borderWidth: Dp = 1.dp,
+    graphPadding:Dp = 10.dp,
+    graphWidth:Dp = 1.dp,
+    graphColor: Color = Color.Blue,
+    averageColor: Color = Color.Red
+){
+    Canvas(modifier = modifier) {
+        val paint = Paint().asFrameworkPaint().apply {
+            isAntiAlias = true
+            textSize = 20f
+            typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+            color = android.graphics.Color.BLACK
         }
+        val path = Path()
+        val offsetList: MutableList<Offset> = mutableListOf()
 
-        // 데이터 포인트를 경로에 추가
         dataPoints.forEachIndexed { index, value ->
             val x = index * (size.width / (dataPoints.size - 1))
-            val y = size.height - (value / dataPoints.maxOrNull()!! * size.height)
+            val y = size.height - (value / baseNumber * size.height)
+
             path.lineTo(x, y)
+            offsetList.add(Offset(x, y))
+
+            drawIntoCanvas { canvas ->
+                canvas.nativeCanvas.drawText(
+                    value.toString(),
+                    x + 10f, // 점 옆으로 약간 오프셋
+                    y + (paint.textSize / 3), // 텍스트 베이스라인 조정
+                    paint
+                )
+            }
         }
 
-        // 경로 그리기
+        drawPoints(
+            points = offsetList,
+            pointMode = PointMode.Points,
+            color = Color.Red,
+            strokeWidth = 20f,
+            cap = StrokeCap.Round,
+        )
+
+
         drawPath(
             path = path,
             color = graphColor,
-            style = Stroke(strokeWidth)
+            style = Stroke(graphWidth.toPx())
         )
     }
 }
@@ -171,6 +216,6 @@ fun averageOf(numbers: List<Float>): Float {
 
 @Preview(showBackground = true)
 @Composable
-fun GraphPreview() {
+fun LineGraphPreview() {
     GraphView()
 }
