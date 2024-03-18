@@ -28,10 +28,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.view.ContentInfoCompat.Flags
 
 @Composable
 fun GraphView(
-    dataPoints:List<Float> = listOf(0f, 10f, 50f, 30f, 100f, 80f, 130f, 60f),
+    dataPoints:List<Float> = listOf(0f, 0f, 0f, 0f, 0f, 0f, 0f, 10f),
     graphHeight:Dp = 250.dp,
     paddingSize:Dp = 10.dp,
     borderColor: Color = Color.LightGray,
@@ -54,6 +55,8 @@ fun GraphView(
             .padding(paddingSize)
             .border(width = borderWidth, color = borderColor, shape = RoundedCornerShape(0.dp))
     ) {
+
+        /*line showing average of the elements*/
         Column(
             verticalArrangement = Arrangement.Center,
             modifier = Modifier.fillMaxSize()
@@ -61,11 +64,16 @@ fun GraphView(
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(2.dp)
+                    .padding(
+                        top = if(averageOf(dataPoints) > 0) averageOf(dataPoints).dp else 0.dp,
+                        bottom = if(averageOf(dataPoints) < 0) (averageOf(dataPoints).dp * -1) else 0.dp
+                    )
+                    .height(1.dp)
                     .background(color = averageColor)
             )
         }
 
+        /*Horizontal lines showing level*/
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceEvenly
@@ -77,8 +85,6 @@ fun GraphView(
             GraphLineAndTextView("98")
         }
 
-
-
         LineGraph(
             dataPoints = dataPoints,
             graphWidth = graphWidth,
@@ -89,11 +95,6 @@ fun GraphView(
                 .fillMaxHeight()
                 .padding(vertical = graphPadding)
         )
-
-
-
-
-
 
     }
 }
@@ -160,10 +161,16 @@ fun LineGraph(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
+fun averageOf(numbers: List<Float>): Float {
+    var sum = 0f
+    for(num in numbers)
+        sum += num
+
+    return sum / numbers.size
+}
+
+@Preview(showBackground = true)
 @Composable
 fun GraphPreview() {
-    GraphView(
-
-    )
+    GraphView()
 }
