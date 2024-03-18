@@ -36,7 +36,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.roulette.bidhelper.functions.BiddingPriceCalculator
-import com.roulette.bidhelper.ui.bidinfo.graph.GraphView
+import com.roulette.bidhelper.ui.graph.GraphView
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
 import com.roulette.bidhelper.ui.calculator.CalculatorView
 import com.roulette.bidhelper.ui.calculator.Price
@@ -202,13 +202,6 @@ fun BidInfoPreciseCalculatorScreen(
 
         GraphView()
     }
-}
-
-@Composable
-fun BidInfoPreciseGraphView(
-
-) {
-
 }
 
 @Composable
