@@ -8,7 +8,7 @@ import com.roulette.bidhelper.models.apis.after.BidConstWorkResultPriceDTO
 class BidResultPriceViewModel : ViewModel() {
     private val _bidResultPrice = MutableLiveData<BidConstWorkResultPriceDTO>()
     val bidResultPrice: LiveData<BidConstWorkResultPriceDTO> = _bidResultPrice
-
+//    이게 뭔데 오류내는겨?
 //    fun setBidResultPrice(param: BidAmountInfo) {
 //        RequestServer.bidServiceAfter.getBidResultPrice(
 //            numOfRows = param.numOfRows!!,
