@@ -39,7 +39,6 @@ interface AssessmentRateInterface {
         idx: Int,
         listCount: Int
     ): MutableList<AssessmentItem>
-
     suspend fun getBidStatusThingSearch(instName: String): List<Item>
     suspend fun getBidStatusConstWorkSearch(instName: String): List<Item>
     suspend fun getBidStatusServiceSearch(instName: String): List<Item>
@@ -126,6 +125,7 @@ class AssessmentRate(
                         "공고명: ${result.bidNtceNm}\n예정가격: ${result.plnprc}\n기초금액: ${result.bssamt}\n사정률 : $assessmentRate\n\n"
                     )
                 }
+
             }
         job.join()
         return@runBlocking resultArr

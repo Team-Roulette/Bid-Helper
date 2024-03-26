@@ -38,7 +38,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.roulette.bidhelper.functions.AssessmentItem
 
-
 @Composable
 fun GraphView(
     dataPoints:List<Float> = listOf(2f, 0f, 0f, 0f, 0f, 0f, 0f, 1f),
