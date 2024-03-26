@@ -121,7 +121,7 @@ fun CalculatorView(
         DoubleTextField(
             title = "추정 퍼센트(%)",
             changePriceValue = {price.estimate = it},
-            content = if(price.estimate == BigDecimal(0)) "" else price.estimate.toString(),
+            content = if(price.estimate == BigDecimal(0)) "" else String.format("%.3f", price.estimate.toFloat()),
             imeAction = ImeAction.Done,
             modifier = Modifier.padding(top = 10.dp)
         )

@@ -1,6 +1,7 @@
 package com.roulette.bidhelper.ui.graph
 
 import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,17 +31,18 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
+import com.roulette.bidhelper.functions.AssessmentItem
 
 @Composable
 fun GraphView(
     dataPoints:List<Float> = listOf(2f, 0f, 0f, 0f, 0f, 0f, 0f, 1f),
+    datas: List<AssessmentItem>? = null,
+    average: Float = 0f,
     graphHeight:Dp = 250.dp,
     paddingSize:Dp = 10.dp,
     borderColor: Color = Color.LightGray,
@@ -53,6 +55,11 @@ fun GraphView(
     val scrollState = rememberScrollState()
     LaunchedEffect(key1 = Unit) {
         scrollState.scrollTo(scrollState.maxValue)
+    }
+    val convertedDataPoints: List<Float>? = if(datas != null) {
+        convertDataPoints(datas)
+    } else {
+        null
     }
 
     Box(
@@ -68,10 +75,12 @@ fun GraphView(
             verticalArrangement = Arrangement.SpaceEvenly)
 
         AverageLineView(
+            average = average,
             modifier = Modifier.fillMaxSize()
         )
 
         LineGraph(
+            dataPoints = convertedDataPoints,
             graphWidth = graphWidth,
             graphColor = graphColor,
             modifier = Modifier
@@ -80,7 +89,6 @@ fun GraphView(
                 .fillMaxHeight()
                 .padding(vertical = graphPadding)
         )
-
     }
 }
 
@@ -135,13 +143,16 @@ fun GraphLineAndTextView(
 @Composable
 fun AverageLineView(
     modifier: Modifier = Modifier,
-    offset: Float = 2F,
+    average: Float = 0f,
     strokeWidth: Float = 3f
 ){
+
     Canvas(modifier = modifier) {
+        val calculatedAverage = size.height * (1f- (convertDataPoint(average) /100f))
+        Log.d("AssessmentRate", "calculatedheight: "+ calculatedAverage)
         drawLine(
-            start = Offset(0F, size.height / offset),
-            end = Offset(size.width, size.height / offset),
+            start = Offset(0F, calculatedAverage),
+            end = Offset(size.width, calculatedAverage),
             strokeWidth = strokeWidth,
             color = Color.Red
         )
@@ -151,7 +162,7 @@ fun AverageLineView(
 @Composable
 fun LineGraph(
     modifier: Modifier = Modifier,
-    dataPoints:List<Float> = listOf(70f, 20f, 30f, 40f, 80f, 10f, 30f, 50f),
+    dataPoints:List<Float>? = listOf(70f, 20f, 30f, 40f, 80f, 10f, 30f, 50f),
     baseNumber: Float = 100f,
     graphHeight:Dp = 250.dp,
     paddingSize:Dp = 10.dp,
@@ -172,7 +183,7 @@ fun LineGraph(
         val path = Path()
         val offsetList: MutableList<Offset> = mutableListOf()
 
-        dataPoints.forEachIndexed { index, value ->
+        dataPoints?.forEachIndexed { index, value ->
             val x = index * (size.width / (dataPoints.size - 1))
             val y = size.height - (value / baseNumber * size.height)
 
@@ -206,12 +217,22 @@ fun LineGraph(
     }
 }
 
-fun averageOf(numbers: List<Float>): Float {
-    var sum = 0f
-    for(num in numbers)
-        sum += num
+fun convertDataPoints(
+    dataPoints: List<AssessmentItem>
+): List<Float> {
+    val answer: MutableList<Float> = mutableListOf()
 
-    return sum / numbers.size
+    for(point in dataPoints) {
+        answer.add(convertDataPoint(point.assessmentRate.toFloat()))
+    }
+
+    return answer.toList()
+}
+
+fun convertDataPoint(
+    dataPoint: Float
+): Float {
+    return 50f + ((dataPoint - 100f) / 2.5f * 50f)
 }
 
 @Preview(showBackground = true)

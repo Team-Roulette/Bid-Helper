@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.roulette.bidhelper.functions.AssessmentRate
 import com.roulette.bidhelper.functions.BiddingPriceCalculator
 import com.roulette.bidhelper.ui.graph.GraphView
 import com.roulette.bidhelper.ui.bidinfo.viewmodels.BidInfoPreciseViewModel
@@ -74,7 +75,7 @@ fun PreciseScreen(
                 presmptPrce
             )
         }
-        BidInfoTabLayout()
+        BidInfoTabLayout(viewModel = viewModel)
     }
 }
 
@@ -150,9 +151,9 @@ fun BidInfoHorizontalSpacer(
 
 @Composable
 fun BidInfoPreciseCalculatorScreen(
-    formatter:NumberFormat = NumberFormat.getNumberInstance(Locale.KOREA)
+    formatter:NumberFormat = NumberFormat.getNumberInstance(Locale.KOREA),
+    viewModel: BidInfoPreciseViewModel,
 ) {
-
     val scrollState = rememberScrollState()
 
     var answer by remember { mutableStateOf(BigDecimal(0)) }
@@ -161,8 +162,9 @@ fun BidInfoPreciseCalculatorScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.verticalScroll(scrollState)
-    ) {
-        CalculatorView(Price())
+        ) {
+
+        CalculatorView(Price(estimate = BigDecimal(viewModel.getAssessmentRateAverage().toDouble())))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -200,12 +202,15 @@ fun BidInfoPreciseCalculatorScreen(
             )
         }
 
-        GraphView()
+        GraphView(
+            datas = viewModel.assessmentRateList.toList(),
+            average = viewModel.getAssessmentRateAverage())
     }
 }
 
 @Composable
 fun BidInfoTabLayout(
+    viewModel: BidInfoPreciseViewModel,
     modifier:Modifier = Modifier
 ) {
     val list = listOf("공고정보", "계산기")
@@ -224,24 +229,29 @@ fun BidInfoTabLayout(
                 )
             }
         }
-        TabContent(selectedTabIndex = selectedIndex)
+        TabContent(
+            selectedTabIndex = selectedIndex,
+            viewModel = viewModel,)
     }
 }
 
 @Composable
-fun TabContent(selectedTabIndex: Int, modifier: Modifier = Modifier) {
+fun TabContent(
+    viewModel: BidInfoPreciseViewModel,
+    selectedTabIndex: Int,
+    modifier: Modifier = Modifier) {
     when (selectedTabIndex) {
         0 -> BidInfoSummaryScreen(titles = title, contents = contents)
-        1 -> BidInfoPreciseCalculatorScreen()
+        1 -> BidInfoPreciseCalculatorScreen(viewModel = viewModel)
         else -> Text("Selection not valid", color = Color.Red)
     }
 }
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreciseScreenPreview() {
-    BidInfoPreciseCalculatorScreen()
-}
+//
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun PreciseScreenPreview() {
+//    BidInfoPreciseCalculatorScreen()
+//}
 
 
 
